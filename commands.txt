@@ -1,0 +1,2 @@
+zip lambda.zip lambda.py && aws s3 cp lambda.zip s3://yvr-immersion-days/cloudformation/ --profile prototype
+aws s3 cp demo-sagemaker.yaml s3://yvr-immersion-days/cloudformation/demo-sagemaker.yaml --profile prototype

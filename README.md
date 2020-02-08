@@ -2,9 +2,9 @@
 Simple CF demo to deploy Sagemaker stuff
 
 
-To deploy this into Oregon (us-west-2) please use the link below:
+To deploy this into Canada AWS region please use the link below:
 
-__<a href="https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?templateURL=https://yvr-immersion-days.s3.ca-central-1.amazonaws.com/cloudformation/demo-sagemaker.yaml&stackName=DemoSagemaker">Deploy the Sagemaker demo</a>__
+__<a href="https://ca-central-1.console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/create/review?templateURL=https://yvr-immersion-days.s3.ca-central-1.amazonaws.com/cloudformation/demo-sagemaker.yaml&stackName=DemoSagemaker">Deploy the Sagemaker demo</a>__
 
 _You need to be logged into the AWS account where you want to deploy the stack._
 
