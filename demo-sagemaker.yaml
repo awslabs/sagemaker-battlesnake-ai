@@ -3,7 +3,7 @@ Transform: 'AWS::Serverless-2016-10-31'
 Description: Deploy an BattleSnake endpoint running a ready to use AI model
 Globals:
   Function:
-    Runtime: python3.6
+    Runtime: python2.7
     MemorySize: 1024
 Resources:
   MoveFunction:
