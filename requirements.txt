@@ -1,0 +1,8 @@
+certifi==2019.11.28
+chardet==3.0.4
+graphviz==0.8.4
+idna==2.8
+mxnet==1.5.1.post0
+numpy==1.16.6
+requests==2.22.0
+urllib3==1.25.8
