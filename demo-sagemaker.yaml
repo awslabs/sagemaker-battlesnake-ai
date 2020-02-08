@@ -6,7 +6,20 @@ Globals:
     Runtime: python3.6
     MemorySize: 1024
 Resources:
-  ApiFunction:
+  MoveFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Events:
+        ApiEvent:
+          Properties:
+            Method: post
+            Path: /move
+            RestApiId:
+              Ref: ApiGatewayApi
+          Type: Api
+      Handler: lambda.move
+      CodeUri: s3://yvr-immersion-days/cloudformation/lambda.zip
+  StartFunction:
     Type: AWS::Serverless::Function
     Properties:
       Events:
@@ -17,16 +30,19 @@ Resources:
             RestApiId:
               Ref: ApiGatewayApi
           Type: Api
-      Handler: index.handler
+      Handler: lambda.start
       CodeUri: s3://yvr-immersion-days/cloudformation/lambda.zip
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: demo
 Outputs:
-  ProdDataEndpoint:
-    Description: "Snake endpoint"
+  SnakeUrl:
+    Description: "Snake URL"
     Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/demo/"
+  StartMethod:
+    Description: "Start method URL"
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/demo/start"
 
 
             
