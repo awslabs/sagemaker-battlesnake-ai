@@ -1,2 +1,0 @@
-dmlc_tracker
-mxnet
