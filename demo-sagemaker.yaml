@@ -26,7 +26,7 @@ Resources:
 Outputs:
   ProdDataEndpoint:
     Description: "Snake endpoint"
-    Value: !Sub "https://${ApiFunction}.execute-api.${AWS::Region}.amazonaws.com/demo/"
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/demo/"
 
 
             
