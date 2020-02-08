@@ -22,7 +22,11 @@ Resources:
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: prod
+      StageName: demo
+Outputs:
+  ProdDataEndpoint:
+    Description: "Snake endpoint"
+    Value: !Sub "https://${ApiFunction}.execute-api.${AWS::Region}.amazonaws.com/demo/"
 
 
             
