@@ -14,12 +14,12 @@ from convert_utils import ObservationToStateConverter
 converter = ObservationToStateConverter(style='one_versus_all', use_border=True)
 net = mx.gluon.SymbolBlock.imports('model-symbol.json', 'data', 'model-0000.params')
 
-def ping():
+def ping(event, context):
     return {
         "statusCode": 200
     }
 
-def start():
+def start(event, context):
     print("Start")
     color = "#00FF00"
     time.sleep(0.1)
@@ -31,7 +31,7 @@ def start():
         "body": { "color": color }
     }
 
-def move(data):
+def move(data, context):
     print("Move")
     print(data)
 
@@ -81,7 +81,7 @@ def move(data):
     }
 
 
-def end():
+def end(event, context):
     return {
         "statusCode": 200
     }
