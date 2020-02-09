@@ -8,6 +8,32 @@ Globals:
     Layers:
       - arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python27-SciPy1x:2
 Resources:
+  PingFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Events:
+        ApiEvent:
+          Properties:
+            Method: post
+            Path: /ping
+            RestApiId:
+              Ref: ApiGatewayApi
+          Type: Api
+      Handler: lambda.ping
+      CodeUri: s3://yvr-immersion-days/cloudformation/lambda.zip
+  EndFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Events:
+        ApiEvent:
+          Properties:
+            Method: post
+            Path: /end
+            RestApiId:
+              Ref: ApiGatewayApi
+          Type: Api
+      Handler: lambda.end
+      CodeUri: s3://yvr-immersion-days/cloudformation/lambda.zip
   MoveFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -27,7 +53,7 @@ Resources:
       Events:
         ApiEvent:
           Properties:
-            Method: get
+            Method: any
             Path: /start
             RestApiId:
               Ref: ApiGatewayApi

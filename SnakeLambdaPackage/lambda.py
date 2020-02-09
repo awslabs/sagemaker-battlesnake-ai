@@ -28,7 +28,7 @@ def start(event, context):
         "headers": {
             "Content-Type": "application/json"
         },
-        "body": { "color": color }
+        "body": json.dumps({ "color": color })
     }
 
 def move(data, context):
@@ -77,7 +77,7 @@ def move(data, context):
         "headers": {
             "Content-Type": "application/json"
         },
-        "body": { "move": choice }
+        "body": json.dumps({ "move": choice })
     }
 
 
