@@ -5,6 +5,7 @@ Globals:
   Function:
     Runtime: python2.7
     MemorySize: 1024
+    Layers: arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python27-SciPy1x:2
 Resources:
   MoveFunction:
     Type: AWS::Serverless::Function
