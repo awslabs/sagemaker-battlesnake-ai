@@ -1,10 +1,14 @@
 # deployableCFSagemaker
-Simple CF demo to deploy Sagemaker stuff
 
+This project shows how to build and deploy an AI for the game [BattleSnake](https://play.battlesnake.com/) with [AWS Machine Learning](https://aws.amazon.com/machine-learning/)!
+
+## Deploy a pretrained snake AI into your AWS account
+
+This section will deploy a pre-trained AI on a Lambda function. An API Gateway will be created in front of it to provide a snake API entripoint (see [BattleSnake API](https://docs.battlesnake.com/snake-api)).
 
 To deploy this into Canada AWS region please use the link below:
 
-__<a href="https://ca-central-1.console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/create/review?templateURL=https://yvr-immersion-days.s3.ca-central-1.amazonaws.com/cloudformation/demo-sagemaker.yaml&stackName=DemoSagemaker">Deploy the Sagemaker demo</a>__
+__<a href="https://ca-central-1.console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/create/review?templateURL=https://yvr-immersion-days.s3.ca-central-1.amazonaws.com/cloudformation/demo-sagemaker.yaml&stackName=DemoSagemaker" target="_blank">Deploy the Snake</a>__
 
 _You need to be logged into the AWS account where you want to deploy the stack._
 
@@ -26,7 +30,15 @@ You should see:
 
 ![Successfull result](https://github.com/xavierraffin/deployableCFSagemaker/raw/master/Documentation/images/working.png "Result")
 
-Again on output tab, the value "Snake URL" is your Snake URL, you can use it on BattleSnake.io !!!
+Again on output tab, the value "Snake URL" is your Snake URL, you can use it on [BattleSnake](https://play.battlesnake.com/) !
+
+Add your snake:
+
+![Add snake](https://github.com/xavierraffin/deployableCFSagemaker/raw/master/Documentation/images/addsnake.png "Add snake")
+
+Play:
+
+![Battlesnake Board](https://github.com/xavierraffin/deployableCFSagemaker/raw/master/Documentation/images/game.png "Battlesnake Board")
 
 ## Modify the Snake
 
