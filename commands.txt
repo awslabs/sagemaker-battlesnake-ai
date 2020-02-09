@@ -1,10 +1,16 @@
+# To recreate Lambda package
+
+From a Linux machine:
+
+```
 virtualenv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install mxnet
 
 cp SnakeSource/* venv/lib/python2.7/site-packages
 
 cd venv/lib/python2.7/site-packages && zip -r ../../../../lambda.zip . && cd -
+```
 
 aws s3 cp lambda.zip s3://yvr-immersion-days/cloudformation/ --profile prototype
 aws s3 cp demo-sagemaker.yaml s3://yvr-immersion-days/cloudformation/demo-sagemaker.yaml --profile prototype
