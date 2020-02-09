@@ -31,11 +31,11 @@ def start(event, context):
         "body": json.dumps({ "color": color })
     }
 
-def move(data, context):
+def move(event, context):
     print("Move")
-    print(data)
+    print(event)
 
-    state = converter.get_game_state(data)
+    state = converter.get_game_state(event.body)
     
     # Get the list of possible directions
     i,j = np.unravel_index(np.argmax(state[:,:,1], axis=None), state[:,:,1].shape)
