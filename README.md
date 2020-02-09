@@ -16,7 +16,7 @@ Click "Create Stack"
 
 After about a minute, the stack status should be CREATE_COMPLETE:
 
-![Creation complete](raw/master/Documentation/images/create-complete.png "Creation complete")
+![Creation complete](https://github.com/xavierraffin/deployableCFSagemaker/raw/master/Documentation/images/create-complete.png "Creation complete")
 
 Open the outputs tab and click on "Start Method" link to test that the deployment work:
 
