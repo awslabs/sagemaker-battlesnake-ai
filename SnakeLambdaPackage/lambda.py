@@ -63,12 +63,10 @@ def move(event, context):
     directions = ['up', 'down', 'left', 'right']
     direction = directions[int(direction_index)]
     choice = direction
-    if direction in possible:
-        choice = direction
-    elif len(possible) > 0:
+    if direction not in possible:
+      print("Move "+direction+" is not possible")
+      if len(possible) > 0:
         choice = random.choice(possible)
-    else:
-        choice = direction
 
     print("Move " + choice)
 
