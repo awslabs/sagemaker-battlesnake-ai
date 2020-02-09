@@ -44,8 +44,10 @@ Play:
 
 There is two type of change you can do against the Snake:
 
-- Add more heuristics : keep the model but add additionnal hard-wire decision
-- Update the AI model : train the AI again with different settings
+- __Add more heuristics__ : keep the model but add additionnal hard-wire decision
+- __Update the AI model__ : train the AI again with different settings
+
+Next sections explain how to do each of these two type of changes.
 
 ### Add more heuristics
 
@@ -81,10 +83,12 @@ aws s3 cp lambda.zip s3://<YOUR-S3-BUCKET>/lambda.zip
 Deploy the Lambda using CloudFormation: (you have to do that in the same region where your bucket is).
 
 ```
-aws cloudformation create-stack --stack-name <YOUR-STACK-NAME> --template-body file:///improved-ai.json --parameters ParameterKey=S3Bucket,ParameterValue=<YOUR-S3-BUCKET> ParameterKey=S3Key,ParameterValue=lambda.zip
+aws cloudformation create-stack --stack-name <YOUR-STACK-NAME> --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --template-body file://improved-ai.yaml --parameters ParameterKey=S3Bucket,ParameterValue=<YOUR-S3-BUCKET> ParameterKey=S3Key,ParameterValue=lambda.zip
 ```
 
 _obviously you can deploy the lambda package manually without cloudformation. But in that case you'll have to create the API Gateway too and you will need to add the NumPy Lambda layer to make it working._
+
+Once the CloudFormation stack deployed, get the Snake API URL in the output section.
 
 
 ### Update the AI model
