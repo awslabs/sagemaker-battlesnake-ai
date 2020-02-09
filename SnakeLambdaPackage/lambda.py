@@ -35,7 +35,7 @@ def move(event, context):
     print("Move")
     print(event)
 
-    state = converter.get_game_state(event.body)
+    state = converter.get_game_state(json.loads(event['body']))
     
     # Get the list of possible directions
     i,j = np.unravel_index(np.argmax(state[:,:,1], axis=None), state[:,:,1].shape)
@@ -70,7 +70,7 @@ def move(event, context):
     else:
         choice = direction
 
-    print("Choice" + choice)
+    print("Move " + choice)
 
     return {
         "statusCode": 200,
