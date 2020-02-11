@@ -1,125 +1,26 @@
 # sagemaker-battlesnake
 
-This project shows how to build and deploy an AI for the game [BattleSnake](https://play.battlesnake.com/) with [AWS Machine Learning](https://aws.amazon.com/machine-learning/)!
+This project shows how to build and deploy an AI for the game [BattleSnake](https://play.battlesnake.com/) with [AWS Sagemaker](https://aws.amazon.com/sagemaker/) !
 
-## Deploy a pretrained snake AI into your AWS account
+It is ready to deploy and contains learning materials for AI enthusiast.
 
-This section will deploy a pre-trained AI on a Lambda function. An API Gateway will be created in front of it to provide a snake API entripoint (see [BattleSnake API](https://docs.battlesnake.com/snake-api)).
+__What is Battlesnake__
 
-To deploy this into Canada AWS region please use the link below:
+Taken from [Battlesnake.com](https://docs.battlesnake.com/rules):
 
-__<a href="https://ca-central-1.console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/create/review?templateURL=https://battlesnake-aws-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker" target="_blank">Deploy the Snake</a>__
+> Battlesnake is an autonomous survival game where your snake competes with others to find and eat food without being eliminated. To accomplish this, you will have to teach your snake to navigate the serpentine paths created by walls, other snakes, and their own growing tail without running out of energy.
 
-_You need to be logged into the AWS account where you want to deploy the stack._
+## Content
 
-Check all permissions:
+This project can be used in three steps:
 
-![Accept Permissions](https://github.com/awslab/sagemaker-battlesnake/raw/master/Documentation/images/create-stack.png "Permission checkboxes")
+- __[Deploy a pretrained AI](https://github.com/awslab/sagemaker-battlesnake/Documentation/DeployTheAIEndpoint.md)__ : Will deploy a Serverless endpoint in a single click! You are ready for the competition.
+- __[Customize the AI heuristics](https://github.com/awslab/sagemaker-battlesnake/Documentation/CustomizeHeuristicsAndDeploy.md)__ : Customize AI behaviour, visualize your result and publish an upgraded version!
+- __[Train the AI model with your own settings](https://github.com/awslab/sagemaker-battlesnake/Documentation/TrainModelAndDeploy.md)__ : The most challenging one: train the AI again with different settings, visualize your result and publish an upgraded version!
 
-Click "Create Stack"
-
-After about a minute, the stack status should be CREATE_COMPLETE:
-
-![Creation complete](https://github.com/awslab/sagemaker-battlesnake/raw/master/Documentation/images/create-complete.png "Creation complete")
-
-Open the outputs tab and click on "Start Method" link to test that the deployment work:
-
-![Output tab](https://github.com/awslab/sagemaker-battlesnake/raw/master/Documentation/images/outputs.png "Output tab")
-
-You should see:
-
-![Successfull result](https://github.com/awslab/sagemaker-battlesnake/raw/master/Documentation/images/working.png "Result")
-
-Again on output tab, the value "Snake URL" is your Snake URL, you can use it on [BattleSnake](https://play.battlesnake.com/) !
-
-Add your snake:
-
-![Add snake](https://github.com/awslab/sagemaker-battlesnake/raw/master/Documentation/images/addsnake.png "Add snake")
-
-Play:
-
-![Battlesnake Board](https://github.com/awslab/sagemaker-battlesnake/raw/master/Documentation/images/game.png "Battlesnake Board")
-
-## Modify the Snake
-
-There is two type of change you can do against the Snake:
-
-- __Add more heuristics__ : keep the model but add additionnal hard-wire decision
-- __Update the AI model__ : train the AI again with different settings
-
-Next sections explain how to do each of these two type of changes.
-
-### Add more heuristics
-
-Here we keep the AI as is but we add some code to change the AI movement decision.
-
-For example, you can calculate if the move will make you collide into a snake body or head with a longer body (in both case you die).
-
-Another one will be detect that you may be able to kill another shorter snake colliding head to head.
-
-_If you do clever things, your pull request is welcome!_
-
-__STEP 1: Edit the source code__
-
-Inside SnakeLambdaPackage/lambda.py on the move function add your code.
-
-__STEP 2: Deploy the new Snake__
-
-Generate a lambda package like this:
-
-```
-cd SnakeLambdaPackage
-zip -9r lambda.zip  .
-```
-
-__STEP 3: Deploy the new Snake__
-
-Push this code to an S3 bucket of you using the console or the CLI:
-
-```
-aws s3 cp lambda.zip s3://<YOUR-S3-BUCKET>/lambda.zip
-```
-
-Deploy the Lambda using CloudFormation: (you have to do that in the same region where your bucket is).
-
-```
-aws cloudformation create-stack --stack-name <YOUR-STACK-NAME> --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --template-body file://improved-ai.yaml --parameters ParameterKey=S3Bucket,ParameterValue=<YOUR-S3-BUCKET> ParameterKey=S3Key,ParameterValue=lambda.zip
-```
-
-_obviously you can deploy the lambda package manually without cloudformation. But in that case you'll have to create the API Gateway too and you will need to add the NumPy Lambda layer to make it working._
-
-Once the CloudFormation stack deployed, get the Snake API URL in the output section.
-
-
-### Update the AI model
-
-_...coming soon_
+_We recommend doing the steps in order but you can also jump on the one you like directly._
 
 ## Package Developers
 
-Here are instructions that have been used to create the initial Lambda package.
-
-On a Amazon Linux 1 machine: (SnakeSource contains the python code of the AI)
-
-```
-virtualenv venv
-source venv/bin/activate
-pip install mxnet
-
-cp SnakeSource/* venv/lib/python2.7/site-packages
-
-cd venv/lib/python2.7/site-packages && zip -r ../../../../lambda.zip . && cd -
-```
-
-Publish the Lambda package on a public S3 bucket:
-
-```
-aws s3 cp lambda.zip s3://yvr-immersion-days/cloudformation/
-```
-
-For the Cloudformation script same command:
-
-```
-aws s3 cp demo-sagemaker.yaml s3://yvr-immersion-days/cloudformation/demo-sagemaker.yaml
-```
+[Here](https://github.com/awslab/sagemaker-battlesnake/Documentation/PackageDeveloperDoc.md) are instructions that have been used to create the initial Lambda package.
 
