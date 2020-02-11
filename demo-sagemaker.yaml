@@ -5,6 +5,7 @@ Globals:
   Function:
     Runtime: python2.7
     MemorySize: 1024
+    CodeUri: s3://battlesnake-aws-ca-central-1/cloudformation/lambda-ai-endpoint.zip
     Layers:
       - arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python27-SciPy1x:2
 Resources:
@@ -20,7 +21,6 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.ping
-      CodeUri: s3://yvr-immersion-days/cloudformation/lambda.zip
   EndFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -33,7 +33,6 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.end
-      CodeUri: s3://yvr-immersion-days/cloudformation/lambda.zip
   MoveFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -46,7 +45,6 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.move
-      CodeUri: s3://yvr-immersion-days/cloudformation/lambda.zip
   StartFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -59,7 +57,6 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.start
-      CodeUri: s3://yvr-immersion-days/cloudformation/lambda.zip
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:

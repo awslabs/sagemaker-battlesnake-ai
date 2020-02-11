@@ -11,10 +11,10 @@ Parameters:
   S3Bucket:
     Description: The bucket where the Lamba package is
     Type: String
-    Default: yvr-immersion-days
+    Default: battlesnake-aws-ca-central-1
   S3Key:
     Description: Key of the lambda package
-    Default: cloudformation/lambda.zip
+    Default: cloudformation/lambda-ai-endpoint.zip
     Type: String
 Resources:
   PingFunction:

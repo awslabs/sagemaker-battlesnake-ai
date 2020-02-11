@@ -9,8 +9,8 @@ pip install mxnet
 
 cp SnakeSource/* venv/lib/python2.7/site-packages
 
-cd venv/lib/python2.7/site-packages && zip -r ../../../../lambda.zip . && cd -
+cd venv/lib/python2.7/site-packages && zip -r ../../../../ lambda-ai-endpoint.zip . && cd -
 ```
 
-aws s3 cp lambda.zip s3://yvr-immersion-days/cloudformation/ --profile prototype
-aws s3 cp demo-sagemaker.yaml s3://yvr-immersion-days/cloudformation/demo-sagemaker.yaml --profile prototype
+aws s3 cp lambda-ai-endpoint.zip s3://battlesnake-aws-ca-central-1/cloudformation/ --profile prototype
+aws s3 cp demo-sagemaker.yaml s3://battlesnake-aws-ca-central-1/cloudformation/deploy-battlesnake-endpoint.yaml --profile prototype
