@@ -1,4 +1,4 @@
-# sagemaker-battlesnake
+# Amazon SageMaker for Battlesnake AI
 
 This project shows how to build and deploy an AI for the game [BattleSnake](https://play.battlesnake.com/) with [AWS Sagemaker](https://aws.amazon.com/sagemaker/)!
 
