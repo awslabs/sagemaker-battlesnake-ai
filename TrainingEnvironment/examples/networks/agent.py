@@ -7,14 +7,15 @@ import numpy as np
 import mxnet as mx
 from mxnet import nd, autograd, gluon
 
-from examples.networks.qnetworks import QNetworkConcat, QNetworkAttention
-from examples.networks.utils import sort_states_for_snake_id
+from networks.qnetworks import QNetworkConcat, QNetworkAttention
+from networks.utils import sort_states_for_snake_id
 
 ctx = mx.gpu(0) if mx.context.num_gpus() > 0 else mx.cpu()
 
 class MultiAgentsCollection:
     def __init__(self, seed, model_dir,
                  load, load_only_conv_layers,
+                 models_to_save,
                  # State configurations
                  state_type, state_shape, number_of_snakes,
 
@@ -32,7 +33,8 @@ class MultiAgentsCollection:
                  kernel_size, repeat_size,
                  activation_type):
         self.one_versus_all = state_type == "one_versus_all"
-
+        self.models_to_save = models_to_save
+            
         action_size = 4
         network_params = (seed, load, load_only_conv_layers,
                           qnetwork_type, state_shape, action_size,
@@ -123,18 +125,22 @@ class MultiAgentsCollection:
                        should_learn=should_learn)
 
     def save(self, name, i_episode):
-        agents[0].qnetwork_local.save_parameters(
-                '{}/local-{}-e{}.params'.format(
-                    self.model_dir, name, i_episode))
-        agents[0].qnetwork_local.export(
-                '{}/local-{}-e{}'.format(
-                    self.model_dir, name, i_episode))
-        agents[0].qnetwork_target.save_parameters(
-                '{}/target-{}-e{}.params'.format(
-                    self.model_dir, name, i_episode))
-        agents[0].qnetwork_target.export(
-                '{}/target-{}-e{}'.format(
-                    self.model_dir, name, i_episode))
+        if self.models_to_save == "all":
+            agents[0].qnetwork_local.save_parameters(
+                    '{}/local-{}-e{}.params'.format(
+                        self.model_dir, name, i_episode))
+            agents[0].qnetwork_local.export(
+                    '{}/local-{}-e{}'.format(
+                        self.model_dir, name, i_episode))
+            agents[0].qnetwork_target.save_parameters(
+                    '{}/target-{}-e{}.params'.format(
+                        self.model_dir, name, i_episode))
+            agents[0].qnetwork_target.export(
+                    '{}/target-{}-e{}'.format(
+                        self.model_dir, name, i_episode))
+        else:
+            agents[0].qnetwork_local.export('{}/local'.format(
+                        self.model_dir))
 
     def reset(self):
         for _, agent in agents.items():

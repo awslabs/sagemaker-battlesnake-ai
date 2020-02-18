@@ -10,8 +10,13 @@ else
     echo "Create the entry points"
     mkdir $1
     cd $1
+    mkdir battlesnake_gym/
     mkdir battlesnake_src
     cd ..
+    cp -a TrainingEnvironment/battlesnake_gym $1/battlesnake_gym/battlesnake_gym
+    cp -a TrainingEnvironment/setup.py $1/battlesnake_gym/
+    cp -a TrainingEnvironment/requirements.txt $1/battlesnake_gym/
+
     cp -a TrainingEnvironment/examples/. $1/battlesnake_src/
     cp TrainingEnvironment/requirements.txt $1/battlesnake_src/
 

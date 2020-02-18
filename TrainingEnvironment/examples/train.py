@@ -1,3 +1,9 @@
+import subprocess
+subprocess.run(["pip",  "uninstall", "mxnet-mkl", "-y"])
+subprocess.run(["pip",  "install", "mxnet-mkl", "--pre"])
+import subprocess
+subprocess.run(["pip",  "uninstall", "mxnet-mkl", "-y"])
+subprocess.run(["pip",  "install", "mxnet-mkl", "--pre"])
 import argparse
 import os
 import json
@@ -5,8 +11,8 @@ import json
 from battlesnake_gym.snake_gym import BattleSnakeGym
 from mxboard import SummaryWriter
 
-from examples.dqn_run import trainer
-from examples.networks.agent import MultiAgentsCollection
+from dqn_run import trainer
+from networks.agent import MultiAgentsCollection
 
 def run(seed, args):
     print("Running with seed = {}".format(seed))
@@ -47,6 +53,7 @@ def run(seed, args):
 
     agent_params = (seed, model_dir,
                     load, args.load_only_conv_layers,
+                    args.models_to_save,
                     # State configurations
                     args.state_type, state_shape, args.number_of_snakes,
 
@@ -59,7 +66,7 @@ def run(seed, args):
                     args.qnetwork_type, args.sequence_length,
                     args.starting_channels, args.number_of_conv_layers,
                     args.number_of_dense_layers, args.number_of_hidden_states,
-                    args.dS, args.d,
+                    args.depthS, args.depth,
                     args.kernel_size, args.repeat_size,
                     args.activation_type)
     
@@ -136,9 +143,9 @@ if __name__ == "__main__":
                         help='Number of conv. layers for qnetwork concat')
     parser.add_argument('--number_of_dense_layers', type=int, default=2,
                         help='Number of dense layers for qnetwork concat')
-    parser.add_argument('--dS', type=int, default=10,
+    parser.add_argument('--depthS', type=int, default=10,
                         help='depth of the embeddings for the snake ID for qnetwork attention')
-    parser.add_argument('--d', type=int, default=200,
+    parser.add_argument('--depth', type=int, default=200,
                         help='depth of the embeddings for the snake health for qnetwork attention')
     parser.add_argument('--number_of_hidden_states', type=int, default=128,
                         help='Number of hidden states in the qnetwork')
@@ -154,6 +161,8 @@ if __name__ == "__main__":
     # Logging information
     parser.add_argument('--print_score_steps', type=int, default=100,
                         help='Steps to print score (default: 100)')
+    parser.add_argument('--models_to_save', type=str, default='all',
+                       help='select which models to save options ["all", "local"] (default: all)')
     parser.add_argument('--save_only_best_models', type=bool, default=False,
                         help='Save only the best models')
     parser.add_argument('--save_model_every', type=int, default=2000,
