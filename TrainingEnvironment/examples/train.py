@@ -1,9 +1,3 @@
-import subprocess
-subprocess.run(["pip",  "uninstall", "mxnet-mkl", "-y"])
-subprocess.run(["pip",  "install", "mxnet-mkl", "--pre"])
-import subprocess
-subprocess.run(["pip",  "uninstall", "mxnet-mkl", "-y"])
-subprocess.run(["pip",  "install", "mxnet-mkl", "--pre"])
 import argparse
 import os
 import json
