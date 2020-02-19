@@ -5,7 +5,7 @@ This section will deploy a pre-trained AI on a Lambda function. An API Gateway w
 Use the links below to deploy the model in the region you like:
 
 | Region        | deployment link |
-| ------------- | -------------:|
+| ------------- | :-------------:|
 | __US West (Oregon) (us-west-2)__*      | [deploy](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?templateURL=https://battlesnake-aws-us-west-2.s3.us-west-2.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
 | US East (N. Virginia) us-east-1     | [deploy](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?templateURL=https://battlesnake-aws-us-east-1.s3.us-east-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
 | Canada (Central) us-east-1     | [deploy](https://ca-central-1.console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/create/review?templateURL=https://battlesnake-aws-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
