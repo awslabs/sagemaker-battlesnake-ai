@@ -2,11 +2,11 @@
 
 This section will deploy a pre-trained AI on a Lambda function. An API Gateway will be created in front of it to provide a snake API entripoint (see [BattleSnake API](https://docs.battlesnake.com/snake-api)).
 
-Use the links below to deploy the model in the region you like:
+Use the links below to deploy the model in the region you like*:
 
 | Region        | deployment link |
 | ------------- | :-------------:|
-| __US West (Oregon) (us-west-2)__*      | [deploy](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?templateURL=https://battlesnake-aws-us-west-2.s3.us-west-2.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
+| __US West (Oregon) (us-west-2)__**      | [deploy](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?templateURL=https://battlesnake-aws-us-west-2.s3.us-west-2.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
 | US East (N. Virginia) us-east-1     | [deploy](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?templateURL=https://battlesnake-aws-us-east-1.s3.us-east-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
 | Canada (Central) us-east-1     | [deploy](https://ca-central-1.console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/create/review?templateURL=https://battlesnake-aws-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
 | South America (São Paulo) sa-east-1     | [deploy](https://sa-east-1.console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/create/review?templateURL=https://battlesnake-aws-sa-east-1.s3.sa-east-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
@@ -15,9 +15,9 @@ Use the links below to deploy the model in the region you like:
 | Asia Pacific (Seoul) ap-northeast-2     | [deploy](https://ap-northeast-2.console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/create/review?templateURL=https://battlesnake-aws-ap-northeast-2.s3.ap-northeast-2.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
 | Asia Pacific (Sydney) ap-southeast-2    | [deploy](https://ap-southeast-2.console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?templateURL=https://battlesnake-aws-ap-southeast-2.s3.ap-southeast-2.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=DemoSagemaker) |
 
-_* the official BattleSnake platform run in us-west-2, selecting this one will provide you the lowest latency_
+_* You need to be logged into the AWS account where you want to deploy the stack._
 
-_You need to be logged into the AWS account where you want to deploy the stack._
+_** the official BattleSnake platform run in us-west-2, selecting this one will provide you the lowest latency_
 
 Check all permissions:
 
