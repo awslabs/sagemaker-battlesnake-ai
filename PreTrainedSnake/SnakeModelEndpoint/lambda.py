@@ -65,7 +65,7 @@ def move(event, context):
 
     net = nets[str(data['board']['width'])]
     # Getting the result from the model
-    output = sum([net(state_nd, mx.nd.array([i]*2, ctx=ctx).reshape((1,-1)), turn_sequence, health_sequence).softmax() for i in range(4)])
+    output = sum([net(current_state_nd, mx.nd.array([i]*2, ctx=ctx).reshape((1,-1)), turn_sequence, health_sequence).softmax() for i in range(4)])
     
     # Getting the highest predicted index
     direction_index = output.argmax(axis=1)[0].asscalar()
