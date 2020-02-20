@@ -2,7 +2,7 @@
 
 This section will deploy a pre-trained AI on a Lambda function. An API Gateway will be created in front of it to provide a snake API entrypoint (see [BattleSnake API](https://docs.battlesnake.com/snake-api)):
 
-<img src="images/SimpleEndpoint.png" width="300px" />
+![Endpoint Architecture](images/SimpleEndpoint.png "Endpoint Architecture")
 
 > __Estimated cost__ : this architecture is entirely Serverless and you pay nothing to deploy it, you will be charge only when you call the Snake. For a test usage this will be probably free because of the [AWS Free tiers](https://aws.amazon.com/free/). __If you call the snake less than 500 000 times in a month that should be free.__ After the free tiers every 1M Snake API call will be charged approximately 6$ (see [Lambda pricing](https://aws.amazon.com/lambda/pricing/) and [API Gateway pricing](https://aws.amazon.com/api-gateway/pricing/))
 
@@ -25,28 +25,28 @@ _** the official BattleSnake platform run in us-west-2, selecting this one will 
 
 Check all permissions:
 
-<img src="images/create-stack.png" width="400px" />
+![Accept Permissions](images/create-stack.png "Permission checkboxes")
 
 Click "Create Stack"
 
 After about a minute, the stack status should be CREATE_COMPLETE:
 
-<img src="images/create-complete.png" width="400px" />
+![Creation complete](images/create-complete.png "Creation complete")
 
 Open the outputs tab and click on "Start Method" link to test that the deployment work:
 
-<img src="images/outputs.png" width="400px" />
+![Output tab](images/outputs.png "Output tab")
 
 You should see:
 
-<img src="images/working.png" width="400px" />
+![Successfull result](images/working.png "Result")
 
 Again on output tab, the value "Snake URL" is your Snake URL, you can use it on [BattleSnake](https://play.battlesnake.com/) !
 
 Add your snake:
 
-<img src="images/addsnake.png" width="400px" />
+![Add snake](images/addsnake.png "Add snake")
 
 Play:
 
-![Battlesnake Board](images/game.png "Battlesnake Board")
+![Battlesnake Board](images/game.png =250x)
