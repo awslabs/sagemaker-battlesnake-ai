@@ -13,9 +13,14 @@ source venv/bin/activate
 # Install mxnet package
 pip install mxnet
 
-# Copy model into the package directory and zip it into a lambda package
+# Copy model into the package directory
 cp -r PreTrainedSnake/SnakeModelEndpoint/* venv/lib/python2.7/site-packages
 cd venv/lib/python2.7/site-packages
+# remove unused file to remain under 250Mb (max Lambda package size)
+rm -rf *.dist-info
+rm -rf numpy pip setuptools
+
+# zip it into a lambda package
 zip -9r ../../../../model-lambda-package.zip .
 
 # Deactivate virtualenv
