@@ -37,11 +37,11 @@ def move(event, context):
     print("Move")
     print(event)
 
-    state = converter.get_game_state(json.loads(event['body']))
+    current_state, previous_state = converter.get_game_state(json.loads(event['body']))
     
     # Get the list of possible directions
-    i,j = np.unravel_index(np.argmax(state[:,:,1], axis=None), state[:,:,1].shape)
-    snakes = state[:,:,1:].sum(axis=2)
+    i,j = np.unravel_index(np.argmax(current_state[:,:,1], axis=None), current_state[:,:,1].shape)
+    snakes = current_state[:,:,1:].sum(axis=2)
     possible = []
     if snakes[i+1,j] == 0:
         possible.append('down')
@@ -52,13 +52,13 @@ def move(event, context):
     if snakes[i,j-1] == 0:
         possible.append('left')
 
-    # Sending the states for inference
-    state_nd = mx.nd.array(state, ctx=ctx)
+    # Sending the current_states for inference
+    current_state_nd = mx.nd.array(current_state, ctx=ctx)
     previous_state_nd = mx.nd.array(previous_state, ctx=ctx)
-    state_nd = state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
+    current_state_nd = current_state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
     previous_state_nd = previous_state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
     
-    state_nd = mx.nd.concatenate([previous_state_nd, state_nd], axis=1)
+    current_state_nd = mx.nd.concatenate([previous_state_nd, current_state_nd], axis=1)
     turn_sequence = mx.nd.array([data['turn']]*2, ctx=ctx).reshape((1,-1))
     health_sequence = mx.nd.array([data['you']['health']]*2, ctx=ctx).reshape((1,-1))
 
