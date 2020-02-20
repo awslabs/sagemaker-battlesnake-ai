@@ -8,21 +8,28 @@ Globals:
 Mappings: 
   RegionMap:
     ap-northeast-2:
+      "MxnetLayerArn": "arn:aws:lambda:ap-northeast-2:752200179490:layer:AWSLambda-Python27-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:ap-northeast-2:296580773974:layer:AWSLambda-Python27-SciPy1x:2"
     ap-southeast-2:
+      "MxnetLayerArn": "arn:aws:lambda:ap-southeast-2:752200179490:layer:AWSLambda-Python27-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:ap-southeast-2:817496625479:layer:AWSLambda-Python27-SciPy1x:2"
     sa-east-1:
+      "MxnetLayerArn": "arn:aws:lambda:sa-east-1:752200179490:layer:AWSLambda-Python27-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:sa-east-1:640010853179:layer:AWSLambda-Python27-SciPy1x:2"
     eu-west-1:
+      "MxnetLayerArn": "arn:aws:lambda:eu-west-1:752200179490:layer:AWSLambda-Python27-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:eu-west-1:399891621064:layer:AWSLambda-Python27-SciPy1x:2"
     eu-west-3:
+      "MxnetLayerArn": "arn:aws:lambda:eu-west-3:752200179490:layer:AWSLambda-Python27-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:eu-west-3:959311844005:layer:AWSLambda-Python27-SciPy1x:2"
     us-east-1:
+      "MxnetLayerArn": "arn:aws:lambda:us-east-1:752200179490:layer:AWSLambda-Python27-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python27-SciPy1x:2"
     us-west-2:
-      "MxnetLayerArn": "arn:aws:lambda:us-west-2:752200179490:layer:mxnet-python27:11"
+      "MxnetLayerArn": "arn:aws:lambda:us-west-2:752200179490:layer:AWSLambda-Python27-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python27-SciPy1x:2"
-    ca-central-1: 
+    ca-central-1:
+      "MxnetLayerArn": "arn:aws:lambda:ca-central-1:752200179490:layer:AWSLambda-Python27-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python27-SciPy1x:2"
 Parameters:
   S3Bucket:
