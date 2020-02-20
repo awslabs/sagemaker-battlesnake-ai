@@ -2,15 +2,16 @@
 #
 # prerequisite: python 2.7, virtualenv, pip
 
-echo " "
+echo
 echo " > Start packaging model on Lambda"
-echo " "
+echo
 
 PACKAGE_FILE_NAME="model-lambda-package.zip"
 
 # Delete file if it exist already
 if [ -f $PACKAGE_FILE_NAME ]; then
-    echo "$PACKAGE_FILE_NAME exist, delete it"
+    echo " > $PACKAGE_FILE_NAME exist, delete it"
+    echo
     rm -f "./$PACKAGE_FILE_NAME"
 fi
 
@@ -29,11 +30,16 @@ rm -rf *.dist-info
 rm -rf numpy pip setuptools
 
 # display package content for debug
-echo "The package will contain:"
+echo
+echo " > The package will contain:"
+echo
+
 ls
 
+echo
+
 # zip it into a lambda package
-zip -9r ../../../../$PACKAGE_FILE_NAME .
+zip -q9r ../../../../$PACKAGE_FILE_NAME .
 
 cd -
 
@@ -43,6 +49,6 @@ deactivate
 # Cleanup
 rm -rf venv
 
-echo " "
+echo
 echo " > Your Lambda package $PACKAGE_FILE_NAME is ready"
-echo " "
+echo
