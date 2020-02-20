@@ -36,8 +36,9 @@ def start(event, context):
 def move(event, context):
     print("Move")
     print(event)
+    data = json.loads(event['body'])
 
-    current_state, previous_state = converter.get_game_state(json.loads(event['body']))
+    current_state, previous_state = converter.get_game_state(data)
     
     # Get the list of possible directions
     i,j = np.unravel_index(np.argmax(current_state[:,:,1], axis=None), current_state[:,:,1].shape)
