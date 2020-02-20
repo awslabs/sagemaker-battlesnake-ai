@@ -35,7 +35,7 @@ if [ -z "$2" ]
         AWS_PROFILE=""
         echo " no profile supplied, using default AWS credentials"
     else
-        AWS_PROFILE="--profile "$2
+        AWS_PROFILE="--profile $2"
         echo " using AWS profile "$2
 fi
 
@@ -44,24 +44,28 @@ echo
 displayEndExecCmd () {
   echo "$2"
   echo
-  eval "$1"
+  eval cmd="$1"
+  eval ${cmd}
+  echo ${cmd}
   echo
 }
 
 updateOrCreateLayer () {
     PYTHON_VERSION="python2.7"
-    LAYER_NAME="mxnet-"$PYTHON_VERSION
+    LAYER_NAME="mxnet-python27"
+    LAYER_PACKAGE_SOURCE_KEY="lambda/mxnet-layer-package.zip"
 
-    COMMAND="aws s3 cp mxnet-layer-package.zip s3://$S3_PREFIX$1/lambda/mxnet-layer-package.zip $AWS_PROFILE"
+    COMMAND="aws s3 cp mxnet-layer-package.zip s3://$S3_PREFIX$1/$LAYER_PACKAGE_SOURCE_KEY --region $1 $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy MXNet lambda layer package source to region "$1
 
-    COMMAND="aws lambda delete-layer-version --layer-name $LAYER_NAME --version-number 1 $AWS_PROFILE"
+    COMMAND="aws lambda delete-layer-version --layer-name $LAYER_NAME --version-number 1 --region $1 $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Delete Layer $LAYER_NAME in region "$1
 
-    COMMAND="aws lambda publish-layer-version --layer-name $LAYER_NAME --description \"MXnet layer for $PYTHON_VERSION require SciPy layer\" --license-info \"MIT\" --content S3Bucket=battlesnake-aws-us-west-2,S3Key=lambda/layer-mxnet-package.zip --compatible-runtimes $PYTHON_VERSION $AWS_PROFILE"
+    LAYER_DESCRIPTION="MXnet layer for $PYTHON_VERSION require SciPy layer"
+    COMMAND="aws lambda publish-layer-version --layer-name $LAYER_NAME --description \"$LAYER_DESCRIPTION\" --license-info \"MIT\" --content S3Bucket=$S3_PREFIX$1,S3Key=$LAYER_PACKAGE_SOURCE_KEY --compatible-runtimes $PYTHON_VERSION --region $1 $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Create Lambda layer in region "$1
 
-    COMMAND="aws lambda add-layer-version-permission --layer-name $LAYER_NAME --statement-id public --action lambda:GetLayerVersion  --principal \* --version-number 1 --output text $AWS_PROFILE"
+    COMMAND="aws lambda add-layer-version-permission --layer-name $LAYER_NAME --statement-id public --action lambda:GetLayerVersion  --principal \"*\" --version-number 1 --output text --region $1 $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Making Layer Version public in region "$1
 }
 
