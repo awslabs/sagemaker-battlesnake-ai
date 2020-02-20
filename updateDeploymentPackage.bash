@@ -1,3 +1,16 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License").
+# You may not use this file except in compliance with the License.
+# A copy of the License is located at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# or in the "license" file accompanying this file. This file is distributed 
+# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+# express or implied. See the License for the specific language governing 
+# permissions and limitations under the License.
+
 # This script is for AWS maintainer only
 # It deploys all CloudFormation scripts and packages to the project S3 buckets
 # It will fail for user without AWS credentials
@@ -76,12 +89,12 @@ do
     COMMAND="aws s3 cp CloudFormation/deploy-battlesnake-endpoint.yaml s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-battlesnake-endpoint.yaml $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy cloudformation scripts to region "${S3_REGIONS[$ix]}
     
-    # WARNING:
-    # Every time you update the Lambda Layer the version increase by one.
-    # So you'll need to update the Cloudformation script with that new number.
-    # Decomment this line only when you want to update the layer
+   # WARNING:
+   # Every time you update the Lambda Layer the version increase by one.
+   # So you'll need to update the Cloudformation script with that new number.
+   # Decomment this line only when you want to update the layer
     #
-    # updateOrCreateLayer ${S3_REGIONS[$ix]}
+   # updateOrCreateLayer ${S3_REGIONS[$ix]}
     
     COMMAND="aws s3 cp model-lambda-package.zip s3://$S3_PREFIX${S3_REGIONS[$ix]}/lambda/model-lambda-package.zip $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy lambda model inference package to region "${S3_REGIONS[$ix]}
