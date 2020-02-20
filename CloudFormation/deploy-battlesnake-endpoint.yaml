@@ -30,7 +30,7 @@ Parameters:
   S3Key:
     Description: Key of the lambda package
     Type: String
-    default: lambda/model-lambda-package.zip
+    Default: lambda/model-lambda-package.zip
 Resources:
   PingFunction:
     Type: AWS::Serverless::Function
