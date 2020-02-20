@@ -64,19 +64,16 @@ displayEndExecCmd () {
 }
 
 updateOrCreateLayer () {
-    # PYTHON_VERSION="python2.7"
-    # LAYER_NAME="AWSLambda-Python27-MXNet"
-    PYTHON_MAJOR_VERSION="python3"
-    SUPPORTED_PYTHON_VERSION="python3.6 python3.7 python3.8"
-    LAYER_NAME="AWSLambda-Python3-MXNet-test"
+    PYTHON_VERSION="python3.7"
+    LAYER_NAME="AWSLambda-Python37-MXNet"
     LAYER_PACKAGE_SOURCE_KEY="lambda/mxnet-layer-package.zip"
     TEMP_FILE="cmddumptemp.txt"
 
     COMMAND="aws s3 cp mxnet-layer-package.zip s3://$S3_PREFIX$1/$LAYER_PACKAGE_SOURCE_KEY --region $1 $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy MXNet lambda layer package source to region "$1
 
-    LAYER_DESCRIPTION="MXnet layer for $PYTHON_MAJOR_VERSION. This layer require SciPy layer"
-    COMMAND="aws lambda publish-layer-version --layer-name $LAYER_NAME --description \"$LAYER_DESCRIPTION\" --license-info \"MIT\" --content S3Bucket=$S3_PREFIX$1,S3Key=$LAYER_PACKAGE_SOURCE_KEY --compatible-runtimes $SUPPORTED_PYTHON_VERSION --region $1 $AWS_PROFILE > $TEMP_FILE"
+    LAYER_DESCRIPTION="MXnet layer for $PYTHON_VERSION. This layer require SciPy 3.7 layer"
+    COMMAND="aws lambda publish-layer-version --layer-name $LAYER_NAME --description \"$LAYER_DESCRIPTION\" --license-info \"MIT\" --content S3Bucket=$S3_PREFIX$1,S3Key=$LAYER_PACKAGE_SOURCE_KEY --compatible-runtimes $PYTHON_VERSION --region $1 $AWS_PROFILE > $TEMP_FILE"
     displayEndExecCmd \${COMMAND} " > Create Lambda layer in region "$1
 
     LAYER_VERSION=`cat $TEMP_FILE | grep "Version\":" | sed 's/[^0-9]*//g'`
@@ -92,12 +89,12 @@ do
     COMMAND="aws s3 cp CloudFormation/deploy-battlesnake-endpoint.yaml s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-battlesnake-endpoint.yaml $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy cloudformation scripts to region "${S3_REGIONS[$ix]}
     
-   # WARNING:
-   # Every time you update the Lambda Layer the version increase by one.
-   # So you'll need to update the Cloudformation script with that new number.
-   # Decomment this line only when you want to update the layer
+    # WARNING:
+    # Every time you update the Lambda Layer the version increase by one.
+    # So you'll need to update the Cloudformation script with that new number.
+    # Decomment this line only when you want to update the layer
     #
-   # updateOrCreateLayer ${S3_REGIONS[$ix]}
+    updateOrCreateLayer ${S3_REGIONS[$ix]}
     
     COMMAND="aws s3 cp model-lambda-package.zip s3://$S3_PREFIX${S3_REGIONS[$ix]}/lambda/model-lambda-package.zip $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy lambda model inference package to region "${S3_REGIONS[$ix]}
