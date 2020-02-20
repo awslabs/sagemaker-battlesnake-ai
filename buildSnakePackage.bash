@@ -13,7 +13,7 @@
 
 # This script build the snake Lambda package
 #
-# prerequisite: python 2.7, virtualenv, pip
+# prerequisite: python 3, venv, pip
 
 echo
 echo " > Start packaging model on Lambda"
@@ -36,15 +36,15 @@ cleanup $LAYER_PACKAGE_FILE_NAME
 # Create the subfolder python
 mkdir -p packageLayerTmp/python
 
-# Create a virtualenv python 2.7
-virtualenv venv
+# Create a virtualenv python 3
+python3 -m venv venv
 source venv/bin/activate
 
 # Install mxnet package
-pip install mxnet
+python3 -m pip install mxnet
 
 # Copy model into the package directory
-cd venv/lib/python2.7/site-packages
+cd venv/lib/python3*/site-packages
 # remove unused file to remain under 250Mb (max Lambda package size)
 rm -rf *.dist-info
 rm -rf numpy pip setuptools easy_install*

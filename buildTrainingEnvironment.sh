@@ -16,7 +16,7 @@ if find $1 -mindepth 1 | read > /dev/null; then
 else
     echo "Installing the battlesnake gym"
     cd TrainingEnvironment
-    source activate mxnet_p36
+    source activate mxnet_p38
     pip install -e .
     cd ..
     
