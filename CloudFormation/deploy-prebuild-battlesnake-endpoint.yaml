@@ -5,8 +5,12 @@ Globals:
   Function:
     Runtime: python2.7
     MemorySize: 1024
-    Layers:
-      - arn:aws:lambda:${AWS::Region}:778625758767:layer:AWSLambda-Python27-SciPy1x:2
+Mappings: 
+  RegionMap: 
+    us-west-2: 
+      "SciPyLayerArn": "arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python27-SciPy1x:2"
+    ca-central-1: 
+      "SciPyLayerArn": "arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python27-SciPy1x:2"
 Resources:
   PingFunction:
     Type: AWS::Serverless::Function
@@ -20,9 +24,11 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.ping
+      Layers:
+        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
         Bucket: !Sub battlesnake-aws-${AWS::Region}
-        Key: cloudformation/model-lambda-package.zip
+        Key: lambda/model-lambda-package.zip
   EndFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -35,9 +41,11 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.end
+      Layers:
+        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
         Bucket: !Sub battlesnake-aws-${AWS::Region}
-        Key: cloudformation/model-lambda-package.zip
+        Key: lambda/model-lambda-package.zip
   MoveFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -50,9 +58,11 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.move
+      Layers:
+        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
         Bucket: !Sub battlesnake-aws-${AWS::Region}
-        Key: cloudformation/model-lambda-package.zip
+        Key: lambda/model-lambda-package.zip
   StartFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -65,9 +75,11 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.start
+      Layers:
+        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
         Bucket: !Sub battlesnake-aws-${AWS::Region}
-        Key: cloudformation/model-lambda-package.zip
+        Key: lambda/model-lambda-package.zip
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
