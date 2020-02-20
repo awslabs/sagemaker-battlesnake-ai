@@ -6,7 +6,19 @@ Globals:
     Runtime: python2.7
     MemorySize: 1024
 Mappings: 
-  RegionMap: 
+  RegionMap:
+    ap-northeast-2:
+      "SciPyLayerArn": "arn:aws:lambda:ap-northeast-2:296580773974:layer:AWSLambda-Python27-SciPy1x:2"
+    ap-southeast-2:
+      "SciPyLayerArn": "arn:aws:lambda:ap-southeast-2:817496625479:layer:AWSLambda-Python27-SciPy1x:2"
+    sa-east-1:
+      "SciPyLayerArn": "arn:aws:lambda:sa-east-1:640010853179:layer:AWSLambda-Python27-SciPy1x:2"
+    eu-west-1:
+      "SciPyLayerArn": "arn:aws:lambda:eu-west-1:399891621064:layer:AWSLambda-Python27-SciPy1x:2"
+    eu-west-3:
+      "SciPyLayerArn": "arn:aws:lambda:eu-west-3:959311844005:layer:AWSLambda-Python27-SciPy1x:2"
+    us-east-1:
+      "SciPyLayerArn": "arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python27-SciPy1x:2"
     us-west-2: 
       "SciPyLayerArn": "arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python27-SciPy1x:2"
     ca-central-1: 
@@ -18,6 +30,7 @@ Parameters:
   S3Key:
     Description: Key of the lambda package
     Type: String
+    default: lambda/model-lambda-package.zip
 Resources:
   PingFunction:
     Type: AWS::Serverless::Function
