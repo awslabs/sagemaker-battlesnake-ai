@@ -23,27 +23,27 @@ The openAI gym was designed to follow the rules as provided here: https://docs.b
 - `pip install -e .`
 
 ### Training the MXNet example on sagemaker
-- The main entry point (sagemaker endpoint) of the training the model is [`examples/train.py`](https://github.com/awslab/sagemaker-battlesnake-ai/TrainingEnvironment/examples/train.py)
+- The main entry point (sagemaker endpoint) of the training the model is [`examples/train.py`](../TrainingEnvironment/examples/train.py)
 - In a sagemaker terminal, run the script with `python examples/train.py --should_render --print_progress --number_of_snakes 4`
 - Open and run the notebook in `SagemakerModelTraining.ipynb` and the models will be automatically created.
 
 ### Reinforcement learning and gym details
 #### Observation space: 
 This gym provide several options for the options for the observation space. 
-The observation space provided by the gym is of size `N x M x C` where `N` and `M` are the width and height of the map and `C` is the number of snakes + 1 to account for the food). The food is indicated by values of `1` in `C=0`. The snakes in `C=1 to C=num_snakes+1` and represented by 2 [options](https://github.com/awslab/sagemaker-battlesnake-ai/TrainingEnvironment/battlesnake_gym/snake_gym.py) (`51s`, `num`): 
+The observation space provided by the gym is of size `N x M x C` where `N` and `M` are the width and height of the map and `C` is the number of snakes + 1 to account for the food). The food is indicated by values of `1` in `C=0`. The snakes in `C=1 to C=num_snakes+1` and represented by 2 [options](../TrainingEnvironment/battlesnake_gym/snake_gym.py) (`51s`, `num`): 
 
 *Figure 1: 51s snake representation*             |  *Figure 2: num snake representation*
 :-----------------------------------------------:|:----------------------------------------------------------------:
-![alt text](https://github.com/awslab/sagemaker-battlesnake-ai/Documentation/images/51s.png "51s snake representation") |  ![alt text](https://github.com/awslab/sagemaker-battlesnake-ai/Documentation/images/num.png "num snake representation")
+![alt text](images/51s.png "51s snake representation") |  ![alt text](images/num.png "num snake representation")
 
 The gym also provides an option to increase the map size by 2 to include -1 in the border.
 
 *Figure 3: bordered 51s snake representation*
 
-![alt text](https://github.com/awslab/sagemaker-battlesnake-ai/Documentation/images/border.png "Bordered 51s snake representation")
+![alt text](images/border.png "Bordered 51s snake representation")
 
 #### Actions:
-For each snake, the possible [actions](https://github.com/awslab/sagemaker-battlesnake-ai/TrainingEnvironment/battlesnake_gym/snake.py) are UP, DOWN, LEFT, RIGHT (0, 1, 2, 3 respectively). Please note that according to the rules of Battsnake, if your snake is facing UP and your snake performs a DOWN action, your snake will die.
+For each snake, the possible [actions](../TrainingEnvironment/battlesnake_gym/snake.py) are UP, DOWN, LEFT, RIGHT (0, 1, 2, 3 respectively). Please note that according to the rules of Battsnake, if your snake is facing UP and your snake performs a DOWN action, your snake will die.
 
 #### Food spawning:
 The food spawning were not provided in the official battlesnake rules. The gym was designed based on the code provided [here](
@@ -93,7 +93,7 @@ info provides information on the turn count and the health of each snake
 This code uses multi-agent DQN to train the bots. The `N` snakes shared the same qnetwork and the network was configured as follows:
 
 *Figure 4: The qnetwork*
-![alt text](https://github.com/awslab/sagemaker-battlesnake-ai/Documentation/images/qnetwork.png "qnetwork")
+![alt text](images/qnetwork.png "qnetwork")
 
 Given a state representation `N x M x C` to get the action of snake `i`, the network expects that `C=1` is the representation of snake `i` and `C=2 ... num_snakes+1` are the remaining snakes (note that `C=0` represents the food).
 
