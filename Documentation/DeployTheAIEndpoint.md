@@ -2,7 +2,7 @@
 
 This section will deploy a pre-trained AI on a Lambda function. An API Gateway will be created in front of it to provide a snake API entrypoint (see [BattleSnake API](https://docs.battlesnake.com/snake-api)):
 
-![Endpoint Architecture](https://github.com/awslab/sagemaker-battlesnake-ai/raw/master/Documentation/images/SimpleEndpoint.png "Endpoint Architecture")
+![Endpoint Architecture](images/SimpleEndpoint.png "Endpoint Architecture")
 
 > __Estimated cost__ : this architecture is entirely Serverless and you pay nothing to deploy it, you will be charge only when you call the Snake. For a test usage this will be probably free because of the [AWS Free tiers](https://aws.amazon.com/free/). __If you call the snake less than 500 000 times in a month that should be free.__ After the free tiers every 1M Snake API call will be charged approximately 6$ (see [Lambda pricing](https://aws.amazon.com/lambda/pricing/) and [API Gateway pricing](https://aws.amazon.com/api-gateway/pricing/))
 
