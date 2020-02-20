@@ -19,7 +19,8 @@ Mappings:
       "SciPyLayerArn": "arn:aws:lambda:eu-west-3:959311844005:layer:AWSLambda-Python27-SciPy1x:2"
     us-east-1:
       "SciPyLayerArn": "arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python27-SciPy1x:2"
-    us-west-2: 
+    us-west-2:
+      "MxnetLayerArn": "arn:aws:lambda:us-west-2:752200179490:layer:mxnet-python27:11"
       "SciPyLayerArn": "arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python27-SciPy1x:2"
     ca-central-1: 
       "SciPyLayerArn": "arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python27-SciPy1x:2"
@@ -46,6 +47,7 @@ Resources:
       Handler: lambda.ping
       Layers:
         - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
+        - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
       CodeUri:
         Bucket: !Ref S3Bucket
         Key: !Ref S3Key
@@ -63,6 +65,7 @@ Resources:
       Handler: lambda.end
       Layers:
         - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
+        - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
       CodeUri:
         Bucket: !Ref S3Bucket
         Key: !Ref S3Key
@@ -80,6 +83,7 @@ Resources:
       Handler: lambda.move
       Layers:
         - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
+        - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
       CodeUri:
         Bucket: !Ref S3Bucket
         Key: !Ref S3Key
@@ -97,6 +101,7 @@ Resources:
       Handler: lambda.start
       Layers:
         - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
+        - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
       CodeUri:
         Bucket: !Ref S3Bucket
         Key: !Ref S3Key
