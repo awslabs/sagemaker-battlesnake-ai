@@ -7,13 +7,6 @@ Globals:
     MemorySize: 1024
     Layers:
       - arn:aws:lambda:${AWS::Region}:778625758767:layer:AWSLambda-Python27-SciPy1x:2
-Parameters:
-  S3Bucket:
-    Description: The bucket where the Lamba package is
-    Type: String
-  S3Key:
-    Description: Key of the lambda package
-    Type: String
 Resources:
   PingFunction:
     Type: AWS::Serverless::Function
@@ -28,8 +21,8 @@ Resources:
           Type: Api
       Handler: lambda.ping
       CodeUri:
-        Bucket: !Ref S3Bucket
-        Key: !Ref S3Key
+        Bucket: !Sub battlesnake-aws-${AWS::Region}
+        Key: cloudformation/model-lambda-package.zip
   EndFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -43,8 +36,8 @@ Resources:
           Type: Api
       Handler: lambda.end
       CodeUri:
-        Bucket: !Ref S3Bucket
-        Key: !Ref S3Key
+        Bucket: !Sub battlesnake-aws-${AWS::Region}
+        Key: cloudformation/model-lambda-package.zip
   MoveFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -58,8 +51,8 @@ Resources:
           Type: Api
       Handler: lambda.move
       CodeUri:
-        Bucket: !Ref S3Bucket
-        Key: !Ref S3Key
+        Bucket: !Sub battlesnake-aws-${AWS::Region}
+        Key: cloudformation/model-lambda-package.zip
   StartFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -73,8 +66,8 @@ Resources:
           Type: Api
       Handler: lambda.start
       CodeUri:
-        Bucket: !Ref S3Bucket
-        Key: !Ref S3Key
+        Bucket: !Sub battlesnake-aws-${AWS::Region}
+        Key: cloudformation/model-lambda-package.zip
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
