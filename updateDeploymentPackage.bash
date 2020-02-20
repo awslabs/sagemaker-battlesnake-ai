@@ -55,6 +55,9 @@ updateOrCreateLayer () {
     COMMAND="aws s3 cp mxnet-layer-package.zip s3://$S3_PREFIX$1/lambda/mxnet-layer-package.zip $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy MXNet lambda layer package source to region "$1
 
+    COMMAND="aws lambda delete-layer-version --layer-name $LAYER_NAME --version-number 1 $AWS_PROFILE"
+    displayEndExecCmd \${COMMAND} " > Delete Layer $LAYER_NAME in region "$1
+
     COMMAND="aws lambda publish-layer-version --layer-name $LAYER_NAME --description \"MXnet layer for $PYTHON_VERSION require SciPy layer\" --license-info \"MIT\" --content S3Bucket=battlesnake-aws-us-west-2,S3Key=lambda/layer-mxnet-package.zip --compatible-runtimes $PYTHON_VERSION $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Create Lambda layer in region "$1
 
