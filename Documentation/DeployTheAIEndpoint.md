@@ -25,28 +25,28 @@ _** the official BattleSnake platform run in us-west-2, selecting this one will 
 
 Check all permissions:
 
-![Accept Permissions](https://github.com/awslab/sagemaker-battlesnake-ai/raw/master/Documentation/images/create-stack.png "Permission checkboxes")
+![Accept Permissions](images/create-stack.png "Permission checkboxes")
 
 Click "Create Stack"
 
 After about a minute, the stack status should be CREATE_COMPLETE:
 
-![Creation complete](https://github.com/awslab/sagemaker-battlesnake-ai/raw/master/Documentation/images/create-complete.png "Creation complete")
+![Creation complete](images/create-complete.png "Creation complete")
 
 Open the outputs tab and click on "Start Method" link to test that the deployment work:
 
-![Output tab](https://github.com/awslab/sagemaker-battlesnake-ai/raw/master/Documentation/images/outputs.png "Output tab")
+![Output tab](images/outputs.png "Output tab")
 
 You should see:
 
-![Successfull result](https://github.com/awslab/sagemaker-battlesnake-ai/raw/master/Documentation/images/working.png "Result")
+![Successfull result](images/working.png "Result")
 
 Again on output tab, the value "Snake URL" is your Snake URL, you can use it on [BattleSnake](https://play.battlesnake.com/) !
 
 Add your snake:
 
-![Add snake](https://github.com/awslab/sagemaker-battlesnake-ai/raw/master/Documentation/images/addsnake.png "Add snake")
+![Add snake](images/addsnake.png "Add snake")
 
 Play:
 
-![Battlesnake Board](https://github.com/awslab/sagemaker-battlesnake-ai/raw/master/Documentation/images/game.png "Battlesnake Board")
+![Battlesnake Board](images/game.png "Battlesnake Board")
