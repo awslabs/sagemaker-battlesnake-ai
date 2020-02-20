@@ -74,7 +74,7 @@ do
     COMMAND="aws s3 cp CloudFormation/deploy-battlesnake-endpoint.yaml s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-battlesnake-endpoint.yaml $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy cloudformation scripts to region "${S3_REGIONS[$ix]}
     
-    updateOrCreateLayer ${S3_REGIONS[$ix]}
+    #updateOrCreateLayer ${S3_REGIONS[$ix]}
     
     COMMAND="aws s3 cp model-lambda-package.zip s3://$S3_PREFIX${S3_REGIONS[$ix]}/lambda/model-lambda-package.zip $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy lambda model inference package to region "${S3_REGIONS[$ix]}
