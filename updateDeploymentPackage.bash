@@ -43,9 +43,13 @@ echo
 
 for ix in ${!S3_REGIONS[*]}
 do
-    echo " > Copy cloudformation to region "${S3_REGIONS[$ix]}
+    echo " > Copy cloudformation scripts to region "${S3_REGIONS[$ix]}
     echo 
     COMMAND="aws s3 cp CloudFormation/deploy-battlesnake-endpoint.yaml s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-battlesnake-endpoint.yaml $AWS_PROFILE"
+    echo $COMMAND
+    eval $COMMAND
+    echo
+    COMMAND="aws s3 cp CloudFormation/deploy-prebuild-battlesnake-endpoint.yaml s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-prebuild-battlesnake-endpoint.yaml $AWS_PROFILE"
     echo $COMMAND
     eval $COMMAND
     echo
