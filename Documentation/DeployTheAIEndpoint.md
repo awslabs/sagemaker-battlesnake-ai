@@ -23,7 +23,7 @@ _* You need to be logged into the AWS account where you want to deploy the stack
 
 _** the official BattleSnake platform run in us-west-2, selecting this one will provide you the lowest latency_
 
-Check all permissions:
+Leave all default value and scroll down at the end of the page. Then check all permissions:
 
 ![Accept Permissions](images/create-stack.png "Permission checkboxes")
 
@@ -37,16 +37,16 @@ Open the outputs tab and click on "Start Method" link to test that the deploymen
 
 ![Output tab](images/outputs.png "Output tab")
 
-You should see:
+You should see somthing like this:
 
 ![Successfull result](images/working.png "Result")
 
 Again on output tab, the value "Snake URL" is your Snake URL, you can use it on [BattleSnake](https://play.battlesnake.com/) !
 
-Add your snake:
+Add your snake on the [Battlesnake platform](https://play.battlesnake.com/) and copy your URL:
 
 ![Add snake](images/addsnake.png "Add snake")
 
-Play:
+Create a game, select your snake by his name, add opponents and start the game:
 
 ![Battlesnake Board](images/game.png "Battlesnake Board")
