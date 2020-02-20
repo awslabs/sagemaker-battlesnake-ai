@@ -41,23 +41,35 @@ fi
 
 echo
 
+displayEndExecCmd () {
+  echo "$2"
+  echo
+  eval "$1"
+  echo
+}
+
+updateOrCreateLayer () {
+    PYTHON_VERSION="python2.7"
+    LAYER_NAME="mxnet-"$PYTHON_VERSION
+
+    COMMAND="aws s3 cp mxnet-layer-package.zip s3://$S3_PREFIX$1/lambda/mxnet-layer-package.zip $AWS_PROFILE"
+    displayEndExecCmd \${COMMAND} " > Copy MXNet lambda layer package source to region "$1
+
+    COMMAND="aws lambda publish-layer-version --layer-name $LAYER_NAME --description \"MXnet layer for $PYTHON_VERSION require SciPy layer\" --license-info \"MIT\" --content S3Bucket=battlesnake-aws-us-west-2,S3Key=lambda/layer-mxnet-package.zip --compatible-runtimes $PYTHON_VERSION $AWS_PROFILE"
+    displayEndExecCmd \${COMMAND} " > Create Lambda layer in region "$1
+
+    COMMAND="aws lambda add-layer-version-permission --layer-name $LAYER_NAME --statement-id public --action lambda:GetLayerVersion  --principal \* --version-number 1 --output text $AWS_PROFILE"
+    displayEndExecCmd \${COMMAND} " > Making Layer Version public in region "$1
+}
+
 for ix in ${!S3_REGIONS[*]}
 do
-    echo " > Copy cloudformation scripts to region "${S3_REGIONS[$ix]}
-    echo 
     COMMAND="aws s3 cp CloudFormation/deploy-battlesnake-endpoint.yaml s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-battlesnake-endpoint.yaml $AWS_PROFILE"
-    echo $COMMAND
-    eval $COMMAND
-    echo
-    COMMAND="aws s3 cp CloudFormation/deploy-prebuild-battlesnake-endpoint.yaml s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-prebuild-battlesnake-endpoint.yaml $AWS_PROFILE"
-    echo $COMMAND
-    eval $COMMAND
-    echo
-    echo " > Copy lambda model inference package to region "${S3_REGIONS[$ix]}
-    echo
+    displayEndExecCmd \${COMMAND} " > Copy cloudformation scripts to region "${S3_REGIONS[$ix]}
+    
+    updateOrCreateLayer ${S3_REGIONS[$ix]}
+    
     COMMAND="aws s3 cp model-lambda-package.zip s3://$S3_PREFIX${S3_REGIONS[$ix]}/lambda/model-lambda-package.zip $AWS_PROFILE"
-    echo $COMMAND
-    eval $COMMAND
-    echo
+    displayEndExecCmd \${COMMAND} " > Copy lambda model inference package to region "${S3_REGIONS[$ix]}
 done
 
