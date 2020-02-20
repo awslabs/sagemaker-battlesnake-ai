@@ -94,7 +94,7 @@ do
     # So you'll need to update the Cloudformation script with that new number.
     # Decomment this line only when you want to update the layer
     #
-    updateOrCreateLayer ${S3_REGIONS[$ix]}
+    # updateOrCreateLayer ${S3_REGIONS[$ix]}
     
     COMMAND="aws s3 cp model-lambda-package.zip s3://$S3_PREFIX${S3_REGIONS[$ix]}/lambda/model-lambda-package.zip $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy lambda model inference package to region "${S3_REGIONS[$ix]}
