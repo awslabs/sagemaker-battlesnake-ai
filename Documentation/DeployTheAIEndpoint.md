@@ -49,4 +49,4 @@ Add your snake:
 
 Play:
 
-![Battlesnake Board](images/game.png =250x)
+![Battlesnake Board](images/game.png "Battlesnake Board")
