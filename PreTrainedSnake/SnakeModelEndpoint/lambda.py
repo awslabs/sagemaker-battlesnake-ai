@@ -12,7 +12,9 @@ from convert_utils import ObservationToStateConverter
 #################################
 
 converter = ObservationToStateConverter(style='one_versus_all', use_border=True)
-net = mx.gluon.SymbolBlock.imports('model-symbol.json', 'data', 'model-0000.params')
+ctx = mx.gpu() if mx.context.num_gpus() > 0 else mx.cpu()
+nets = {str(k):mx.gluon.SymbolBlock.imports('local-run-{}x{}-symbol.json'.format(k,k), ['data0', 'data1', 'data2', 'data3'], 'local-run-{}x{}-0000.params'.format(k,k), ctx=ctx) for k in [7,11,15,19]}
+[net.hybridize(static_alloc=True, static_shape=True) for net in nets.values()]
 
 def ping(event, context):
     return {
@@ -51,11 +53,18 @@ def move(event, context):
         possible.append('left')
 
     # Sending the states for inference
-    state_nd = mx.nd.array(state)
-    state_nd = state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2))
+    state_nd = mx.nd.array(state, ctx=ctx)
+    previous_state_nd = mx.nd.array(previous_state, ctx=ctx)
+    state_nd = state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
+    previous_state_nd = previous_state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
     
+    state_nd = mx.nd.concatenate([previous_state_nd, state_nd], axis=1)
+    turn_sequence = mx.nd.array([data['turn']]*2, ctx=ctx).reshape((1,-1))
+    health_sequence = mx.nd.array([data['you']['health']]*2, ctx=ctx).reshape((1,-1))
+
+    net = nets[str(data['board']['width'])]
     # Getting the result from the model
-    output = net(state_nd)
+    output = sum([net(state_nd, mx.nd.array([i]*2, ctx=ctx).reshape((1,-1)), turn_sequence, health_sequence).softmax() for i in range(4)])
     
     # Getting the highest predicted index
     direction_index = output.argmax(axis=1)[0].asscalar()
@@ -63,10 +72,21 @@ def move(event, context):
     directions = ['up', 'down', 'left', 'right']
     direction = directions[int(direction_index)]
     choice = direction
-    if direction not in possible:
-      print("Move "+direction+" is not possible")
-      if len(possible) > 0:
-        choice = random.choice(possible)
+
+    if direction in possible:
+        # Don't starve if possible
+        if data['you']['health'] < 30 and len(food_locations) > 0 and direction not in food_locations:
+            print("eating food instead of move")
+            choice = random.choice(food_locations)
+    elif len(possible) > 0:
+        # Don't starve if possible        
+        if data['you']['health'] < 30 and len(food_locations) > 0 and direction not in food_locations:
+            print("eating food instead of dying")
+            choice = random.choice(food_locations)
+        # Don't kill yourself
+        else:
+            print("Move "+direction+" is not possible")
+            choice = random.choice(possible)
 
     print("Move " + choice)
 
