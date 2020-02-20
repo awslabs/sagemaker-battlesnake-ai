@@ -62,7 +62,8 @@ updateOrCreateLayer () {
     COMMAND="aws lambda publish-layer-version --layer-name $LAYER_NAME --description \"$LAYER_DESCRIPTION\" --license-info \"MIT\" --content S3Bucket=$S3_PREFIX$1,S3Key=$LAYER_PACKAGE_SOURCE_KEY --compatible-runtimes $PYTHON_VERSION --region $1 $AWS_PROFILE > cmddump.txt"
     displayEndExecCmd \${COMMAND} " > Create Lambda layer in region "$1
 
-    LAYER_VERSION=`cat cmddump.txt | grep "Version\":" | sed 's/[^0-9]*//g'`
+    LAYER_VERSION=`cat cmddumptemp.txt | grep "Version\":" | sed 's/[^0-9]*//g'`
+    rm -f cmddumptemp.txt
     echo "Layer Version is $LAYER_VERSION"
 
     COMMAND="aws lambda add-layer-version-permission --layer-name $LAYER_NAME --statement-id public --action lambda:GetLayerVersion  --principal \"*\" --version-number $LAYER_VERSION --output text --region $1 $AWS_PROFILE"

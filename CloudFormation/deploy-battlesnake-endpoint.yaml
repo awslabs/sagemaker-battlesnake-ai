@@ -46,8 +46,8 @@ Resources:
           Type: Api
       Handler: lambda.ping
       Layers:
-        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
         - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
+        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
         Bucket: !Ref S3Bucket
         Key: !Ref S3Key
@@ -64,8 +64,8 @@ Resources:
           Type: Api
       Handler: lambda.end
       Layers:
-        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
         - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
+        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
         Bucket: !Ref S3Bucket
         Key: !Ref S3Key
@@ -82,8 +82,8 @@ Resources:
           Type: Api
       Handler: lambda.move
       Layers:
-        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
         - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
+        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
         Bucket: !Ref S3Bucket
         Key: !Ref S3Key
@@ -100,8 +100,8 @@ Resources:
           Type: Api
       Handler: lambda.start
       Layers:
-        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
         - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
+        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
         Bucket: !Ref S3Bucket
         Key: !Ref S3Key

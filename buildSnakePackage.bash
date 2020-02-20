@@ -20,6 +20,9 @@ cleanup () {
 cleanup $PACKAGE_FILE_NAME
 cleanup $LAYER_PACKAGE_FILE_NAME
 
+# Create the subfolder python
+mkdir -p packageLayerTmp/python
+
 # Create a virtualenv python 2.7
 virtualenv venv
 source venv/bin/activate
@@ -33,25 +36,29 @@ cd venv/lib/python2.7/site-packages
 rm -rf *.dist-info
 rm -rf numpy pip setuptools easy_install*
 
+mv * ../../../../packageLayerTmp/python
+cd ../../../../packageLayerTmp
+
 # display package content for debug
 echo
 echo " > The lambda layer package will contain:"
 echo
 
-ls
+ls python
 
 echo
 
 # zip it into a lambda package
-zip -q9r ../../../../$LAYER_PACKAGE_FILE_NAME .
+zip -rq ../$LAYER_PACKAGE_FILE_NAME .
 
-cd -
+cd ..
 
 # Deactivate virtualenv
 deactivate
 
 # Cleanup
 rm -rf venv
+rm -rf packageLayerTmp
 
 echo
 echo " > Your Lambda Layer package $LAYER_PACKAGE_FILE_NAME is ready"
