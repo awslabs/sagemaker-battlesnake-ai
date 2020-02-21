@@ -48,6 +48,27 @@ Parameters:
     Default: lambda/model-lambda-package.zip
     Type: String
 Resources:
+  NotebookInstanceExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+              - sagemaker.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+  NotebookInstance:
+    Type: AWS::SageMaker::NotebookInstance
+    Properties: 
+      # DefaultCodeRepository: String
+      DirectInternetAccess: Enabled
+      InstanceType: ml.t3.medium
+      NotebookInstanceName: BattleSnakeNotebook
+      RoleArn: !GetAtt NotebookInstanceExecutionRole.Arn
+      VolumeSizeInGB: 25
   BattleSnakeAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
