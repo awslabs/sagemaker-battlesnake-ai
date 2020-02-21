@@ -56,14 +56,17 @@ def ping():
     }
 
 def start():
-    color = "#00FF00"
     time.sleep(0.1)
     return {
         "statusCode": 200,
         "headers": {
             "Content-Type": "application/json"
         },
-        "body": json.dumps({ "color": color })
+        "body": json.dumps({
+            "color": os.environ['SNAKE_COLOR'],
+            "headType": os.environ['SNAKE_HEAD'],
+	        "tailType": os.environ['SNAKE_TAIL']
+        })
     }
 
 def move(body):

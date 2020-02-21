@@ -1,10 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: Deploy an BattleSnake endpoint running a ready to use AI model
-Globals:
-  Function:
-    Runtime: python3.7
-    MemorySize: 1024
 Mappings: 
   RegionMap:
     ap-northeast-2:
@@ -32,13 +28,25 @@ Mappings:
       "MxnetLayerArn": "arn:aws:lambda:ca-central-1:752200179490:layer:AWSLambda-Python37-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python37-SciPy1x:2"
 Parameters:
+  SnakeColor:
+    Description: "Hexa RVB color of the snake"
+    Default: "#128a7a"
+    Type: String
+  SnakeHead:
+    Description: "Snake head : evil, fang, pixel, safe, ... (see: https://docs.battlesnake.com/snake-customization)"
+    Default: bendr
+    Type: String
+  SnakeTail:
+    Description: "Snake tail : sharp, pixel, bolt, curled, ... (see: https://docs.battlesnake.com/snake-customization)"
+    Default: freckled
+    Type: String
   S3Bucket:
     Description: The bucket where the Lamba package is
     Type: String
   S3Key:
     Description: Key of the lambda package
-    Type: String
     Default: lambda/model-lambda-package.zip
+    Type: String
 Resources:
   BattleSnakeAPIFunction:
     Type: AWS::Serverless::Function
@@ -52,6 +60,13 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.proxyHandler
+      Environment:
+        Variables:
+          SNAKE_COLOR: !Ref SnakeColor
+          SNAKE_HEAD: !Ref SnakeHead
+          SNAKE_TAIL: !Ref SnakeTail
+      Runtime: python3.7
+      MemorySize: 1024
       Layers:
         - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
         - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
