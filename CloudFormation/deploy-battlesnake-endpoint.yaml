@@ -99,6 +99,9 @@ Resources:
     Properties:
       StageName: demo
 Outputs:
+  NotebookInstance:
+    Description: "Notebook Instance"
+    Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/BattleSnakeNotebook"
   SnakeUrl:
     Description: "Snake URL"
     Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/demo/"
