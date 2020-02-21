@@ -1,3 +1,16 @@
+ # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ # 
+ # Licensed under the Apache License, Version 2.0 (the "License").
+ # You may not use this file except in compliance with the License.
+ # A copy of the License is located at
+ # 
+ #     http://www.apache.org/licenses/LICENSE-2.0
+ # 
+ # or in the "license" file accompanying this file. This file is distributed 
+ # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ # express or implied. See the License for the specific language governing 
+ # permissions and limitations under the License.
+
 import json
 import os
 import random
@@ -16,13 +29,33 @@ ctx = mx.gpu() if mx.context.num_gpus() > 0 else mx.cpu()
 nets = {str(k):mx.gluon.SymbolBlock.imports('local-run-{}x{}-symbol.json'.format(k,k), ['data0', 'data1', 'data2', 'data3'], 'local-run-{}x{}-0000.params'.format(k,k), ctx=ctx) for k in [7,11,15,19]}
 [net.hybridize(static_alloc=True, static_shape=True) for net in nets.values()]
 
-def ping(event, context):
+def proxyHandler(event, context):
+    print("Request received")
+    print(event)
+    if (event["path"] == "/move"):
+        if (event["httpMethod"] == "POST"):
+            return move(event["body"])
+        else:
+            return {
+                "statusCode": 403
+            }
+    elif (event["path"] == "/start"):
+        return start()
+    elif (event["path"] == "/ping"):
+        return ping()
+    elif (event["path"] == "/end"):
+        return end()
+    else:
+        return {
+            "statusCode": 404
+        }
+
+def ping():
     return {
         "statusCode": 200
     }
 
-def start(event, context):
-    print("Start")
+def start():
     color = "#00FF00"
     time.sleep(0.1)
     return {
@@ -33,10 +66,8 @@ def start(event, context):
         "body": json.dumps({ "color": color })
     }
 
-def move(event, context):
-    print("Move")
-    print(event)
-    data = json.loads(event['body'])
+def move(body):
+    data = json.loads(body)
 
     current_state, previous_state = converter.get_game_state(data)
     
@@ -100,7 +131,7 @@ def move(event, context):
     }
 
 
-def end(event, context):
+def end():
     return {
         "statusCode": 200
     }

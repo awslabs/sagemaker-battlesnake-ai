@@ -40,72 +40,18 @@ Parameters:
     Type: String
     Default: lambda/model-lambda-package.zip
 Resources:
-  PingFunction:
+  BattleSnakeAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
       Events:
         ApiEvent:
           Properties:
-            Method: post
-            Path: /ping
+            Method: ANY
+            Path: "/{proxy+}"
             RestApiId:
               Ref: ApiGatewayApi
           Type: Api
-      Handler: lambda.ping
-      Layers:
-        - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
-        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
-      CodeUri:
-        Bucket: !Ref S3Bucket
-        Key: !Ref S3Key
-  EndFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Events:
-        ApiEvent:
-          Properties:
-            Method: post
-            Path: /end
-            RestApiId:
-              Ref: ApiGatewayApi
-          Type: Api
-      Handler: lambda.end
-      Layers:
-        - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
-        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
-      CodeUri:
-        Bucket: !Ref S3Bucket
-        Key: !Ref S3Key
-  MoveFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Events:
-        ApiEvent:
-          Properties:
-            Method: post
-            Path: /move
-            RestApiId:
-              Ref: ApiGatewayApi
-          Type: Api
-      Handler: lambda.move
-      Layers:
-        - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
-        - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
-      CodeUri:
-        Bucket: !Ref S3Bucket
-        Key: !Ref S3Key
-  StartFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Events:
-        ApiEvent:
-          Properties:
-            Method: any
-            Path: /start
-            RestApiId:
-              Ref: ApiGatewayApi
-          Type: Api
-      Handler: lambda.start
+      Handler: lambda.proxyHandler
       Layers:
         - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
         - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
