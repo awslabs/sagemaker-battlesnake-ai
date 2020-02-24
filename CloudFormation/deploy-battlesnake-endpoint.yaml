@@ -86,7 +86,6 @@ Resources:
     Properties: 
       NotebookInstanceLifecycleConfigName: BattleSnakeConfig
       OnStart:
-        OnStart:
         - Content:
             Fn::Base64:
               Fn::Join:
