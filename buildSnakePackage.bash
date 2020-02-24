@@ -96,7 +96,7 @@ echo
 echo " > The lambda package will contain:"
 echo
 
-ls
+find .
 
 # zip it into a lambda package
 zip -q9r ../$PACKAGE_FILE_NAME .
