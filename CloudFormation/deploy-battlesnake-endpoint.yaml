@@ -66,9 +66,23 @@ Resources:
       # DefaultCodeRepository: String
       DirectInternetAccess: Enabled
       InstanceType: ml.t3.medium
+      LifecycleConfigName: !GetAtt LifeCycleConfig.NotebookInstanceLifecycleConfigName
       NotebookInstanceName: BattleSnakeNotebook
       RoleArn: !GetAtt NotebookInstanceExecutionRole.Arn
       VolumeSizeInGB: 25
+  LifeCycleConfig:
+    Type: AWS::SageMaker::NotebookInstanceLifecycleConfig
+    Properties: 
+      NotebookInstanceLifecycleConfigName: BattleSnakeConfig
+      OnStart:
+        OnStart:
+        - Content:
+            Fn::Base64:
+              Fn::Join:
+              - ";"
+              - - cd /home/ec2-user/SageMaker
+                - aws s3 sync s3://battlesnake-aws-us-west-2.s3.us-west-2.amazonaws.com/deployEndpoint.ipynb
+                - jupyter nbconvert --to notebook --execute deployEndpoint.ipynb
   BattleSnakeAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -99,6 +113,9 @@ Resources:
     Properties:
       StageName: demo
 Outputs:
+  TrainingEnvironement:
+    Description:
+    Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/BattleSnakeNotebook?view=lab"
   NotebookInstance:
     Description: "Notebook Instance"
     Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/BattleSnakeNotebook"
