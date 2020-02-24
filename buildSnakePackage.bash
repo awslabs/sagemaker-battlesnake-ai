@@ -77,9 +77,25 @@ echo
 echo " > Your Lambda Layer package $LAYER_PACKAGE_FILE_NAME is ready"
 echo
 
-cd PreTrainedSnake/SnakeModelEndpoint
+TMP_BUILD_FOLDER=buildLambaTmpFolder
+
+mkdir $TMP_BUILD_FOLDER
+cd $TMP_BUILD_FOLDER
+cp -r InferenceEndpoint/SnakeAPIEndpoint/* .
+tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
+mv Model Model-11x11
+tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
+mv Model Model-19x19
+tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
+mv Model Model-15x15
+tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
+mv Model Model-7x7
 # zip it into a lambda package
-zip -q9r ../../$PACKAGE_FILE_NAME .
+zip -q9r ../$PACKAGE_FILE_NAME .
+
+# cleanup temp file
+cd -
+rm -rf $TMP_BUILD_FOLDER
 
 # display package content for debug
 echo
