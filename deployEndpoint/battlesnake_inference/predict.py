@@ -18,26 +18,42 @@ import mxnet as mx
 from mxnet import gluon 
 import glob
 
+from battlesnake_heuristics import MyBattlesnakeHeuristics
+
+heuristics = MyBattlesnakeHeuristics()
+
 def model_fn(model_dir):
     #load pretrained model
-    print(glob.glob("{}/*".format(model_dir)))
-    print("dir {}".format(model_dir))
+    print("model_fn model_dir={} glob={}".format(model_dir, glob.glob("{}/Model/*".format(model_dir))))
+    symbol = None
+    params = None
+    for filename in glob.glob("{}/Model/*".format(model_dir)):
+        if "local-symbol.json" in filename:
+            symbol = filename
+        if "local-0000.params" in filename:
+            params = filename
+            
+    for filename in glob.glob("{}/*".format(model_dir)):
+        if "local-symbol.json" in filename:
+            symbol = filename
+        if "local-0000.params" in filename:
+            params = filename
+
     model = gluon.SymbolBlock.imports(
-        '{}/local-symbol.json'.format(model_dir),
-        ['data0', 'data1', 'data2', 'data3'],
-        '{}/local-0000.params'.format(model_dir),
-    ) 
+        symbol, ['data0', 'data1', 'data2', 'data3'],
+        params) 
+    print("model_fn symbol {} params {}".format(symbol, params))
     return model
     
 def transform_fn(model, data, content_type, output_content_type):
     """
     Transform incoming requests.
     """
-    
     #check if GPUs area available
     ctx = mx.gpu() if mx.context.num_gpus() > 0 else mx.cpu()
     
     data = json.loads(data)
+    
     #convert input data into MXNet NDArray
     state = mx.nd.array(data["state"], ctx=ctx)
     snake_id = mx.nd.array(data["snake_id"], ctx=ctx)
@@ -46,11 +62,21 @@ def transform_fn(model, data, content_type, output_content_type):
     
     #inference
     action = model(state, snake_id, turn_count, snake_health)
+    action = action.asnumpy()[0]
     
-    #convert results to a list
-    result = [action.asnumpy()[0].tolist()]
+    heuristics_state = np.array(data["state"])
+    heuristics_id = np.array(data["snake_id"])
+    heuristics_turn = np.array(data["turn_count"])
+    heuristics_health = np.array(data["health"])
+      
+    converted_action = heuristics.run(heuristics_state, 
+                                      heuristics_id,
+                                      heuristics_turn+1,
+                                      heuristics_health, 
+                                      action=action)
+    output = converted_action.tolist()
     
     #decode result as json string
-    response_body = json.dumps(result)
+    response_body = json.dumps(output)
     
     return response_body, output_content_type
