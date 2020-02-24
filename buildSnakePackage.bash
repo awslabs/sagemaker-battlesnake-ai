@@ -81,7 +81,7 @@ TMP_BUILD_FOLDER=buildLambaTmpFolder
 
 mkdir $TMP_BUILD_FOLDER
 cd $TMP_BUILD_FOLDER
-cp -r InferenceEndpoint/SnakeAPIEndpoint/* .
+cp -r ../InferenceEndpoint/SnakeInference/* .
 tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
 mv Model Model-11x11
 tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
@@ -90,12 +90,6 @@ tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
 mv Model Model-15x15
 tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
 mv Model Model-7x7
-# zip it into a lambda package
-zip -q9r ../$PACKAGE_FILE_NAME .
-
-# cleanup temp file
-cd -
-rm -rf $TMP_BUILD_FOLDER
 
 # display package content for debug
 echo
@@ -104,9 +98,14 @@ echo
 
 ls
 
+# zip it into a lambda package
+zip -q9r ../$PACKAGE_FILE_NAME .
+
 echo
 
-cd -
+# Cleanup temp file
+cd ..
+rm -rf $TMP_BUILD_FOLDER
 
 echo
 echo " > Your Lambda package $PACKAGE_FILE_NAME is ready"

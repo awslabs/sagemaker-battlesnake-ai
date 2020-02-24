@@ -111,7 +111,7 @@ Resources:
           SNAKE_COLOR: !Ref SnakeColor
           SNAKE_HEAD: !Ref SnakeHead
           SNAKE_TAIL: !Ref SnakeTail
-          USE_SAGEMAKER_ENDPOINT: !Ref CreateTrainingEnv
+          USE_SAGEMAKER_ENDPOINT: !Ref CreateTrainingEnvironment
       Runtime: python3.7
       MemorySize: 1024
       Layers:
