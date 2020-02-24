@@ -25,6 +25,7 @@ else
     cd $1
     mkdir battlesnake_gym/
     mkdir battlesnake_src
+    mkdir battlesnake_inference
     cd ..
     cp -a TrainingEnvironment/battlesnake_gym $1/battlesnake_gym/battlesnake_gym
     cp -a TrainingEnvironment/setup.py $1/battlesnake_gym/
@@ -35,5 +36,14 @@ else
 
     echo "Create the notebooks"
     cp TrainingEnvironment/notebooks/* $1
+    cp TrainingEnvironment/notebooks/battlesnake_inference/* $1/battlesnake_inference/
+    
+    echo "Copy the pretrained models"
+    cd $1
+    mkdir pretrained_models
+    cd pretrained_models
+    wget "https://battlesnake-aws-us-east-2.s3-us-east-2.amazonaws.com/pretrainedmodels/Model-15x15/Model.tar.gz"
+    tar -xf Model.tar.gz
+    cd ..
 fi
 
