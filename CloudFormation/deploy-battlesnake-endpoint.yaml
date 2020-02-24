@@ -40,7 +40,7 @@ Parameters:
     Description: "Snake tail : sharp, pixel, bolt, curled, ... (see: https://docs.battlesnake.com/snake-customization)"
     Default: freckled
     Type: String
-  CreateTrainingEnv:
+  CreateTrainingEnvironment:
     Description: "Create training environement"
     Default: true
     Type: String
@@ -54,7 +54,7 @@ Parameters:
     Type: String
 Conditions:
   ShouldCreateTrainingEnv:
-    !Equals [true, !Ref CreateTrainingEnv]
+    !Equals [true, !Ref CreateTrainingEnvironment]
 Resources:
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
@@ -127,7 +127,7 @@ Resources:
 Outputs:
   TrainingEnvironement:
     Condition: ShouldCreateTrainingEnv
-    Description:
+    Description: "Training Notebook"
     Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/BattleSnakeNotebook?view=lab"
   NotebookInstance:
     Condition: ShouldCreateTrainingEnv
