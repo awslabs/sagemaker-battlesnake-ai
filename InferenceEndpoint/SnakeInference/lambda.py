@@ -35,7 +35,7 @@ if (useSageMakerEndpoint == "true"):
     runtime = boto3.client('runtime.sagemaker', config=config)
 else:
     ctx = mx.gpu() if mx.context.num_gpus() > 0 else mx.cpu()
-    nets = {str(k):mx.gluon.SymbolBlock.imports('local-run-{}x{}-symbol.json'.format(k,k), ['data0', 'data1', 'data2', 'data3'], 'local-run-{}x{}-0000.params'.format(k,k), ctx=ctx) for k in [7,11,15,19]}
+    nets = {str(k):mx.gluon.SymbolBlock.imports('Model-{}x{}/local-symbol.json'.format(k,k), ['data0', 'data1', 'data2', 'data3'], 'Model-{}x{}/local-0000.params'.format(k,k), ctx=ctx) for k in [7,11,15,19]}
     [net.hybridize(static_alloc=True, static_shape=True) for net in nets.values()]
 
 
