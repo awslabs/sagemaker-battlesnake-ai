@@ -108,14 +108,14 @@ Resources:
             Action:
               - 'sts:AssumeRole'
       Policies:
-        PolicyName: InvokeSagemakerEndpoint
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-          - Effect: Allow
-            Action:
-              - sagemaker:InvokeEndpoint
-            Resource: "*"
+        - PolicyName: InvokeSagemakerEndpoint
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+                - sagemaker:InvokeEndpoint
+              Resource: "*"
   BattleSnakeAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
