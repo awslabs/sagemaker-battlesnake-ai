@@ -40,6 +40,11 @@ Parameters:
     Description: "Snake tail : sharp, pixel, bolt, curled, ... (see: https://docs.battlesnake.com/snake-customization)"
     Default: freckled
     Type: String
+  CreateTrainingEnv:
+    Description: "Create training environement"
+    Default: true
+    Type: String
+    AllowedValues: [true, false]
   S3Bucket:
     Description: The bucket where the Lamba package is
     Type: String
@@ -47,9 +52,13 @@ Parameters:
     Description: Key of the lambda package
     Default: lambda/model-lambda-package.zip
     Type: String
+Conditions:
+  ShouldCreateTrainingEnv:
+    !Equals [true, !Ref CreateTrainingEnv]
 Resources:
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
+    Condition: ShouldCreateTrainingEnv
     Properties:
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -62,6 +71,7 @@ Resources:
               - 'sts:AssumeRole'
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
+    Condition: ShouldCreateTrainingEnv
     Properties: 
       # DefaultCodeRepository: String
       DirectInternetAccess: Enabled
@@ -72,6 +82,7 @@ Resources:
       VolumeSizeInGB: 25
   LifeCycleConfig:
     Type: AWS::SageMaker::NotebookInstanceLifecycleConfig
+    Condition: ShouldCreateTrainingEnv
     Properties: 
       NotebookInstanceLifecycleConfigName: BattleSnakeConfig
       OnStart:
@@ -100,6 +111,7 @@ Resources:
           SNAKE_COLOR: !Ref SnakeColor
           SNAKE_HEAD: !Ref SnakeHead
           SNAKE_TAIL: !Ref SnakeTail
+          USE_SAGEMAKER_ENDPOINT: !Ref CreateTrainingEnv
       Runtime: python3.7
       MemorySize: 1024
       Layers:
@@ -114,9 +126,11 @@ Resources:
       StageName: demo
 Outputs:
   TrainingEnvironement:
+    Condition: ShouldCreateTrainingEnv
     Description:
     Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/BattleSnakeNotebook?view=lab"
   NotebookInstance:
+    Condition: ShouldCreateTrainingEnv
     Description: "Notebook Instance"
     Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/BattleSnakeNotebook"
   SnakeUrl:
