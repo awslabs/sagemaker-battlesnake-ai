@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Description: Deploy an BattleSnake endpoint running a ready to use AI model
+Description: "(SA0001) - sagemaker-battlesnake-ai: Solution for training and deploying a Battlesnake AI using Amazon SageMaker. Version 1",
 Mappings: 
   RegionMap:
     ap-northeast-2:

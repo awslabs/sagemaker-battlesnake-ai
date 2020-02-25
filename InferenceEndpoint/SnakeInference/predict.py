@@ -22,30 +22,27 @@ from battlesnake_heuristics import MyBattlesnakeHeuristics
 
 heuristics = MyBattlesnakeHeuristics()
 
-def model_fn(model_dir):
-    #load pretrained model
-    print("model_fn model_dir={} glob={}".format(model_dir, glob.glob("{}/Model/*".format(model_dir))))
-    symbol = None
-    params = None
-    for filename in glob.glob("{}/Model/*".format(model_dir)):
-        if "local-symbol.json" in filename:
-            symbol = filename
-        if "local-0000.params" in filename:
-            params = filename
-            
-    for filename in glob.glob("{}/*".format(model_dir)):
-        if "local-symbol.json" in filename:
-            symbol = filename
-        if "local-0000.params" in filename:
-            params = filename
+model_names = ["Model-11x11", 
+               "Model-15x15",
+               "Model-19x19", 
+               "Model-7x7"]
 
-    model = gluon.SymbolBlock.imports(
-        symbol, ['data0', 'data1', 'data2', 'data3'],
-        params) 
-    print("model_fn symbol {} params {}".format(symbol, params))
-    return model
+def model_fn(model_dir):
+    print("123 model_fn model_dir={} glob={}".format(model_dir, glob.glob("{}/*".format(model_dir))))
     
-def transform_fn(model, data, content_type, output_content_type):
+    models = {}
+    for model_name in model_names:
+        symbol_name = "{}/Models/{}/local-symbol.json".format(model_dir, model_name)
+        params_name = "{}/Models/{}/local-0000.params".format(model_dir, model_name)
+    
+        model = gluon.SymbolBlock.imports(
+            symbol_name, ['data0', 'data1', 'data2', 'data3'],
+            params_name) 
+        print("model_fn {} symbol={} params={}".format(model_name, symbol_name, params_name))
+        models[model_name] = model
+    return models
+    
+def transform_fn(models, data, content_type, output_content_type):
     """
     Transform incoming requests.
     """
@@ -54,6 +51,8 @@ def transform_fn(model, data, content_type, output_content_type):
     
     data = json.loads(data)
     
+    model_name = "Model-{}x{}".format(data["map_width"], data["map_width"])
+    
     #convert input data into MXNet NDArray
     state = mx.nd.array(data["state"], ctx=ctx)
     snake_id = mx.nd.array(data["snake_id"], ctx=ctx)
@@ -61,20 +60,23 @@ def transform_fn(model, data, content_type, output_content_type):
     snake_health = mx.nd.array(data["health"], ctx=ctx)
     
     #inference
+    model = models[model_name]
     action = model(state, snake_id, turn_count, snake_health)
     action = action.asnumpy()[0]
     
-    heuristics_state = np.array(data["state"])
-    heuristics_id = np.array(data["snake_id"])
-    heuristics_turn = np.array(data["turn_count"])
-    heuristics_health = np.array(data["health"])
+    heuristics_state = np.array(data["state"])[0, 1, :].transpose(2, 0, 1)
+    heuristics_id = np.array(data["snake_id"])[0, 1]
+    heuristics_turn = np.array(data["turn_count"])[0, 1]
+    heuristics_health = np.array(data["health"])[0, 1]
       
+    print("got heuristics")
     converted_action = heuristics.run(heuristics_state, 
                                       heuristics_id,
                                       heuristics_turn+1,
                                       heuristics_health, 
                                       action=action)
-    output = converted_action.tolist()
+    print("converted_action {}".format(converted_action))
+    output = converted_action
     
     #decode result as json string
     response_body = json.dumps(output)

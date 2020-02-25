@@ -1,0 +1,783 @@
+{
+  "nodes": [
+    {
+      "op": "null", 
+      "name": "data0", 
+      "inputs": []
+    }, 
+    {
+      "op": "repeat", 
+      "name": "qnetworkattention0_repeat0", 
+      "attrs": {
+        "axis": "3", 
+        "repeats": "3"
+      }, 
+      "inputs": [[0, 0, 0]]
+    }, 
+    {
+      "op": "repeat", 
+      "name": "qnetworkattention0_repeat1", 
+      "attrs": {
+        "axis": "4", 
+        "repeats": "3"
+      }, 
+      "inputs": [[1, 0, 0]]
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "qnetworkattention0_reshape0", 
+      "attrs": {"shape": "(-3, -2)"}, 
+      "inputs": [[2, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "conv0_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6, 3, 3, 3)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "conv0_bias", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__init__": "zeros", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6,)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "conv0_fwd", 
+      "attrs": {
+        "dilate": "(1, 1)", 
+        "kernel": "(3, 3)", 
+        "layout": "NCHW", 
+        "no_bias": "False", 
+        "num_filter": "6", 
+        "num_group": "1", 
+        "pad": "(0, 0)", 
+        "stride": "(2, 2)"
+      }, 
+      "inputs": [[3, 0, 0], [4, 0, 0], [5, 0, 0]]
+    }, 
+    {
+      "op": "Activation", 
+      "name": "conv0_softrelu_fwd", 
+      "attrs": {"act_type": "softrelu"}, 
+      "inputs": [[6, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "conv1_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6, 6, 3, 3)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "conv1_bias", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__init__": "zeros", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6,)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "conv1_fwd", 
+      "attrs": {
+        "dilate": "(1, 1)", 
+        "kernel": "(3, 3)", 
+        "layout": "NCHW", 
+        "no_bias": "False", 
+        "num_filter": "6", 
+        "num_group": "1", 
+        "pad": "(0, 0)", 
+        "stride": "(2, 2)"
+      }, 
+      "inputs": [[7, 0, 0], [8, 0, 0], [9, 0, 0]]
+    }, 
+    {
+      "op": "Activation", 
+      "name": "conv1_softrelu_fwd", 
+      "attrs": {"act_type": "softrelu"}, 
+      "inputs": [[10, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "conv2_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6, 6, 3, 3)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "conv2_bias", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__init__": "zeros", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6,)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "conv2_fwd", 
+      "attrs": {
+        "dilate": "(1, 1)", 
+        "kernel": "(3, 3)", 
+        "layout": "NCHW", 
+        "no_bias": "False", 
+        "num_filter": "6", 
+        "num_group": "1", 
+        "pad": "(0, 0)", 
+        "stride": "(2, 2)"
+      }, 
+      "inputs": [[7, 0, 0], [12, 0, 0], [13, 0, 0]]
+    }, 
+    {
+      "op": "transpose", 
+      "name": "qnetworkattention0_transpose0", 
+      "attrs": {"axes": "(0, 2, 3, 1)"}, 
+      "inputs": [[14, 0, 0]]
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "qnetworkattention0_reshape1", 
+      "attrs": {"shape": "(0, -3, -1)"}, 
+      "inputs": [[15, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "data1", 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "embedding0_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(5, 42)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Embedding", 
+      "name": "embedding0_fwd", 
+      "attrs": {
+        "dtype": "float32", 
+        "input_dim": "5", 
+        "output_dim": "42", 
+        "sparse_grad": "False"
+      }, 
+      "inputs": [[17, 0, 0], [18, 0, 0]]
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "qnetworkattention0_reshape2", 
+      "attrs": {"shape": "(-3, 7, -1)"}, 
+      "inputs": [[19, 0, 0]]
+    }, 
+    {
+      "op": "_linalg_gemm2", 
+      "name": "qnetworkattention0_linalg_gemm20", 
+      "attrs": {
+        "alpha": "0.3779644730092272", 
+        "transpose_b": "True"
+      }, 
+      "inputs": [[16, 0, 0], [20, 0, 0]]
+    }, 
+    {
+      "op": "softmax", 
+      "name": "qnetworkattention0_softmax0", 
+      "inputs": [[21, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "conv4_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6, 6, 3, 3)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "conv4_bias", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__init__": "zeros", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6,)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "conv4_fwd", 
+      "attrs": {
+        "dilate": "(1, 1)", 
+        "kernel": "(3, 3)", 
+        "layout": "NCHW", 
+        "no_bias": "False", 
+        "num_filter": "6", 
+        "num_group": "1", 
+        "pad": "(0, 0)", 
+        "stride": "(2, 2)"
+      }, 
+      "inputs": [[7, 0, 0], [23, 0, 0], [24, 0, 0]]
+    }, 
+    {
+      "op": "transpose", 
+      "name": "qnetworkattention0_transpose1", 
+      "attrs": {"axes": "(0, 2, 3, 1)"}, 
+      "inputs": [[25, 0, 0]]
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "qnetworkattention0_reshape3", 
+      "attrs": {"shape": "(0, -3, -1)"}, 
+      "inputs": [[26, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "data2", 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "embedding2_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(10, 114)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Embedding", 
+      "name": "embedding2_fwd", 
+      "attrs": {
+        "dtype": "float32", 
+        "input_dim": "10", 
+        "output_dim": "114", 
+        "sparse_grad": "False"
+      }, 
+      "inputs": [[28, 0, 0], [29, 0, 0]]
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "qnetworkattention0_reshape4", 
+      "attrs": {"shape": "(-3, 19, -1)"}, 
+      "inputs": [[30, 0, 0]]
+    }, 
+    {
+      "op": "_linalg_gemm2", 
+      "name": "qnetworkattention0_linalg_gemm21", 
+      "attrs": {
+        "alpha": "0.22941573387056174", 
+        "transpose_b": "True"
+      }, 
+      "inputs": [[27, 0, 0], [31, 0, 0]]
+    }, 
+    {
+      "op": "softmax", 
+      "name": "qnetworkattention0_softmax1", 
+      "inputs": [[32, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "conv3_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6, 6, 3, 3)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "conv3_bias", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__init__": "zeros", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6,)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "conv3_fwd", 
+      "attrs": {
+        "dilate": "(1, 1)", 
+        "kernel": "(3, 3)", 
+        "layout": "NCHW", 
+        "no_bias": "False", 
+        "num_filter": "6", 
+        "num_group": "1", 
+        "pad": "(0, 0)", 
+        "stride": "(2, 2)"
+      }, 
+      "inputs": [[7, 0, 0], [34, 0, 0], [35, 0, 0]]
+    }, 
+    {
+      "op": "transpose", 
+      "name": "qnetworkattention0_transpose2", 
+      "attrs": {"axes": "(0, 2, 3, 1)"}, 
+      "inputs": [[36, 0, 0]]
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "qnetworkattention0_reshape5", 
+      "attrs": {"shape": "(0, -3, -1)"}, 
+      "inputs": [[37, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "data3", 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "embedding1_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(100, 114)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Embedding", 
+      "name": "embedding1_fwd", 
+      "attrs": {
+        "dtype": "float32", 
+        "input_dim": "100", 
+        "output_dim": "114", 
+        "sparse_grad": "False"
+      }, 
+      "inputs": [[39, 0, 0], [40, 0, 0]]
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "qnetworkattention0_reshape6", 
+      "attrs": {"shape": "(-3, 19, -1)"}, 
+      "inputs": [[41, 0, 0]]
+    }, 
+    {
+      "op": "_linalg_gemm2", 
+      "name": "qnetworkattention0_linalg_gemm22", 
+      "attrs": {
+        "alpha": "0.22941573387056174", 
+        "transpose_b": "True"
+      }, 
+      "inputs": [[38, 0, 0], [42, 0, 0]]
+    }, 
+    {
+      "op": "softmax", 
+      "name": "qnetworkattention0_softmax2", 
+      "inputs": [[43, 0, 0]]
+    }, 
+    {
+      "op": "Concat", 
+      "name": "qnetworkattention0_concat0", 
+      "attrs": {
+        "dim": "2", 
+        "num_args": "3"
+      }, 
+      "inputs": [[22, 0, 0], [33, 0, 0], [44, 0, 0]]
+    }, 
+    {
+      "op": "reshape_like", 
+      "name": "qnetworkattention0_reshape_like0", 
+      "attrs": {
+        "lhs_begin": "1", 
+        "lhs_end": "2", 
+        "rhs_begin": "1", 
+        "rhs_end": "3"
+      }, 
+      "inputs": [[45, 0, 0], [37, 0, 0]]
+    }, 
+    {
+      "op": "transpose", 
+      "name": "qnetworkattention0_transpose3", 
+      "attrs": {"axes": "(0, 3, 1, 2)"}, 
+      "inputs": [[46, 0, 0]]
+    }, 
+    {
+      "op": "Concat", 
+      "name": "qnetworkattention0_concat1", 
+      "attrs": {
+        "dim": "1", 
+        "num_args": "2"
+      }, 
+      "inputs": [[11, 0, 0], [47, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "conv5_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6, 51, 3, 3)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "conv5_bias", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__init__": "zeros", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(6,)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "conv5_fwd", 
+      "attrs": {
+        "dilate": "(1, 1)", 
+        "kernel": "(3, 3)", 
+        "layout": "NCHW", 
+        "no_bias": "False", 
+        "num_filter": "6", 
+        "num_group": "1", 
+        "pad": "(0, 0)", 
+        "stride": "(2, 2)"
+      }, 
+      "inputs": [[48, 0, 0], [49, 0, 0], [50, 0, 0]]
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "qnetworkattention0_reshape7", 
+      "attrs": {"shape": "(0, -1)"}, 
+      "inputs": [[51, 0, 0]]
+    }, 
+    {
+      "op": "reshape_like", 
+      "name": "qnetworkattention0_reshape_like1", 
+      "attrs": {
+        "lhs_begin": "0", 
+        "lhs_end": "1", 
+        "rhs_begin": "0", 
+        "rhs_end": "2"
+      }, 
+      "inputs": [[52, 0, 0], [0, 0, 0]]
+    }, 
+    {
+      "op": "SwapAxis", 
+      "name": "gru0_swapaxes0", 
+      "attrs": {
+        "dim1": "0", 
+        "dim2": "1"
+      }, 
+      "inputs": [[53, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "gru0_l0_i2h_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(489, 0)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "gru0_reshape0", 
+      "attrs": {"shape": "-1"}, 
+      "inputs": [[55, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "gru0_l0_h2h_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(489, 163)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "gru0_reshape1", 
+      "attrs": {"shape": "-1"}, 
+      "inputs": [[57, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "gru0_l0_i2h_bias", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__init__": "zeros", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(489,)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "gru0_reshape2", 
+      "attrs": {"shape": "-1"}, 
+      "inputs": [[59, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "gru0_l0_h2h_bias", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__init__": "zeros", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(489,)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Reshape", 
+      "name": "gru0_reshape3", 
+      "attrs": {"shape": "-1"}, 
+      "inputs": [[61, 0, 0]]
+    }, 
+    {
+      "op": "_rnn_param_concat", 
+      "name": "gru0__rnn_param_concat0", 
+      "attrs": {
+        "dim": "0", 
+        "num_args": "4"
+      }, 
+      "inputs": [[56, 0, 0], [58, 0, 0], [60, 0, 0], [62, 0, 0]]
+    }, 
+    {
+      "op": "_zeros", 
+      "name": "qnetworkattention0_gru0_h0_0", 
+      "attrs": {
+        "__layout__": "LNC", 
+        "dtype": "float32", 
+        "shape": "(1, 0, 163)"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "RNN", 
+      "name": "gru0_rnn0", 
+      "attrs": {
+        "bidirectional": "False", 
+        "lstm_state_clip_max": "None", 
+        "lstm_state_clip_min": "None", 
+        "lstm_state_clip_nan": "False", 
+        "mode": "gru", 
+        "num_layers": "1", 
+        "p": "0", 
+        "projection_size": "None", 
+        "state_outputs": "True", 
+        "state_size": "163", 
+        "use_sequence_length": "False"
+      }, 
+      "inputs": [[54, 0, 0], [63, 0, 0], [64, 0, 0]]
+    }, 
+    {
+      "op": "SwapAxis", 
+      "name": "gru0_swapaxes1", 
+      "attrs": {
+        "dim1": "0", 
+        "dim2": "1"
+      }, 
+      "inputs": [[65, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "dense0_weight", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(4, 0)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "dense0_bias", 
+      "attrs": {
+        "__dtype__": "0", 
+        "__init__": "zeros", 
+        "__lr_mult__": "1.0", 
+        "__shape__": "(4,)", 
+        "__storage_type__": "0", 
+        "__wd_mult__": "1.0"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "FullyConnected", 
+      "name": "dense0_fwd", 
+      "attrs": {
+        "flatten": "True", 
+        "no_bias": "False", 
+        "num_hidden": "4"
+      }, 
+      "inputs": [[66, 0, 0], [67, 0, 0], [68, 0, 0]]
+    }
+  ], 
+  "arg_nodes": [
+    0, 
+    4, 
+    5, 
+    8, 
+    9, 
+    12, 
+    13, 
+    17, 
+    18, 
+    23, 
+    24, 
+    28, 
+    29, 
+    34, 
+    35, 
+    39, 
+    40, 
+    49, 
+    50, 
+    55, 
+    57, 
+    59, 
+    61, 
+    67, 
+    68
+  ], 
+  "node_row_ptr": [
+    0, 
+    1, 
+    2, 
+    3, 
+    4, 
+    5, 
+    6, 
+    7, 
+    8, 
+    9, 
+    10, 
+    11, 
+    12, 
+    13, 
+    14, 
+    15, 
+    16, 
+    17, 
+    18, 
+    19, 
+    20, 
+    21, 
+    22, 
+    23, 
+    24, 
+    25, 
+    26, 
+    27, 
+    28, 
+    29, 
+    30, 
+    31, 
+    32, 
+    33, 
+    34, 
+    35, 
+    36, 
+    37, 
+    38, 
+    39, 
+    40, 
+    41, 
+    42, 
+    43, 
+    44, 
+    45, 
+    46, 
+    47, 
+    48, 
+    49, 
+    50, 
+    51, 
+    52, 
+    53, 
+    54, 
+    55, 
+    56, 
+    57, 
+    58, 
+    59, 
+    60, 
+    61, 
+    62, 
+    63, 
+    64, 
+    65, 
+    67, 
+    68, 
+    69, 
+    70, 
+    71
+  ], 
+  "heads": [[69, 0, 0]], 
+  "attrs": {"mxnet_version": ["int", 10500]}
+}

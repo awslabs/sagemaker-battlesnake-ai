@@ -11,6 +11,11 @@
 # express or implied. See the License for the specific language governing 
 # permissions and limitations under the License.
 
+if [ -z "$1" ]; then
+    echo "Please enter a directory name as an argument"
+    exit 1
+fi
+
 if find $1 -mindepth 1 | read > /dev/null; then
    echo "$1 not empty. Please enter an empty directory"
 else
@@ -36,14 +41,15 @@ else
 
     echo "Create the notebooks"
     cp TrainingEnvironment/notebooks/* $1
-    cp TrainingEnvironment/notebooks/battlesnake_inference/* $1/battlesnake_inference/
+    
+    echo "Create the heuristics code"
+    cp InferenceEndpoint/SnakeInference/predict.py $1/battlesnake_inference/
+    cp InferenceEndpoint/SnakeInference/battlesnake_heuristics.py $1/battlesnake_inference/
     
     echo "Copy the pretrained models"
     cd $1
     mkdir pretrained_models
-    cd pretrained_models
-    wget "https://battlesnake-aws-us-east-2.s3-us-east-2.amazonaws.com/pretrainedmodels/Model-15x15/Model.tar.gz"
-    tar -xf Model.tar.gz
     cd ..
+    cp -r InferenceEndpoint/PretrainedModels/* $1/pretrained_models/
 fi
 
