@@ -36,7 +36,11 @@ if (useSageMakerEndpoint == "true"):
     runtime = boto3.client('runtime.sagemaker', config=config)
 else:
     ctx = mx.gpu() if mx.context.num_gpus() > 0 else mx.cpu()
-    nets = {str(k):mx.gluon.SymbolBlock.imports('Model-{}x{}/local-symbol.json'.format(k,k), ['data0', 'data1', 'data2', 'data3'], 'Model-{}x{}/local-0000.params'.format(k,k), ctx=ctx) for k in [7,11,15,19]}
+    nets = {}
+    for k in [7, 11, 15, 19]:
+        symbol = 'Model-{}x{}/local-symbol.json'.format(k,k)
+        params = 'Model-{}x{}/local-0000.params'.format(k, k)
+        nets[str(k)] = mx.gluon.SymbolBlock.imports(symbol, ['data0', 'data1', 'data2', 'data3'], params)
     [net.hybridize(static_alloc=True, static_shape=True) for net in nets.values()]
     heuristics = MyBattlesnakeHeuristics()
 
@@ -84,7 +88,6 @@ def start():
 
 def move(body):
     data = json.loads(body)
-
     current_state, previous_state = converter.get_game_state(data)
 
     if (useSageMakerEndpoint == "true"):
@@ -104,6 +107,12 @@ def move(body):
         },
         "body": json.dumps({ "move": choice })
     }
+    
+def make_health_dict(data):
+    health_dict = {0: data['you']['health']}
+    for i, snake in enumerate(data["board"]["snakes"]):
+        health_dict[i+1] = snake["health"]
+    return health_dict
 
 def localInference(previous_state, current_state, data):
 
@@ -114,16 +123,18 @@ def localInference(previous_state, current_state, data):
     previous_state_nd = previous_state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
     
     state_nd = mx.nd.concatenate([previous_state_nd, current_state_nd], axis=1)
-    turn_sequence = mx.nd.array([data['turn']]*2, ctx=ctx).reshape((1,-1))
-    health_sequence = mx.nd.array([data['you']['health']]*2, ctx=ctx).reshape((1,-1))
+    turn_sequence = mx.nd.array([data['turn']-1, data['turn']], ctx=ctx).reshape((1,-1))
+    health_sequence = mx.nd.array([data['you']['health']-1, data['you']['health']], ctx=ctx).reshape((1,-1))
+    id_sequence = mx.nd.array([1]*2, ctx=ctx).reshape((1,-1))
 
     net = nets[str(data['board']['width'])]
 
     # Getting estimation of all direction from the model
-    output = sum([net(state_nd, mx.nd.array([i]*2, ctx=ctx).reshape((1,-1)), turn_sequence, health_sequence).softmax() for i in range(4)])
+    action = net(state_nd, id_sequence, turn_sequence, health_sequence)
     
+    health_dict = make_health_dict(data)
     # Invoke heuristics to take final decision
-    direction_index = heuristics.run(current_state, 1, data['turn'], data['you']['health'], output)
+    direction_index = heuristics.run(current_state, 1, data['turn'], health_dict, output)
 
     return direction_index
  
@@ -133,8 +144,15 @@ def remoteInference(previous_state, current_state, data):
     state = np.expand_dims(np.stack([previous_state, current_state]), 0).transpose(0, 1, 4, 2, 3)
     snake_id = np.array([[1]]*2).transpose(1, 0)
     turn = np.array([[data['turn']-1], [data['turn']]]).transpose(1, 0)
-    health = np.array([[data['you']['health']-1], [data['you']['health']]]).transpose(1, 0)
-    data = {"state": state, "snake_id": snake_id, "turn_count": turn, "health": health}
+    health = np.array([[data['you']['health']+1], [data['you']['health']]]).transpose(1, 0)
+    map_width = data['board']['width']
+
+    health_dict = make_health_dict(data)
+    print("health dict {}".format(health_dict))
+
+    data = {"state": state.tolist(), "snake_id": snake_id.tolist(), 
+        "turn_count": turn.tolist(), "health": health.tolist(),
+        "all_health": health_dict, "map_width": map_width}
     payload = json.dumps(data)
     response = runtime.invoke_endpoint(EndpointName="battlesnake-endpoint",
                                        ContentType='application/json',

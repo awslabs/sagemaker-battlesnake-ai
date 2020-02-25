@@ -28,7 +28,7 @@ model_names = ["Model-11x11",
                "Model-7x7"]
 
 def model_fn(model_dir):
-    print("123 model_fn model_dir={} glob={}".format(model_dir, glob.glob("{}/*".format(model_dir))))
+    print("model_fn model_dir={} glob={}".format(model_dir, glob.glob("{}/*".format(model_dir))))
     
     models = {}
     for model_name in model_names:
@@ -67,7 +67,9 @@ def transform_fn(models, data, content_type, output_content_type):
     heuristics_state = np.array(data["state"])[0, 1, :].transpose(2, 0, 1)
     heuristics_id = np.array(data["snake_id"])[0, 1]
     heuristics_turn = np.array(data["turn_count"])[0, 1]
-    heuristics_health = np.array(data["health"])[0, 1]
+    heuristics_health = data["all_health"]
+    
+    print("Heuristisc health {}".format(heuristics_health))
       
     print("got heuristics")
     converted_action = heuristics.run(heuristics_state, 
