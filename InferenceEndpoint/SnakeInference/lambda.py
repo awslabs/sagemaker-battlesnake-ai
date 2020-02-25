@@ -91,7 +91,9 @@ def moveLocal(body):
     # Get the list of possible directions
     i,j = np.unravel_index(np.argmax(current_state[:,:,1], axis=None), current_state[:,:,1].shape)
     snakes = current_state[:,:,1:].sum(axis=2)
+    food = current_state[:,:,0]
     possible = []
+    food_locations = []
     if snakes[i+1,j] == 0:
         possible.append('down')
     if snakes[i-1,j] == 0:
@@ -101,19 +103,29 @@ def moveLocal(body):
     if snakes[i,j-1] == 0:
         possible.append('left')
 
-    # Sending the current_states for inference
+    # Food locations
+    if food[i+1, j] == 1:
+        food_locations.append('down')
+    if food[i-1,j] == 1:
+        food_locations.append('up')
+    if food[i,j+1] == 1:
+        food_locations.append('right')
+    if food[i,j-1] == 1:
+        food_locations.append('left')
+
+    # Sending the states for inference
     current_state_nd = mx.nd.array(current_state, ctx=ctx)
     previous_state_nd = mx.nd.array(previous_state, ctx=ctx)
     current_state_nd = current_state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
     previous_state_nd = previous_state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
     
-    current_state_nd = mx.nd.concatenate([previous_state_nd, current_state_nd], axis=1)
+    state_nd = mx.nd.concatenate([previous_state_nd, current_state_nd], axis=1)
     turn_sequence = mx.nd.array([data['turn']]*2, ctx=ctx).reshape((1,-1))
     health_sequence = mx.nd.array([data['you']['health']]*2, ctx=ctx).reshape((1,-1))
 
     net = nets[str(data['board']['width'])]
     # Getting the result from the model
-    output = sum([net(current_state_nd, mx.nd.array([i]*2, ctx=ctx).reshape((1,-1)), turn_sequence, health_sequence).softmax() for i in range(4)])
+    output = sum([net(state_nd, mx.nd.array([i]*2, ctx=ctx).reshape((1,-1)), turn_sequence, health_sequence).softmax() for i in range(4)])
     
     # Getting the highest predicted index
     direction_index = output.argmax(axis=1)[0].asscalar()
