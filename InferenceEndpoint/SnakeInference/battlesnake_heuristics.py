@@ -12,6 +12,7 @@
 # permissions and limitations under the License.
 
 import numpy as np
+import random
 
 class MyBattlesnakeHeuristics:
     '''
@@ -37,6 +38,7 @@ class MyBattlesnakeHeuristics:
     
         `health`: dict
         Indicates the health of all snakes in the form of {snake_id: health}
+        TODO: This is not implemented like that for now !!!
 
         `action`: np.array of size 4
         The qvalues of the actions calculated. The 4 values correspond to [up, down, left, right]
@@ -46,6 +48,46 @@ class MyBattlesnakeHeuristics:
         best_action = np.argmax(action)
 
         # TO DO, add your own heuristics
-        
-        assert best_action in [0, 1, 2, 3], "{} is not a valid action.".format(best_action)
-        return best_action
+        i,j = np.unravel_index(np.argmax(state[:,:,1], axis=None), state[:,:,1].shape)
+        snakes = state[:,:,1:].sum(axis=2)
+        food = state[:,:,0]
+        possible = []
+        food_locations = []
+        if snakes[i-1,j] == 0:
+            possible.append(0) # up
+        if snakes[i+1,j] == 0:
+            possible.append(1) # down
+        if snakes[i,j-1] == 0:
+            possible.append(2) # left
+        if snakes[i,j+1] == 0:
+            possible.append(3) # right
+
+        # Food locations
+        if food[i-1,j] == 1:
+            food_locations.append(0) # up
+        if food[i+1, j] == 1:
+            food_locations.append(1) # down
+        if food[i,j-1] == 1:
+            food_locations.append(2) # left
+        if food[i,j+1] == 1:
+            food_locations.append(3) # right
+
+        choice = best_action
+
+        if best_action in possible:
+            # Don't starve if possible
+            if health < 30 and len(food_locations) > 0 and best_action not in food_locations:
+                print("eating food instead of move")
+                choice = random.choice(food_locations)
+        elif len(possible) > 0:
+            # Don't starve if possible        
+            if health < 30 and len(food_locations) > 0 and best_action not in food_locations:
+                print("eating food instead of dying")
+                choice = random.choice(food_locations)
+            # Don't kill yourself
+            else:
+                print("Move "+best_action+" is not possible")
+                choice = random.choice(possible)
+
+        assert choice in [0, 1, 2, 3], "{} is not a valid action.".format(choice)
+        return choice

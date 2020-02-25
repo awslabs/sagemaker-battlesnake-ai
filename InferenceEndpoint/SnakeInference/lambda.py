@@ -20,6 +20,7 @@ import numpy as np
 import boto3
 import botocore
 
+from battlesnake_heuristics import MyBattlesnakeHeuristics
 from convert_utils import ObservationToStateConverter
 
 #################################
@@ -37,6 +38,7 @@ else:
     ctx = mx.gpu() if mx.context.num_gpus() > 0 else mx.cpu()
     nets = {str(k):mx.gluon.SymbolBlock.imports('Model-{}x{}/local-symbol.json'.format(k,k), ['data0', 'data1', 'data2', 'data3'], 'Model-{}x{}/local-0000.params'.format(k,k), ctx=ctx) for k in [7,11,15,19]}
     [net.hybridize(static_alloc=True, static_shape=True) for net in nets.values()]
+    heuristics = MyBattlesnakeHeuristics()
 
 
 def proxyHandler(event, context):
@@ -44,10 +46,7 @@ def proxyHandler(event, context):
     print(event)
     if (event["path"] == "/move"):
         if (event["httpMethod"] == "POST"):
-            if (useSageMakerEndpoint == "true"):
-                return move(event["body"])
-            else:
-                return moveLocal(event["body"])
+            return move(event["body"])
         else:
             return {
                 "statusCode": 403
@@ -83,35 +82,30 @@ def start():
     }
 
 
-def moveLocal(body):
+def move(body):
     data = json.loads(body)
 
     current_state, previous_state = converter.get_game_state(data)
-    
-    # Get the list of possible directions
-    i,j = np.unravel_index(np.argmax(current_state[:,:,1], axis=None), current_state[:,:,1].shape)
-    snakes = current_state[:,:,1:].sum(axis=2)
-    food = current_state[:,:,0]
-    possible = []
-    food_locations = []
-    if snakes[i+1,j] == 0:
-        possible.append('down')
-    if snakes[i-1,j] == 0:
-        possible.append('up')
-    if snakes[i,j+1] == 0:
-        possible.append('right')
-    if snakes[i,j-1] == 0:
-        possible.append('left')
 
-    # Food locations
-    if food[i+1, j] == 1:
-        food_locations.append('down')
-    if food[i-1,j] == 1:
-        food_locations.append('up')
-    if food[i,j+1] == 1:
-        food_locations.append('right')
-    if food[i,j-1] == 1:
-        food_locations.append('left')
+    if (useSageMakerEndpoint == "true"):
+        direction_index = remoteInference(previous_state, current_state, data)
+    else:
+        direction_index = localInference(previous_state, current_state, data)
+
+    directions = ['up', 'down', 'left', 'right']
+    choice = directions[int(direction_index)]
+
+    print("Move " + choice)
+
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": json.dumps({ "move": choice })
+    }
+
+def localInference(previous_state, current_state, data):
 
     # Sending the states for inference
     current_state_nd = mx.nd.array(current_state, ctx=ctx)
@@ -124,45 +118,17 @@ def moveLocal(body):
     health_sequence = mx.nd.array([data['you']['health']]*2, ctx=ctx).reshape((1,-1))
 
     net = nets[str(data['board']['width'])]
-    # Getting the result from the model
+
+    # Getting estimation of all direction from the model
     output = sum([net(state_nd, mx.nd.array([i]*2, ctx=ctx).reshape((1,-1)), turn_sequence, health_sequence).softmax() for i in range(4)])
     
-    # Getting the highest predicted index
-    direction_index = output.argmax(axis=1)[0].asscalar()
-    
-    directions = ['up', 'down', 'left', 'right']
-    direction = directions[int(direction_index)]
-    choice = direction
+    # Invoke heuristics to take final decision
+    direction_index = heuristics.run(current_state, 1, data['turn'], data['you']['health'], output)
 
-    if direction in possible:
-        # Don't starve if possible
-        if data['you']['health'] < 30 and len(food_locations) > 0 and direction not in food_locations:
-            print("eating food instead of move")
-            choice = random.choice(food_locations)
-    elif len(possible) > 0:
-        # Don't starve if possible        
-        if data['you']['health'] < 30 and len(food_locations) > 0 and direction not in food_locations:
-            print("eating food instead of dying")
-            choice = random.choice(food_locations)
-        # Don't kill yourself
-        else:
-            print("Move "+direction+" is not possible")
-            choice = random.choice(possible)
+    return direction_index
+ 
 
-    print("Move " + choice)
-
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "body": json.dumps({ "move": choice })
-    }
-
-def move(body):
-    data = json.loads(body)
-
-    current_state, previous_state = converter.get_game_state(data)
+def remoteInference(previous_state, current_state, data):
     
     state = np.expand_dims(np.stack([previous_state, current_state]), 0).transpose(0, 1, 4, 2, 3)
     snake_id = np.array([[1]]*2).transpose(1, 0)
@@ -175,17 +141,7 @@ def move(body):
                                        Body=payload)
     direction_index = json.loads(response['Body'].read().decode())
 
-    directions = ['up', 'down', 'left', 'right']
-    direction = directions[int(direction_index)]
-    choice = direction
-
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "body": json.dumps({ "move": choice })
-    }
+    return direction_index
 
 
 def end():
