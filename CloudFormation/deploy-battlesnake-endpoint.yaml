@@ -91,8 +91,9 @@ Resources:
               Fn::Join:
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - aws s3 sync s3://battlesnake-aws-us-west-2.s3.us-west-2.amazonaws.com/deployEndpoint.ipynb
-                - jupyter nbconvert --to notebook --execute deployEndpoint.ipynb
+                - ls
+                # - aws s3 sync s3://battlesnake-aws-us-west-2.s3.us-west-2.amazonaws.com/deployEndpoint.ipynb
+                # - jupyter nbconvert --to notebook --execute deployEndpoint.ipynb
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
