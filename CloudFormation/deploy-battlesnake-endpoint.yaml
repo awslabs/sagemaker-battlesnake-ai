@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Description: "(SA0001) - sagemaker-battlesnake-ai: Solution for training and deploying a Battlesnake AI using Amazon SageMaker. Version 1",
+Description: "(SA0001) - sagemaker-battlesnake-ai: Solution for training and deploying a Battlesnake AI using Amazon SageMaker. Version 1"
 Mappings: 
   RegionMap:
     ap-northeast-2:
@@ -43,16 +43,12 @@ Parameters:
   S3Bucket:
     Description: The bucket where the Lamba package is
     Type: String
-  S3Key:
-    Description: Key of the lambda package
-    Default: lambda/model-lambda-package.zip
-    Type: String
 Resources:
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: 2012-10-17
+        Version: '2012-10-17'
         Statement:
           - Effect: Allow
             Principal:
@@ -60,6 +56,23 @@ Resources:
               - sagemaker.amazonaws.com
             Action:
               - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: AccessS3BucketSagemakerSession
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - s3:ListBucket
+              Effect: Allow
+              Resource:
+              - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}"
+            - Action:
+              - s3:GetObject
+              - s3:PutObject
+              - s3:DeleteObject
+              Effect: Allow
+              Resource:
+              - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
     Properties: 
@@ -73,7 +86,6 @@ Resources:
   LifeCycleConfig:
     Type: AWS::SageMaker::NotebookInstanceLifecycleConfig
     Properties: 
-      NotebookInstanceLifecycleConfigName: BattleSnakeConfig
       OnStart:
         - Content:
             Fn::Base64:
@@ -81,21 +93,22 @@ Resources:
               - ";"
               - - cd /home/ec2-user/SageMaker
                 - ls
-                # - aws s3 sync s3://battlesnake-aws-us-west-2.s3.us-west-2.amazonaws.com/deployEndpoint.ipynb
-                # - jupyter nbconvert --to notebook --execute deployEndpoint.ipynb
+                #- curl https://battlesnake-aws-us-west-2.s3-us-west-2.amazonaws.com/deployEndpoint/deployEndpoint.ipynb > deployEndpoint.ipynb
+                #- jupyter nbconvert --to notebook --execute deployEndpoint.ipynb
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
-          -
-            Effect: Allow
+          - Effect: Allow
             Principal:
               Service:
-                - 'lambda.amazonaws.com'
+                - lambda.amazonaws.com
             Action:
-              - 'sts:AssumeRole'
+              - sts:AssumeRole
       Policies:
         - PolicyName: InvokeSagemakerEndpoint
           PolicyDocument:
@@ -130,7 +143,7 @@ Resources:
         - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
         Bucket: !Ref S3Bucket
-        Key: !Ref S3Key
+        Key: lambda/model-lambda-package.zip
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
