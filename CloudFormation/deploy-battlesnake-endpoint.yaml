@@ -40,6 +40,17 @@ Parameters:
     Description: "Snake tail : sharp, pixel, bolt, curled, ... (see: https://docs.battlesnake.com/snake-customization)"
     Default: freckled
     Type: String
+  InferenceEndpointInstanceType:
+    Description: "Instance type used for the inference endpoint. t2 is default because it works on all accounts, you can choose m5 or m4 which are in the AWS free tier if your account support it"
+    Default: ml.t2.medium
+    Type: String
+    AllowedValues:
+      - ml.t2.medium
+      - ml.m5.xlarge
+      - ml.m4.xlarge
+Conditions:
+  ShouldUpdateInstanceType:
+    !Equals [ml.t2.medium, !Ref InferenceEndpointInstanceType]
 Resources:
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
@@ -159,6 +170,10 @@ Resources:
               - - cd /home/ec2-user/SageMaker
                 - wget https://battlesnake-aws-us-west-2.s3-us-west-2.amazonaws.com/deployEndpoint.zip
                 - unzip deployEndpoint.zip
+                - Fn::If:
+                  - ShouldUpdateInstanceType
+                  - !Sub "sed -i 's/ml.t2.medium/${InferenceEndpointInstanceType}/g' deployEndpoint.ipynb"
+                  - "ls"
                 - /bin/bash on-start.sh
   LambdaRole:
     Type: AWS::IAM::Role
