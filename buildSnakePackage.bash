@@ -82,14 +82,6 @@ TMP_BUILD_FOLDER=buildLambaTmpFolder
 mkdir $TMP_BUILD_FOLDER
 cd $TMP_BUILD_FOLDER
 cp -r ../InferenceEndpoint/SnakeInference/* .
-tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
-mv Model Model-11x11
-tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
-mv Model Model-19x19
-tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
-mv Model Model-15x15
-tar -xzf ../InferenceEndpoint/PretrainedModels/Model-11x11/Model.tar.gz
-mv Model Model-7x7
 
 # display package content for debug
 echo
