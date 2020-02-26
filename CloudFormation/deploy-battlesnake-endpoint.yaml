@@ -40,9 +40,6 @@ Parameters:
     Description: "Snake tail : sharp, pixel, bolt, curled, ... (see: https://docs.battlesnake.com/snake-customization)"
     Default: freckled
     Type: String
-  S3Bucket:
-    Description: The bucket where the Lamba package is
-    Type: String
 Resources:
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
@@ -89,6 +86,28 @@ Resources:
           Resource:
           - "*"
           - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/*"
+        - Effect: Allow
+          Action:
+          - ec2:CreateVpcEndpoint
+          - ec2:DescribeRouteTables
+          Resource: "*"
+        - Effect: Allow
+          Action:
+          - cloudwatch:PutMetricData
+          - cloudwatch:GetMetricData
+          - cloudwatch:GetMetricStatistics
+          - cloudwatch:ListMetrics
+          Resource:
+          - !Sub "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:*"
+        - Effect: Allow
+          Action:
+          - logs:CreateLogGroup
+          - logs:CreateLogStream
+          - logs:DescribeLogStreams
+          - logs:GetLogEvents
+          - logs:PutLogEvents
+          Resource:
+          - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/sagemaker/*"
         - Effect: Allow
           Action:
           - iam:PassRole
@@ -183,7 +202,7 @@ Resources:
         - !FindInMap [RegionMap, !Ref "AWS::Region", MxnetLayerArn]
         - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       CodeUri:
-        Bucket: !Ref S3Bucket
+        Bucket: !Sub "battlesnake-aws-${AWS::Region}"
         Key: lambda/model-lambda-package.zip
   ApiGatewayApi:
     Type: AWS::Serverless::Api
