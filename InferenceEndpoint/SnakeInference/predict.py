@@ -59,12 +59,16 @@ def transform_fn(models, data, content_type, output_content_type):
     turn_count = mx.nd.array(data["turn_count"], ctx=ctx)
     snake_health = mx.nd.array(data["health"], ctx=ctx)
     
+    print("running model")
     #inference
     model = models[model_name]
+        
     action = model(state, snake_id, turn_count, snake_health)
     action = action.asnumpy()[0]
     
-    heuristics_state = np.array(data["state"])[0, 1, :].transpose(2, 0, 1)
+    print("Action is {}".format(action))
+    
+    heuristics_state = np.array(data["state"])[0, 1, :].transpose(1, 2, 0)
     heuristics_id = np.array(data["snake_id"])[0, 1]
     heuristics_turn = np.array(data["turn_count"])[0, 1]
     heuristics_health = data["all_health"]
@@ -72,6 +76,7 @@ def transform_fn(models, data, content_type, output_content_type):
     print("Heuristisc health {}".format(heuristics_health))
       
     print("got heuristics")
+    print("state {}".format(heuristics_state.shape))
     converted_action = heuristics.run(heuristics_state, 
                                       heuristics_id,
                                       heuristics_turn+1,
