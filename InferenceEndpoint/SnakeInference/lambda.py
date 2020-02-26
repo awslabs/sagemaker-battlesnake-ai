@@ -29,21 +29,7 @@ from convert_utils import ObservationToStateConverter
 
 converter = ObservationToStateConverter(style='one_versus_all', use_border=True)
 config = botocore.config.Config(read_timeout=200)
-
-useSageMakerEndpoint = os.environ['USE_SAGEMAKER_ENDPOINT']
-
-if (useSageMakerEndpoint == "true"):
-    runtime = boto3.client('runtime.sagemaker', config=config)
-else:
-    ctx = mx.gpu() if mx.context.num_gpus() > 0 else mx.cpu()
-    nets = {}
-    for k in [7, 11, 15, 19]:
-        symbol = 'Model-{}x{}/local-symbol.json'.format(k,k)
-        params = 'Model-{}x{}/local-0000.params'.format(k, k)
-        nets[str(k)] = mx.gluon.SymbolBlock.imports(symbol, ['data0', 'data1', 'data2', 'data3'], params)
-    [net.hybridize(static_alloc=True, static_shape=True) for net in nets.values()]
-    heuristics = MyBattlesnakeHeuristics()
-
+runtime = boto3.client('runtime.sagemaker', config=config)
 
 def proxyHandler(event, context):
     print("Request received")
@@ -90,10 +76,7 @@ def move(body):
     data = json.loads(body)
     current_state, previous_state = converter.get_game_state(data)
 
-    if (useSageMakerEndpoint == "true"):
-        direction_index = remoteInference(previous_state, current_state, data)
-    else:
-        direction_index = localInference(previous_state, current_state, data)
+    direction_index = remoteInference(previous_state, current_state, data)
 
     directions = ['up', 'down', 'left', 'right']
     choice = directions[int(direction_index)]
@@ -113,31 +96,6 @@ def make_health_dict(data):
     for i, snake in enumerate(data["board"]["snakes"]):
         health_dict[i+1] = snake["health"]
     return health_dict
-
-def localInference(previous_state, current_state, data):
-
-    # Sending the states for inference
-    current_state_nd = mx.nd.array(current_state, ctx=ctx)
-    previous_state_nd = mx.nd.array(previous_state, ctx=ctx)
-    current_state_nd = current_state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
-    previous_state_nd = previous_state_nd.expand_dims(axis=0).transpose((0, 3, 1, 2)).expand_dims(axis=1)
-    
-    state_nd = mx.nd.concatenate([previous_state_nd, current_state_nd], axis=1)
-    turn_sequence = mx.nd.array([data['turn']-1, data['turn']], ctx=ctx).reshape((1,-1))
-    health_sequence = mx.nd.array([data['you']['health']-1, data['you']['health']], ctx=ctx).reshape((1,-1))
-    id_sequence = mx.nd.array([1]*2, ctx=ctx).reshape((1,-1))
-
-    net = nets[str(data['board']['width'])]
-
-    # Getting estimation of all direction from the model
-    action = net(state_nd, id_sequence, turn_sequence, health_sequence)
-    
-    health_dict = make_health_dict(data)
-    # Invoke heuristics to take final decision
-    direction_index = heuristics.run(current_state, 1, data['turn'], health_dict, output)
-
-    return direction_index
- 
 
 def remoteInference(previous_state, current_state, data):
     
