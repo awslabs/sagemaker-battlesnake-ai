@@ -50,7 +50,8 @@ Parameters:
       - ml.m4.xlarge
 Conditions:
   ShouldUpdateInstanceType:
-    !Equals [ml.t2.medium, !Ref InferenceEndpointInstanceType]
+    !Not
+      - !Equals [ml.t2.medium, !Ref InferenceEndpointInstanceType]
 Resources:
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
