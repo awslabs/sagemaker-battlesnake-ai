@@ -133,8 +133,7 @@ Resources:
               Fn::Join:
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - ls
-                - curl https://battlesnake-aws-us-west-2.s3-us-west-2.amazonaws.com/deployEndpoint.zip
+                - wget https://battlesnake-aws-us-west-2.s3-us-west-2.amazonaws.com/deployEndpoint.zip
                 - unzip deployEndpoint.zip
                 - jupyter nbconvert --to notebook --ExecutePreprocessor.kernel_name=python3 --ExecutePreprocessor.timeout=600 --execute deployEndpoint.ipynb &
   LambdaRole:
