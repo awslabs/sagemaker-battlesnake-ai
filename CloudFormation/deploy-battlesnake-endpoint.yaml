@@ -135,7 +135,7 @@ Resources:
               - - cd /home/ec2-user/SageMaker
                 - wget https://battlesnake-aws-us-west-2.s3-us-west-2.amazonaws.com/deployEndpoint.zip
                 - unzip deployEndpoint.zip
-                - nohup jupyter nbconvert --to notebook --ExecutePreprocessor.kernel_name=python3 --ExecutePreprocessor.timeout=600 --execute deployEndpoint.ipynb &
+                - /bin/bash on-start.sh
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
