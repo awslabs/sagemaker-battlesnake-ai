@@ -56,60 +56,64 @@ Resources:
               - sagemaker.amazonaws.com
             Action:
               - 'sts:AssumeRole'
-      Policies:
-        - PolicyName: AccessS3BucketSagemakerSession
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-            - Effect: Allow
-              Action:
-              - sagemaker:CreateTrainingJob
-              - sagemaker:DescribeTrainingJob
-              - sagemaker:CreateModel
-              - sagemaker:DescribeModel
-              - sagemaker:DeleteModel
-              - sagemaker:DescribeTransformJob
-              - sagemaker:CreateTransformJob
-              - sagemaker:DescribeEndpointConfig
-              - sagemaker:CreateEndpointConfig
-              - sagemaker:CreateEndpoint
-              - sagemaker:DescribeEndpoint
-              Resource:
-              - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
-            - Effect: Allow
-              Action:
-              - ecr:GetAuthorizationToken
-              - ecr:GetDownloadUrlForLayer
-              - ecr:BatchGetImage
-              - ecr:BatchCheckLayerAvailability
-              Resource:
-              - "*"
-              - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/*"
-            - Effect: Allow
-              Action:
-              - iam:PassRole
-              Resource:
-              - !GetAtt NotebookInstanceExecutionRole.Arn
-              Condition:
-                StringEquals:
-                  iam:PassedToService: sagemaker.amazonaws.com
-            - Effect: Allow
-              Action:
-              - s3:CreateBucket
-              Resource:
-              - "*"
-            - Effect: Allow
-              Action:
-              - s3:ListBucket
-              Resource:
-              - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}"
-            - Effect: Allow
-              Action:
-              - s3:GetObject
-              - s3:PutObject
-              - s3:DeleteObject
-              Resource:
-              - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
+  NotebookInstanceIAMPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: battlesnake-notebook-instance-policy
+      Roles:
+        - !Ref NotebookInstanceExecutionRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - sagemaker:CreateTrainingJob
+          - sagemaker:DescribeTrainingJob
+          - sagemaker:CreateModel
+          - sagemaker:DescribeModel
+          - sagemaker:DeleteModel
+          - sagemaker:DescribeTransformJob
+          - sagemaker:CreateTransformJob
+          - sagemaker:DescribeEndpointConfig
+          - sagemaker:CreateEndpointConfig
+          - sagemaker:CreateEndpoint
+          - sagemaker:DescribeEndpoint
+          Resource:
+          - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
+        - Effect: Allow
+          Action:
+          - ecr:GetAuthorizationToken
+          - ecr:GetDownloadUrlForLayer
+          - ecr:BatchGetImage
+          - ecr:BatchCheckLayerAvailability
+          Resource:
+          - "*"
+          - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/*"
+        - Effect: Allow
+          Action:
+          - iam:PassRole
+          Resource:
+          - !GetAtt NotebookInstanceExecutionRole.Arn
+          Condition:
+            StringEquals:
+              iam:PassedToService: sagemaker.amazonaws.com
+        - Effect: Allow
+          Action:
+          - s3:CreateBucket
+          Resource:
+          - "*"
+        - Effect: Allow
+          Action:
+          - s3:ListBucket
+          Resource:
+          - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}"
+        - Effect: Allow
+          Action:
+          - s3:GetObject
+          - s3:PutObject
+          - s3:DeleteObject
+          Resource:
+          - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
     Properties: 
