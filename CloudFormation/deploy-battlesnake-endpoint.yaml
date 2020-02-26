@@ -118,6 +118,11 @@ Resources:
               iam:PassedToService: sagemaker.amazonaws.com
         - Effect: Allow
           Action:
+          - iam:GetRole
+          Resource:
+          - !GetAtt NotebookInstanceExecutionRole.Arn
+        - Effect: Allow
+          Action:
           - s3:CreateBucket
           Resource:
           - "*"
