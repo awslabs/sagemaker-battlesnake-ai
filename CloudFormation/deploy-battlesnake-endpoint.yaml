@@ -169,15 +169,15 @@ Resources:
               Fn::Join:
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - git clone --depth=1  https://github.com/JohnyFicient/randomproject.git battlesnake
+                - git clone --depth=1  https://github.com/JohnyFicient/randomproject.git
+                - mv randomproject battlesnake
                 - cd battlesnake
                 - rm -rf .git
-                - cd InferenceEndpoint
                 - Fn::If:
                   - ShouldUpdateInstanceType
-                  - !Sub "sed -i 's/ml.t2.medium/${InferenceEndpointInstanceType}/g' deployEndpoint.ipynb"
+                  - !Sub "sed -i 's/ml.t2.medium/${InferenceEndpointInstanceType}/g' InferenceEndpoint/deployEndpoint.ipynb"
                   - "ls"
-                - /bin/bash on-start.sh
+                - /bin/bash CloudFormation/on-start.sh
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
