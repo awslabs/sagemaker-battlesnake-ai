@@ -20,6 +20,7 @@ echo " > Start packaging model on Lambda"
 echo
 
 PACKAGE_FILE_NAME="model-lambda-package.zip"
+DEPLOY_PACKAGE_FILE_NAME="deployment-lambda-package.zip"
 LAYER_PACKAGE_FILE_NAME="mxnet-layer-package.zip"
 
 # Delete file if it exist already
@@ -32,6 +33,11 @@ cleanup () {
 }
 cleanup $PACKAGE_FILE_NAME
 cleanup $LAYER_PACKAGE_FILE_NAME
+cleanup $DEPLOY_PACKAGE_FILE_NAME
+
+# Create the deployment Lambda package
+zip -rq $DEPLOY_PACKAGE_FILE_NAME CloudFormation/lambda.py
+
 
 # Create the subfolder python
 mkdir -p packageLayerTmp/python

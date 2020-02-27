@@ -59,7 +59,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda.handler
-      Role: !GetAtt LambdaRole.Arn
+      Role: !GetAtt LambdaEndpointRole.Arn
       Environment:
         Variables:
           SAGEMAKER_BUCKET_ARN: !GetAtt SagemakerBucket.Arn
@@ -68,7 +68,7 @@ Resources:
       CodeUri:
         Bucket: !Sub "battlesnake-aws-${AWS::Region}"
         Key: lambda/deployment-lambda-package.zip
-  cleanupBucketOnDelete:
+  CleanupBucketOnDelete:
      Type: Custom::CleanupBucket
      Properties:
        ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
@@ -161,15 +161,15 @@ Resources:
         - Effect: Allow
           Action:
           - s3:ListBucket
-          Resource:
-          - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}"
-        - Effect: Allow
-          Action:
           - s3:GetObject
           - s3:PutObject
           - s3:DeleteObject
           Resource:
-          - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
+          - !GetAtt SagemakerBucket.Arn
+          - !Join
+            - "/"
+              - !GetAtt SagemakerBucket.Arn
+              - "*"
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
     Properties:
@@ -192,12 +192,44 @@ Resources:
                 - chown -R ec2-user:ec2-user battlesnake
                 - cd battlesnake
                 - rm -rf .git
+                - !Join
+                  - ""
+                    - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
+                    - !Ref SagemakerBucket
+                    - "/g' InferenceEndpoint/deployEndpoint.ipynb"
                 - Fn::If:
                   - ShouldUpdateInstanceType
                   - !Sub "sed -i 's/ml.t2.medium/${InferenceEndpointInstanceType}/g' InferenceEndpoint/deployEndpoint.ipynb"
                   - "ls"
                 - /bin/bash CloudFormation/on-start.sh
-  LambdaRole:
+  LambdaDeploymentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: DeleteObjectOnSagemakerBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - s3:DeleteObject
+              Resource:
+              - !Join
+                - "/"
+                  - !GetAtt SagemakerBucket.Arn
+                  - "*"
+  LambdaEndpointRole:
     Type: AWS::IAM::Role
     Properties:
       ManagedPolicyArns:
@@ -232,7 +264,7 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: lambda.proxyHandler
-      Role: !GetAtt LambdaRole.Arn
+      Role: !GetAtt LambdaEndpointRole.Arn
       Environment:
         Variables:
           SNAKE_COLOR: !Ref SnakeColor

@@ -95,7 +95,10 @@ do
     # Decomment this line only when you want to update the layer
     #
     # updateOrCreateLayer ${S3_REGIONS[$ix]}
-    
+
+    COMMAND="aws s3 cp deployment-lambda-package.zip s3://$S3_PREFIX${S3_REGIONS[$ix]}/lambda/deployment-lambda-package.zip $AWS_PROFILE"
+    displayEndExecCmd \${COMMAND} " > Copy deployment lambda package to region "${S3_REGIONS[$ix]}
+
     COMMAND="aws s3 cp model-lambda-package.zip s3://$S3_PREFIX${S3_REGIONS[$ix]}/lambda/model-lambda-package.zip $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy lambda model inference package to region "${S3_REGIONS[$ix]}
 done
