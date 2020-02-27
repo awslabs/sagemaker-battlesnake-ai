@@ -53,6 +53,26 @@ Conditions:
     !Not
       - !Equals [ml.t2.medium, !Ref InferenceEndpointInstanceType]
 Resources:
+  SagemakerBucket:
+    Type: AWS::S3::Bucket
+  BattleSnakeDeployFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda.handler
+      Role: !GetAtt LambdaRole.Arn
+      Environment:
+        Variables:
+          SAGEMAKER_BUCKET_ARN: !GetAtt SagemakerBucket.Arn
+      Runtime: python3.7
+      MemorySize: 1024
+      CodeUri:
+        Bucket: !Sub "battlesnake-aws-${AWS::Region}"
+        Key: lambda/deployment-lambda-package.zip
+  cleanupBucketOnDelete:
+     Type: Custom::CleanupBucket
+     Properties:
+       ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
+       Operation: CleanupSagemakerBucket
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
     Properties:
