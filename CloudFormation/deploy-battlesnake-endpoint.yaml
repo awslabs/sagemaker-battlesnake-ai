@@ -166,6 +166,8 @@ Resources:
           - s3:PutObject
           - s3:DeleteObject
           Resource:
+          - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}"
+          - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
           - !GetAtt SagemakerBucket.Arn
           - !Join
             - "/"
@@ -205,7 +207,7 @@ Resources:
                     - "/g' TrainingEnvironment/notebooks/SagemakerModelTraining.ipynb"
                 - !Join
                   - ""
-                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
+                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/" 
                     - !Ref SagemakerBucket
                     - "/g' InferenceEndpoint/deployEndpoint.ipynb"
                 - Fn::If:
