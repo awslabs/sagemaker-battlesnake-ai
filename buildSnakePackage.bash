@@ -36,7 +36,8 @@ cleanup $LAYER_PACKAGE_FILE_NAME
 cleanup $DEPLOY_PACKAGE_FILE_NAME
 
 # Create the deployment Lambda package
-zip -rq $DEPLOY_PACKAGE_FILE_NAME CloudFormation/lambda.py
+cd CloudFormation
+zip -rq ../$DEPLOY_PACKAGE_FILE_NAME lambda.py
 
 
 # Create the subfolder python
