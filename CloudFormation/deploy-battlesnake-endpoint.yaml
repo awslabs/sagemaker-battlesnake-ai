@@ -195,17 +195,17 @@ Resources:
                 - rm -rf .git
                 - !Join
                   - ""
-                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/
+                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
                     - !Ref SagemakerBucket
                     - "/g' TrainingEnvironment/notebooks/HeuristicsDeveloper.ipynb"
                 - !Join
                   - ""
-                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/
+                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
                     - !Ref SagemakerBucket
                     - "/g' TrainingEnvironment/notebooks/SagemakerModelTraining.ipynb"
                 - !Join
                   - ""
-                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/
+                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
                     - !Ref SagemakerBucket
                     - "/g' InferenceEndpoint/deployEndpoint.ipynb"
                 - Fn::If:
