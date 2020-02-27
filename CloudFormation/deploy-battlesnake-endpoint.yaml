@@ -169,7 +169,8 @@ Resources:
               Fn::Join:
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - git clone --depth=1  https://github.com/JohnyFicient/randomproject.git .
+                - git clone --depth=1  https://github.com/JohnyFicient/randomproject.git battlesnake
+                - cd battlesnake
                 - rm -rf .git
                 - cd InferenceEndpoint
                 - Fn::If:
