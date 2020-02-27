@@ -153,7 +153,7 @@ Resources:
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
     Properties: 
-      # DefaultCodeRepository: String
+      DefaultCodeRepository: https://github.com/JohnyFicient/randomproject.git
       DirectInternetAccess: Enabled
       InstanceType: ml.t3.medium
       LifecycleConfigName: !GetAtt LifeCycleConfig.NotebookInstanceLifecycleConfigName
@@ -169,8 +169,7 @@ Resources:
               Fn::Join:
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - wget https://battlesnake-aws-us-west-2.s3-us-west-2.amazonaws.com/deployEndpoint.zip
-                - unzip deployEndpoint.zip
+                - cd InferenceEndpoint
                 - Fn::If:
                   - ShouldUpdateInstanceType
                   - !Sub "sed -i 's/ml.t2.medium/${InferenceEndpointInstanceType}/g' deployEndpoint.ipynb"
