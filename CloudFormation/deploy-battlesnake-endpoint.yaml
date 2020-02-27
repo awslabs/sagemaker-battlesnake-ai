@@ -152,8 +152,7 @@ Resources:
           - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
-    Properties: 
-      DefaultCodeRepository: https://github.com/JohnyFicient/randomproject.git
+    Properties:
       DirectInternetAccess: Enabled
       InstanceType: ml.t3.medium
       LifecycleConfigName: !GetAtt LifeCycleConfig.NotebookInstanceLifecycleConfigName
@@ -169,8 +168,8 @@ Resources:
               Fn::Join:
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - git clone --depth=1  https://github.com/JohnyFicient/randomproject.git
-                - mv randomproject battlesnake
+                - git clone --depth=1  https://github.com/JohnyFicient/randomproject.git battlesnake
+                - chown -R ec2-user:ec2-user battlesnake
                 - cd battlesnake
                 - rm -rf .git
                 - Fn::If:

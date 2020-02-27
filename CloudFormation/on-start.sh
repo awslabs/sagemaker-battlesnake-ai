@@ -21,7 +21,7 @@ set -e
 # PARAMETERS
 
 ENVIRONMENT=python3
-NOTEBOOK_FILE=/home/ec2-user/SageMaker/InferenceEndpoint/deployEndpoint.ipynb
+NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/InferenceEndpoint/deployEndpoint.ipynb
 
 source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
 
