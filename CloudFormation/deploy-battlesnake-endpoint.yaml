@@ -58,13 +58,14 @@ Resources:
   BattleSnakeDeployFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Timeout: 900
       Handler: lambda.handler
       Role: !GetAtt LambdaEndpointRole.Arn
       Environment:
         Variables:
           SAGEMAKER_BUCKET_ARN: !GetAtt SagemakerBucket.Arn
       Runtime: python3.7
-      MemorySize: 1024
+      MemorySize: 512
       CodeUri:
         Bucket: !Sub "battlesnake-aws-${AWS::Region}"
         Key: lambda/deployment-lambda-package.zip
