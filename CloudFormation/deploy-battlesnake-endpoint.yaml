@@ -168,7 +168,7 @@ Resources:
           - !GetAtt SagemakerBucket.Arn
           - !Join
             - "/"
-              - !GetAtt SagemakerBucket.Arn
+            - - !GetAtt SagemakerBucket.Arn
               - "*"
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
@@ -185,7 +185,7 @@ Resources:
       OnStart:
         - Content:
             Fn::Base64:
-              Fn::Join:
+              !Join
               - ";"
               - - cd /home/ec2-user/SageMaker
                 - git clone --depth=1  https://github.com/JohnyFicient/randomproject.git battlesnake
@@ -194,7 +194,17 @@ Resources:
                 - rm -rf .git
                 - !Join
                   - ""
-                    - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
+                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
+                    - !Ref SagemakerBucket
+                    - "/g' TrainingEnvironment/notebooks/HeuristicsDeveloper.ipynb"
+                - !Join
+                  - ""
+                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
+                    - !Ref SagemakerBucket
+                    - "/g' TrainingEnvironment/notebooks/SagemakerModelTraining.ipynb"
+                - !Join
+                  - ""
+                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
                     - !Ref SagemakerBucket
                     - "/g' InferenceEndpoint/deployEndpoint.ipynb"
                 - Fn::If:
@@ -227,7 +237,7 @@ Resources:
               Resource:
               - !Join
                 - "/"
-                  - !GetAtt SagemakerBucket.Arn
+                - - !GetAtt SagemakerBucket.Arn
                   - "*"
   LambdaEndpointRole:
     Type: AWS::IAM::Role
