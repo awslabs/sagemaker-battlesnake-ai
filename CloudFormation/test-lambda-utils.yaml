@@ -12,7 +12,7 @@ Resources:
       Role: !GetAtt LambdaEndpointRole.Arn
       Environment:
         Variables:
-          SAGEMAKER_BUCKET_ARN: !GetAtt SagemakerBucket.Arn
+          SAGEMAKER_BUCKET_NAME: !Ref SagemakerBucket
       Runtime: python3.7
       MemorySize: 512
       CodeUri:
@@ -38,12 +38,25 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: InvokeSagemakerEndpoint
+        - PolicyName: S3BucketAccess
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
             - Effect: Allow
               Action:
-                - sagemaker:InvokeEndpoint
-              Resource: "*"
-            
+              - s3:DeleteBucket
+              Resource:
+              - "*"
+            - Effect: Allow
+              Action:
+              - s3:ListBucket
+              - s3:GetObject
+              - s3:PutObject
+              - s3:DeleteObject
+              Resource:
+              - !GetAtt SagemakerBucket.Arn
+              - !Join
+                - "/"
+                - - !GetAtt SagemakerBucket.Arn
+                  - "*"
+                

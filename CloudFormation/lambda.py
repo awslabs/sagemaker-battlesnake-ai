@@ -17,8 +17,7 @@
 import json
 import os
 import boto3
-from botocore.vendored import requests
-
+import requests
 
 def handler(event, context):
     try:
@@ -26,7 +25,7 @@ def handler(event, context):
 
         if operation == 'CleanupSagemakerBucket':
             if event['RequestType'] == 'Delete':
-                bucket = os.environ['SAGEMAKER_BUCKET_ARN']
+                bucket = os.environ['SAGEMAKER_BUCKET_NAME']
                 s3 = boto3.resource('s3')
                 bucket = s3.Bucket(bucket)
                 for obj in bucket.objects.filter():
