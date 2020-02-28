@@ -40,8 +40,8 @@ Parameters:
     Description: "Snake tail : sharp, pixel, bolt, curled, ... (see: https://docs.battlesnake.com/snake-customization)"
     Default: freckled
     Type: String
-  InferenceEndpointInstanceType:
-    Description: "Instance type used for the inference endpoint. t2 is default because it works on all accounts, you can choose m5 or m4 which are in the AWS free tier if your account support it"
+  SagemakerInstanceType:
+    Description: "Instance type used for the inference endpoint and training. t2 is default because it works on all accounts, you can choose m5 or m4 which are in the AWS free tier if your account support it"
     Default: ml.t2.medium
     Type: String
     AllowedValues:
@@ -51,7 +51,7 @@ Parameters:
 Conditions:
   ShouldUpdateInstanceType:
     !Not
-      - !Equals [ml.t2.medium, !Ref InferenceEndpointInstanceType]
+      - !Equals [ml.t2.medium, !Ref SagemakerInstanceType]
 Resources:
   SagemakerBucket:
     Type: AWS::S3::Bucket
@@ -212,7 +212,15 @@ Resources:
                     - "/g' InferenceEndpoint/deployEndpoint.ipynb"
                 - Fn::If:
                   - ShouldUpdateInstanceType
-                  - !Sub "sed -i 's/ml.t2.medium/${InferenceEndpointInstanceType}/g' InferenceEndpoint/deployEndpoint.ipynb"
+                  - !Sub "sed -i 's/ml.t2.medium/${SagemakerInstanceType}/g' InferenceEndpoint/deployEndpoint.ipynb"
+                  - "ls"
+                - Fn::If:
+                  - ShouldUpdateInstanceType
+                  - !Sub "sed -i 's/ml.t2.medium/${SagemakerInstanceType}/g' TrainingEnvironment/notebooks/HeuristicsDeveloper.ipynb"
+                  - "ls"
+                - Fn::If:
+                  - ShouldUpdateInstanceType
+                  - !Sub "sed -i 's/ml.t2.medium/${SagemakerInstanceType}/g' TrainingEnvironment/notebooks/SagemakerModelTraining.ipynb"
                   - "ls"
                 - /bin/bash CloudFormation/on-start.sh
   LambdaDeploymentRole:
