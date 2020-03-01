@@ -9,7 +9,7 @@ Resources:
     Properties:
       Timeout: 900
       Handler: lambda.handler
-      Role: !GetAtt LambdaEndpointRole.Arn
+      Role: !GetAtt LambdaDeploymentRole.Arn
       Environment:
         Variables:
           SAGEMAKER_BUCKET_NAME: !Ref SagemakerBucket
@@ -23,7 +23,7 @@ Resources:
      Properties:
        ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
        Operation: CleanupSagemakerBucket
-  LambdaEndpointRole:
+  LambdaDeploymentRole:
     Type: AWS::IAM::Role
     Properties:
       ManagedPolicyArns:
