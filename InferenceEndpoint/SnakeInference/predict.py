@@ -75,12 +75,12 @@ def transform_fn(models, data, content_type, output_content_type):
     
     print("Heuristisc health {}".format(heuristics_health))
       
-    print("got heuristics")
     print("state {}".format(heuristics_state.shape))
     converted_action = heuristics.run(heuristics_state, 
                                       heuristics_id,
                                       heuristics_turn+1,
                                       heuristics_health, 
+                                      json=data["json"],
                                       action=action)
     print("converted_action {}".format(converted_action))
     output = converted_action

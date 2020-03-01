@@ -18,28 +18,33 @@ class MyBattlesnakeHeuristics:
     '''
     The BattlesnakeHeuristics class allows you to define handcrafted rules of the snake.
     '''
+    FOOD_INDEX = 0
     def __init__(self):
         pass
     
-    def go_to_food_if_close(self, state):
-        # Return an action if food is close to you
-        
+    def go_to_food_if_close(self, state, json):
+        '''
+        Example heuristic to move towards food if it's close to you.
+        '''
         # Get the position of the snake head
-        i, j = np.unravel_index(np.argmax(state[:,:,1], axis=None), state[:,:,1].shape)
-        food = state[:,:,0]
+        your_snake_body = json["you"]["body"]
+        i, j = your_snake_body[0]["x"], your_snake_body[0]["y"]
+        
+        # Set food_direction towards food
+        food = state[:, :, self.FOOD_INDEX]
         food_direction = None
-        if food[i-1,j] == 1:
+        if food[i-1, j] == 1:
             food_direction = 0 # up
-        if food[i+1,j] == 1:
+        if food[i+1, j] == 1:
             food_direction = 1 # down
-        if food[i,j-1] == 1:
+        if food[i, j-1] == 1:
             food_direction = 2 # left
-        if food[i,j+1] == 1:
+        if food[i, j+1] == 1:
             food_direction = 3 # right
             
         return food_direction
     
-    def run(self, state, snake_id, turn_count, health, action):
+    def run(self, state, snake_id, turn_count, health, json, action):
         '''
         The main function of the heuristics.
         
@@ -56,21 +61,23 @@ class MyBattlesnakeHeuristics:
     
         `health`: dict
         Indicates the health of all snakes in the form of {snake_id: health}
+        
+        `json`: dict
+        Provides the same information as above, in the same format as the battlesnake engine.
 
         `action`: np.array of size 4
         The qvalues of the actions calculated. The 4 values correspond to [up, down, left, right]
-        '''
+        '''    
         # The default `best_action` to take is the one that provides has the largest Q value.
         # If you think of something else, you can edit how `best_action` is calculated
         best_action = int(np.argmax(action))
-
-        # Example heuristics to eat food that you are close to
-        food_direction = self.go_to_food_if_close(state)
+                
+        # Example heuristics to eat food that you are close to.
+        food_direction = self.go_to_food_if_close(state, json)
         if food_direction:
-            print("Move {} to move food".format(food_direction))
             best_action = food_direction
-        
-        # TO DO, add your own heuristics
 
+        # TO DO, add your own heuristics
+        
         assert best_action in [0, 1, 2, 3], "{} is not a valid action.".format(best_action)
         return best_action

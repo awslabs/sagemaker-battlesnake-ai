@@ -110,7 +110,7 @@ def remoteInference(previous_state, current_state, data):
 
     data = {"state": state.tolist(), "snake_id": snake_id.tolist(), 
         "turn_count": turn.tolist(), "health": health.tolist(),
-        "all_health": health_dict, "map_width": map_width}
+        "all_health": health_dict, "map_width": map_width, "json": data}
     payload = json.dumps(data)
     response = runtime.invoke_endpoint(EndpointName="battlesnake-endpoint",
                                        ContentType='application/json',
