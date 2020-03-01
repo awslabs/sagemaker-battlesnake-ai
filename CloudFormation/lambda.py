@@ -19,6 +19,14 @@ import os
 import boto3
 import requests
 
+# TODO: additionnal cleanup of the following:
+# - log streams BattleSnakeNotebook/LifecycleConfigOnStart and 	
+#   BattleSnakeNotebook/jupyter.log under loggroup /aws/sagemaker/NotebookInstances
+# - loggroup /aws/lambda/BattleSnakeEnvironment-BattleSnakeDeployFunction-1X4NSQ5IQZZXF
+# - S3 delete only object prefixed under battlesnake-aws (not everything like now)
+# - Endpoint instance, Model, Model conf
+# - If exist training instance and associate resources
+
 def handler(event, context):
     try:
         operation = event['ResourceProperties']['Operation']
