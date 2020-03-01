@@ -56,7 +56,7 @@ Resources:
   BattleSnakeDeployFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Timeout: 900
+      Timeout: 90 # Adapt duration depending on cleanup need
       Handler: lambda.handler
       Role: !GetAtt LambdaEndpointRole.Arn
       Environment:

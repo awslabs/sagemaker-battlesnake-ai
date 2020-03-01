@@ -38,7 +38,7 @@ cleanup $DEPLOY_PACKAGE_FILE_NAME
 #### Deployment lambda creation
 
 # Create the subfolder python
-mkdir -p packageDeployTmp/python
+mkdir packageDeployTmp
 
 # Create a virtualenv python 3
 python3 -m venv venv
@@ -53,7 +53,7 @@ cd venv/lib/python3*/site-packages
 rm -rf *.dist-info
 rm -rf pip setuptools easy_install*
 
-mv * ../../../../packageDeployTmp/python
+mv * ../../../../packageDeployTmp
 cd ../../../../packageDeployTmp
 
 cp ../CloudFormation/lambda.py .
@@ -64,7 +64,6 @@ echo " > The deployment lambda will contain:"
 echo
 
 ls
-ls python
 
 echo
 
