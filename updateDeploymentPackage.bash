@@ -34,7 +34,7 @@ echo
 
 if [ "$1" == "all" ]
     then
-        S3_REGIONS=("ca-central-1" "us-west-2" "us-east-1" "sa-east-1" "eu-west-1" "eu-west-3" "ap-northeast-2" "ap-southeast-2")
+        S3_REGIONS=("ca-central-1" "us-west-2" "us-east-1" "sa-east-1" "eu-west-1" "eu-west-3" "ap-southeast-2")
         echo " deploying to all "${#S3_REGIONS[*]}" regions"
     else
         S3_REGIONS=$1
