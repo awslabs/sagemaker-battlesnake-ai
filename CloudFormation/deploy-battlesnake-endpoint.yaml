@@ -53,8 +53,6 @@ Conditions:
     !Not
       - !Equals [ml.t2.medium, !Ref SagemakerInstanceType]
 Resources:
-  SagemakerBucket:
-    Type: AWS::S3::Bucket
   BattleSnakeDeployFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -63,7 +61,7 @@ Resources:
       Role: !GetAtt LambdaEndpointRole.Arn
       Environment:
         Variables:
-          SAGEMAKER_BUCKET_ARN: !GetAtt SagemakerBucket.Arn
+          SAGEMAKER_BUCKET_NAME: !Sub "sagemaker-${AWS::Region}-${AWS::AccountId}"
       Runtime: python3.7
       MemorySize: 512
       CodeUri:
@@ -168,11 +166,6 @@ Resources:
           Resource:
           - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}"
           - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
-          - !GetAtt SagemakerBucket.Arn
-          - !Join
-            - "/"
-            - - !GetAtt SagemakerBucket.Arn
-              - "*"
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
     Properties:
@@ -195,21 +188,6 @@ Resources:
                 - chown -R ec2-user:ec2-user battlesnake
                 - cd battlesnake
                 - rm -rf .git
-                - !Join
-                  - ""
-                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
-                    - !Ref SagemakerBucket
-                    - "/g' TrainingEnvironment/notebooks/HeuristicsDeveloper.ipynb"
-                - !Join
-                  - ""
-                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/"
-                    - !Ref SagemakerBucket
-                    - "/g' TrainingEnvironment/notebooks/SagemakerModelTraining.ipynb"
-                - !Join
-                  - ""
-                  - - "sed -i 's/SAGEMAKER_SESSION_BUCKET/" 
-                    - !Ref SagemakerBucket
-                    - "/g' InferenceEndpoint/deployEndpoint.ipynb"
                 - Fn::If:
                   - ShouldUpdateInstanceType
                   - !Sub "sed -i 's/ml.t2.medium/${SagemakerInstanceType}/g' InferenceEndpoint/deployEndpoint.ipynb"
@@ -246,10 +224,7 @@ Resources:
               Action:
               - s3:DeleteObject
               Resource:
-              - !Join
-                - "/"
-                - - !GetAtt SagemakerBucket.Arn
-                  - "*"
+              - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
   LambdaEndpointRole:
     Type: AWS::IAM::Role
     Properties:
