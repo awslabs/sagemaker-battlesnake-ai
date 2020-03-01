@@ -35,10 +35,56 @@ cleanup $PACKAGE_FILE_NAME
 cleanup $LAYER_PACKAGE_FILE_NAME
 cleanup $DEPLOY_PACKAGE_FILE_NAME
 
-# Create the deployment Lambda package
-cd CloudFormation
-zip -rq ../$DEPLOY_PACKAGE_FILE_NAME lambda.py
+#### Deployment lambda creation
+
+# Create the subfolder python
+mkdir -p packageDeployTmp/python
+
+# Create a virtualenv python 3
+python3 -m venv venv
+source venv/bin/activate
+
+# Install mxnet package
+python3 -m pip install requests
+
+# Copy model into the package directory
+cd venv/lib/python3*/site-packages
+# remove unused file to remain under 250Mb (max Lambda package size)
+rm -rf *.dist-info
+rm -rf pip setuptools easy_install*
+
+mv * ../../../../packageDeployTmp/python
+cd ../../../../packageDeployTmp
+
+cp ../CloudFormation/lambda.py .
+
+# display package content for debug
+echo
+echo " > The deployment lambda will contain:"
+echo
+
+ls
+ls python
+
+echo
+
+# zip it into a lambda package
+zip -rq ../$DEPLOY_PACKAGE_FILE_NAME .
+
 cd ..
+
+# Deactivate virtualenv
+deactivate
+
+# Cleanup
+rm -rf venv
+rm -rf packageDeployTmp
+
+echo
+echo " > Your Deployment Lambda package $DEPLOY_PACKAGE_FILE_NAME is ready"
+echo
+
+#### Lambda Layer creation
 
 # Create the subfolder python
 mkdir -p packageLayerTmp/python
@@ -83,6 +129,8 @@ rm -rf packageLayerTmp
 echo
 echo " > Your Lambda Layer package $LAYER_PACKAGE_FILE_NAME is ready"
 echo
+
+#### Lambda Endpoint creation
 
 TMP_BUILD_FOLDER=buildLambaTmpFolder
 
