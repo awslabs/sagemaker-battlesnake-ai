@@ -12,7 +12,7 @@ __What is Battlesnake?__ (taken from [Battlesnake.com](https://docs.battlesnake.
 
 This project can be used in three steps:
 
-- __STEP 1: [Deploy a pretrained AI](Documentation/DeployTheAIEndpoint.md)__ : Will deploy a Serverless endpoint in a single click! You are ready for the competition.
+- __STEP 1: [Deploy a pretrained AI](Documentation/DeployTheAIEndpoint.md)__ : Will deploy a Snake AI in a single click! You are ready for the competition.
 - __STEP 2: [Customize the AI heuristics](Documentation/TrainModelAndDeploy.md#Heuristics-development)__ : Customize AI behaviour, visualize your result and publish an upgraded version!
 - __STEP 3: [Train the AI model with your own settings](Documentation/TrainModelAndDeploy.md#Training-a-reinforcement-learning-model)__ : The most challenging one: train the AI again with different settings, visualize your result and publish an upgraded version!
 
