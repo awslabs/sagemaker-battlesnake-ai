@@ -207,6 +207,17 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
+        - PolicyName: SagemakerCleanup
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - sagemaker:DeleteEndpointConfig
+              - sagemaker:DeleteEndpoint
+              - sagemaker:DeleteModel
+              Resource:
+              - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
         - PolicyName: SagemakerBucketAccess
           PolicyDocument:
             Version: '2012-10-17'
@@ -241,8 +252,9 @@ Resources:
             Statement:
             - Effect: Allow
               Action:
-                - sagemaker:InvokeEndpoint
-              Resource: "*"
+              - sagemaker:InvokeEndpoint
+              Resource:
+              - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
   BattleSnakeAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
