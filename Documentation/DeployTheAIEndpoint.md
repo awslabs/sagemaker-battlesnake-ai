@@ -1,10 +1,13 @@
-## Deploy a pretrained snake AI into your AWS account
+## STEP 1 - Deploy a pretrained AI
 
-This section will deploy a pre-trained AI on a Lambda function. An API Gateway will be created in front of it to provide a snake API entrypoint (see [BattleSnake API](https://docs.battlesnake.com/snake-api)):
+This section will deploy a pre-trained AI on your AWS account. This AI will answer to the (see [BattleSnake API](https://docs.battlesnake.com/snake-api)). The architecture deployed will be:
 
-![Endpoint Architecture](images/SimpleEndpoint.png "Endpoint Architecture")
+![Pretrained Architecture](images/ArchitectureSagemakerBattleSnake.png "Pretrained Architecture")
 
-> __Estimated cost__ : this architecture is entirely Serverless and you pay nothing to deploy it, you will be charge only when you call the Snake. For a test usage this will be probably free because of the [AWS Free tiers](https://aws.amazon.com/free/). __If you call the snake less than 500 000 times in a month that should be free.__ After the free tiers every 1M Snake API call will be charged approximately 6$ (see [Lambda pricing](https://aws.amazon.com/lambda/pricing/) and [API Gateway pricing](https://aws.amazon.com/api-gateway/pricing/))
+> __Estimated cost__ : If you run this architecture for a limited time, it will fit in the [AWS Free tiers](https://aws.amazon.com/free/). The AWS Free tiers can support 500 000 snake API invokation on a 125 hours period per month on the first two months. The free tiers also include 250 hours per month of this notebook instance on the first two months.
+> After the free tiers the charge will be $0.269 per hour ($6.5 per 24 hour period) of Sagemaker endpoint instance, $0.269 per hour of Sagemaker notebook instance and $6 per million Snake API call.
+> __Saving tip__ : Once you have finished working (respectively participating to games) you can stop your notebook instance (resp. your endpoint instance) to stop consuming free tiers or occuring charge. You can restart them later to continue your work.
+> See pricing details: [Sagemaker pricing](https://aws.amazon.com/sagemaker/pricing/), [Lambda pricing](https://aws.amazon.com/lambda/pricing/), [API Gateway pricing](https://aws.amazon.com/api-gateway/pricing/)
 
 Use the links below to deploy the model in the region you like*:
 

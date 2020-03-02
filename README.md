@@ -12,13 +12,19 @@ __What is Battlesnake?__ (taken from [Battlesnake.com](https://docs.battlesnake.
 
 This project can be used in three steps:
 
-- __STEP 1: [Deploy a pretrained AI](Documentation/DeployTheAIEndpoint.md)__ : Will deploy a Snake AI in a single click! You are ready for the competition.
-- __STEP 2: [Customize the AI heuristics](Documentation/TrainModelAndDeploy.md#Heuristics-development)__ : Customize AI behaviour, visualize your result and publish an upgraded version!
-- __STEP 3: [Train the AI model with your own settings](Documentation/TrainModelAndDeploy.md#Training-a-reinforcement-learning-model)__ : The most challenging one: train the AI again with different settings, visualize your result and publish an upgraded version!
+- __[STEP 1 - Deploy a pretrained AI](Documentation/DeployTheAIEndpoint.md)__ : Will deploy a Snake AI in a single click! You are ready for the competition.
+- __[STEP 2 - Customize the AI heuristics](Documentation/TrainModelAndDeploy.md#Heuristics-development)__ : Customize AI behaviour, visualize your result and publish an upgraded version!
+- __[STEP 3 - Train the AI model with your own settings](Documentation/TrainModelAndDeploy.md#Training-a-reinforcement-learning-model)__ : The most challenging one: train the AI again with different settings, visualize your result and publish an upgraded version!
 
 _You have to do STEP 1 in order to be able to do STEP 2 or STEP 3._
 
-## Cost
+### Architecture
+
+If you use  STEP 1, STEP 2 and STEP 3, you will have the following deployed:
+
+![General Architecture](Documentation/images/ArchitectureSagemakerBattleSnakeFull.png "General Architecture")
+
+### Cost
 
 This project have been design to fit inside the AWS free tiers for some time.
 See each section for duration and cost.
