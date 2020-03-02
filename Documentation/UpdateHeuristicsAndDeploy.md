@@ -20,12 +20,25 @@ _If you do clever things, your pull request is welcome!_
 
 ## How to develop your own heuristic algorithms
 
-- Open and run the notebook in `HeuristicDeveloper.ipynb` and ensure that you have a functioning model (if you have altered the inputs model, you may need to configure the inference step in `get_action(*args)`).
-- Edit `run` in the class `MyBattlesnakeHeuristics` in `battlesnake_heuristics.py` with your 
+- Open a terminal in jupyter (on the right: New ▼ > Other: Terminal), run:
+``` ./buildTraningEnvironment.sh <NAME OF FOLDER>``` and navigate to `<NAME OF FOLDER>`
+- Open and run the notebook in `HeuristicDeveloper.ipynb` and ensure that you have a functioning model (if you have altered the inputs model, you may need to configure the inference step in `heuristics_utils.get_action(*args)`).
+- Edit `run` in the class `MyBattlesnakeHeuristics` in `battlesnake_inference/battlesnake_heuristics.py` with your own rules (see the `go_to_food_if_close` for an example). 
 
+## Visualising your algorithm
+
+- If you want to visualise the model, ensure that you are using *Jupyter* not *JupyterLab*.
+- The notebook loads a pre-trained model and simulate the actions.
+- After the *Playback the simulation* section, you should see the step-by-step positions, actions, health etc. of each snake.
+- If you want to specify the positions of each snake and food (instead of randomly generating it), you can enter it in `initial_state` in *Define the openAI gym*. initial_state is defined similarly to the [battlesnake API] (https://docs.battlesnake.com/snake-api).
+
+![Visualization](images/VisualizingHeuristics.png "Visualise the heuristics")
 
 ## Deploy your own custom snake
-TODO
+
+- If you trained a new model (but did not deploy it yet), run the cell in *(Optional) Run if you retrained the model*
+- Otherwise, simply run the cell in *Deploy your new heuristics* and your snake will be deployed.
+- Note that there's no need to change the url on the battlesnake engine.
 
 ## Next step: customize the Model
 
