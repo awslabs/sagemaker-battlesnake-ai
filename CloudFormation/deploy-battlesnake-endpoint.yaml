@@ -271,14 +271,14 @@ Resources:
       StageName: snake
 Outputs:
   TrainingEnvironement:
-    Description: "Training Notebook"
+    Description: "Open training Notebook"
     Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/BattleSnakeNotebook?view=lab"
   SnakeEndpoint:
-    Description: "Snake API endpoint URL"
+    Description: "Snake API endpoint"
     Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/snake/"
   StartMethod:
-    Description: "Start method URL"
-    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/snake/start"
+    Description: "Check snake status"
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/snake/status"
 
 
             
