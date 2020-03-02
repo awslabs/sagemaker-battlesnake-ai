@@ -41,17 +41,13 @@ Parameters:
     Default: freckled
     Type: String
   SagemakerInstanceType:
-    Description: "Instance type used for the inference endpoint and training. t2 is default because it works on all accounts, you can choose m5 or m4 which are in the AWS free tier if your account support it"
-    Default: ml.t2.medium
+    Description: "Instance type used for the inference endpoint and training. m5 is default it is in free tiers and most performant. In case of unavailability of the instance on your account use m4 (also free) or t2 (not free but cheap)"
+    Default: ml.m5.xlarge
     Type: String
     AllowedValues:
       - ml.t2.medium
       - ml.m5.xlarge
       - ml.m4.xlarge
-Conditions:
-  ShouldUpdateInstanceType:
-    !Not
-      - !Equals [ml.t2.medium, !Ref SagemakerInstanceType]
 Resources:
   BattleSnakeDeployFunction:
     Type: AWS::Serverless::Function
@@ -188,18 +184,9 @@ Resources:
                 - chown -R ec2-user:ec2-user battlesnake
                 - cd battlesnake
                 - rm -rf .git
-                - Fn::If:
-                  - ShouldUpdateInstanceType
-                  - !Sub "sed -i 's/ml.t2.medium/${SagemakerInstanceType}/g' InferenceEndpoint/deployEndpoint.ipynb"
-                  - "ls"
-                - Fn::If:
-                  - ShouldUpdateInstanceType
-                  - !Sub "sed -i 's/ml.t2.medium/${SagemakerInstanceType}/g' TrainingEnvironment/notebooks/HeuristicsDeveloper.ipynb"
-                  - "ls"
-                - Fn::If:
-                  - ShouldUpdateInstanceType
-                  - !Sub "sed -i 's/ml.t2.medium/${SagemakerInstanceType}/g' TrainingEnvironment/notebooks/SagemakerModelTraining.ipynb"
-                  - "ls"
+                - !Sub "sed -i 's/SAGEMAKER_INSTANCE_TYPE/${SagemakerInstanceType}/g' InferenceEndpoint/deployEndpoint.ipynb"
+                - !Sub "sed -i 's/SAGEMAKER_INSTANCE_TYPE/${SagemakerInstanceType}/g' TrainingEnvironment/notebooks/HeuristicsDeveloper.ipynb"
+                - !Sub "sed -i 's/SAGEMAKER_INSTANCE_TYPE/${SagemakerInstanceType}/g' TrainingEnvironment/notebooks/SagemakerModelTraining.ipynb"
                 - /bin/bash CloudFormation/on-start.sh
   LambdaDeploymentRole:
     Type: AWS::IAM::Role
