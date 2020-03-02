@@ -170,10 +170,10 @@ Resources:
       LifecycleConfigName: !GetAtt LifeCycleConfig.NotebookInstanceLifecycleConfigName
       NotebookInstanceName: BattleSnakeNotebook
       RoleArn: !GetAtt NotebookInstanceExecutionRole.Arn
-      VolumeSizeInGB: 25
+      VolumeSizeInGB: 14
   LifeCycleConfig:
     Type: AWS::SageMaker::NotebookInstanceLifecycleConfig
-    Properties: 
+    Properties:
       OnStart:
         - Content:
             Fn::Base64:
