@@ -54,7 +54,7 @@ Resources:
     Properties:
       Timeout: 90 # Adapt duration depending on cleanup need
       Handler: lambda.handler
-      Role: !GetAtt LambdaEndpointRole.Arn
+      Role: !GetAtt LambdaDeploymentRole.Arn
       Environment:
         Variables:
           SAGEMAKER_BUCKET_NAME: !Sub "sagemaker-${AWS::Region}-${AWS::AccountId}"

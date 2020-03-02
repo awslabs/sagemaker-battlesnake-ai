@@ -79,7 +79,7 @@ def status():
     #TODO : check if inference endpoint is available or not
     status = "ready"
 
-    html = "<html><head><title>Snake status<title></head><body>"
+    html = "<html><head><title>Snake status</title></head><body>"
     html += "<b>snake status : </b>" + status
     html += "</body></html>"
 
