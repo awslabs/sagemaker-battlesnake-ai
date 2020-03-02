@@ -27,13 +27,12 @@ class Food:
         Food will spawn in the coordinates provided in the list until the list is exhausted.
         After the list is exhausted, food will be randomly spawned
     '''
+    FOOD_SPAWN_CHANCE = 0.15
     def __init__(self, map_size, food_spawn_locations=[]):
         self.map_size = map_size
         self.locations_map = np.zeros(shape=(map_size[0], map_size[1]))
 
         self.food_spawn_locations = food_spawn_locations
-        self.max_turns_to_next_food_spawn = 9
-        self.turns_since_last_food_spawn = 0
 
     @classmethod
     def make_from_list(cls, map_size, food_list):
@@ -68,43 +67,16 @@ class Food:
             locations = get_random_coordinates(self.map_size, 1, excluding=snake_locations)
         for location in locations:
             self.locations_map[location[0], location[1]] = 1
-
-    def _calculate_food_spawn_chance(self):
-        '''
-        Helper function to calculate the chance of spawnning.
-        Adapted from https://github.com/battlesnakeio/engine/blob/master/rules/tick.go
-            calculateFoodSpawnChance()
-        '''
-        x = math.pow(1000/0.5, 1 / (self.max_turns_to_next_food_spawn - 1))
-        y = self.turns_since_last_food_spawn
-        return 0.5 * (1 - math.pow(x, y) / (1 - x))
         
-    def end_of_turn(self, snake_locations, number_of_food_eaten, number_of_snakes_alive):
+    def end_of_turn(self, snake_locations):
         '''
         Function to be called at the end of each step. 
-        Adapted from https://github.com/battlesnakeio/engine/blob/master/rules/tick.go
-            updateFood()
+        Adapted from 
+        https://github.com/BattlesnakeOfficial/rules/blob/44b6b946661d42401f5a33b74303cd9071d0db18/standard.go#L392
         '''
-        number_of_food_to_spawn = 0
-        if self.max_turns_to_next_food_spawn <= 0:
-            number_of_food_to_spawn = number_of_food_eaten
-        else:
-            if self.turns_since_last_food_spawn >= self.max_turns_to_next_food_spawn:
-                number_of_food_to_spawn = int(math.ceil(number_of_snakes_alive / 2))
-            else:
-                chance = random.random() * 1000
-                calculated_chance = self._calculate_food_spawn_chance()
-                if chance <= calculated_chance:
-                    number_of_food_to_spawn = int(math.ceil(number_of_snakes_alive / 2))
-                    self.turns_since_last_food_spawn = 0
-
-        if number_of_food_to_spawn > 0:
-            for i in range(number_of_food_to_spawn):
-                self.spawn_food(snake_locations)
-            self.turns_since_last_food_spawn = 0
-        else:
-            self.turns_since_last_food_spawn += 1
-            
+        if random.random() < self.FOOD_SPAWN_CHANCE:
+            self.spawn_food(snake_locations)
+                    
     def get_food_map(self):
         '''
         Function to get a binary image of all the present food

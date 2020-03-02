@@ -73,6 +73,8 @@ class BattleSnakeGym(gym.Env):
         self.map_size = map_size
         self.number_of_snakes = number_of_snakes
         self.initial_game_state = initial_game_state
+        self.snake_spawn_locations = snake_spawn_locations
+        self.food_spawn_locations = food_spawn_locations
         
         self.number_of_snakes = number_of_snakes
         self.map_size = map_size
@@ -127,9 +129,8 @@ class BattleSnakeGym(gym.Env):
         else:
             self.turn_count = 0
 
-            self.snakes = Snakes(self.map_size, number_of_snakes, snake_spawn_locations)
-            
-            self.food = Food(self.map_size, food_spawn_locations)
+            self.snakes = Snakes(self.map_size, self.number_of_snakes, self.snake_spawn_locations)
+            self.food = Food(self.map_size, self.food_spawn_locations)
             self.food.spawn_food(self.snakes.get_snake_51_map())
 
         dones = {i:False for i in range(self.number_of_snakes)}
@@ -347,9 +348,7 @@ class BattleSnakeGym(gym.Env):
                 number_of_snakes_alive += 1
                 reward[i] += self.rewards.get_reward("another_turn", i, episodes)
         
-        self.food.end_of_turn(self.snakes.get_snake_51_map(),
-                              number_of_food_eaten,
-                              number_of_snakes_alive)
+        self.food.end_of_turn(self.snakes.get_snake_51_map())
 
         snakes_alive = []
         for snake in self.snakes.get_snakes():
