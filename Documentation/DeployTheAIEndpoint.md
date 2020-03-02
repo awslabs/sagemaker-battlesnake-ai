@@ -71,6 +71,10 @@ To stop the notebook instance (dev environment) go to Amazon Sagemaker in the AW
 
 To stop the endpoint instance (dev environment) go to Amazon Sagemaker in the AWS console, navigate to inference endpoint instances, select your instance, clic action, and choose stop.
 
+## Next step: customize snake
+
+Go to __[STEP 2 - Customize the AI heuristics](UpdateHeuristicsAndDeploy.md)__ to start making change to the snake behavior.
+
 ## Cleanup environment
 
 To cleanup the environment go to AWS CloudFormation, select your BattleSnakeEnvironment stack and click delete.
