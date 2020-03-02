@@ -1,6 +1,6 @@
-## STEP 1 - Deploy a pretrained AI
+# STEP 1 - Deploy a pretrained AI
 
-This section will deploy a pre-trained AI on your AWS account. This AI will answer to the (see [BattleSnake API](https://docs.battlesnake.com/snake-api)). The architecture deployed will be:
+This section will deploy a pre-trained AI on your AWS account. This AI will expose the [BattleSnake API](https://docs.battlesnake.com/snake-api). The architecture deployed will be:
 
 ![Pretrained Architecture](images/ArchitectureSagemakerBattleSnake.png "Pretrained Architecture")
 
@@ -25,17 +25,17 @@ _* You need to be logged into the AWS account where you want to deploy the stack
 
 _** the official BattleSnake platform run in us-west-2, selecting this one will provide you the lowest latency_
 
-Leave all default value and scroll down at the end of the page. Then check all permissions:
+Customize your snake appearance (color, head, tail) or leave default and scroll down at the end of the page. Then check all permissions:
 
 ![Accept Permissions](images/create-stack.png "Permission checkboxes")
 
 Click "Create Stack"
 
-After about a minute, the stack status should be CREATE_COMPLETE:
+After about 10 minutes, the stack status should be CREATE_COMPLETE:
 
 ![Creation complete](images/create-complete.png "Creation complete")
 
-Open the outputs tab and click on "Start Method" link to test that the deployment work:
+Open the outputs tab and click on "CheckSnakeStatus" link to see if the Snake is ready:
 
 ![Output tab](images/outputs.png "Output tab")
 

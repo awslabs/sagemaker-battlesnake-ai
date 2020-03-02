@@ -1,4 +1,4 @@
-# Developing your own model and deploying it 
+# STEP 3 - Train the AI model with your own settings
 
 Here you can develop your own battlesnake bots. This environment includes a reinforcement learning training gym and module for you to write your own routines to override the AI's movement decisions (Heuristics). 
 
