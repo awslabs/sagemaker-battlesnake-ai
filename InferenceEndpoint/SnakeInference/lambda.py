@@ -47,6 +47,8 @@ def proxyHandler(event, context):
         return ping()
     elif (event["path"] == "/end"):
         return end()
+    elif (event["path"] == "/status"):
+        return status()
     else:
         return {
             "statusCode": 404
@@ -71,6 +73,23 @@ def start():
         })
     }
 
+def status():
+    time.sleep(0.1)
+
+    #TODO : check if inference endpoint is available or not
+    status = "ready"
+
+    html = "<html><head><title>Snake status</title></head><body>"
+    html += "<b>snake status : </b>" + status
+    html += "</body></html>"
+
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "text/html"
+        },
+        "body": html
+    }
 
 def move(body):
     data = json.loads(body)
