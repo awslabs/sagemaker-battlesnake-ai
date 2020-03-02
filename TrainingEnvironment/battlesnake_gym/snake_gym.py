@@ -59,8 +59,10 @@ class BattleSnakeGym(gym.Env):
 
     verbose: Bool, optional, default=False
 
-    initial_game_state: str
-        Filepath to the initial game state
+    initial_game_state: dict , default=None
+        Dictionary to indicate the initial game state
+        Dict is in the same form as in the battlesnake engine
+        https://docs.battlesnake.com/snake-api
     '''
     
     def __init__(self, observation_type="flat-51s", map_size=(15, 15),
@@ -70,18 +72,8 @@ class BattleSnakeGym(gym.Env):
         
         self.map_size = map_size
         self.number_of_snakes = number_of_snakes
-
-        if initial_game_state is not None:
-            self.snakes, self.food, self.turn_count = self.initialise_game_state(initial_game_state)
-        else:
-            self.turn_count = 0
-
-            self.snakes = Snakes(self.map_size, number_of_snakes, snake_spawn_locations)
-            
-            self.food = Food(self.map_size, food_spawn_locations)
-            self.food.spawn_food(self.snakes.get_snake_51_map())
-
-        self.turn_count = 0
+        self.initial_game_state = initial_game_state
+        
         self.number_of_snakes = number_of_snakes
         self.map_size = map_size
 
@@ -106,13 +98,14 @@ class BattleSnakeGym(gym.Env):
         self.verbose = verbose
         self.rewards = rewards
 
-    def initialise_game_state(self, filename):
+    def initialise_game_state(self, game_state_dict):
         '''
         Function to initialise the gym with outputs of env.render(mode="ascii")
         The output is fed in through a text file containing the rendered ascii string
         '''
-        gsp = Game_state_parser(filename)
+        gsp = Game_state_parser(game_state_dict)
         # Check that the current map size and number of snakes are identical to the states
+                
         assert np.array_equal(gsp.map_size, self.map_size), "Map size of the game state is incorrect"
         assert gsp.number_of_snakes == self.number_of_snakes, "Number of names of the game state is incorrect"
 
@@ -129,10 +122,15 @@ class BattleSnakeGym(gym.Env):
         '''
         Inherited function of the openAI gym to reset the environment.
         '''
-        self.turn_count = 0
-        self.snakes = Snakes(self.map_size, self.number_of_snakes)
-        self.food = Food(self.map_size)
-        self.food.spawn_food(self.snakes.get_snake_51_map())
+        if self.initial_game_state is not None:
+            self.snakes, self.food, self.turn_count = self.initialise_game_state(self.initial_game_state)
+        else:
+            self.turn_count = 0
+
+            self.snakes = Snakes(self.map_size, number_of_snakes, snake_spawn_locations)
+            
+            self.food = Food(self.map_size, food_spawn_locations)
+            self.food.spawn_food(self.snakes.get_snake_51_map())
 
         dones = {i:False for i in range(self.number_of_snakes)}
         
@@ -407,7 +405,7 @@ class BattleSnakeGym(gym.Env):
         depth_of_state = 1 + self.snakes.number_of_snakes
         state = np.zeros((self.map_size[0], self.map_size[1], depth_of_state),
                          dtype=np.uint8)
-        
+
         # Include the postions of the food
         state[:, :, FOOD_INDEX] = self.food.get_food_map()
         

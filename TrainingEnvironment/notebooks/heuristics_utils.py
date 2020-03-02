@@ -161,12 +161,13 @@ def simulate(env, net, heuristics, number_of_snakes):
         3. Feed into the battlesnake gym
     '''
     Memory = namedtuple("Memory", "state turn_count health")
-
-    rgb_arrays = []
-    infos_array = []
-    actions_array = []
     
     state, _, _, info = env.reset()
+    
+    rgb_arrays = [env.render(mode="rgb_array")]
+    infos_array = [info]
+    actions_array = [[4, 4, 4, 4]]
+
     memory = Memory(state=np.zeros(state.shape), turn_count=info["current_turn"], health=info["snake_health"])
     while True:
         info["current_turn"] += 1

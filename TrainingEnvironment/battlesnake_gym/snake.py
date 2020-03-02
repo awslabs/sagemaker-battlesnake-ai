@@ -55,23 +55,19 @@ class Snake:
         Class method to make a snake from a list of coordinates.
         Parameters:
         ----------
-        locations: [(str, int, int)]
-            An unordered list of coordinates indicating the head or body (str) 
-            and positions of the snakes (int, int).
+        locations: [(int, int)]
+            An ordered list of coordinates of the body (y, x)
         health: int
             The health of the snake
         map_size: (int, int)
         '''
-        # Make a temporary placeholder for the locations
-        temp_locations = [None] * len(locations)
-        
-        for identifier, i, j in locations:
-            snake_position = int(identifier[1])
-            temp_locations[-(snake_position+1)] = np.array([i, j]) # head is element n
+        tmp_locations = []
+        for i, j in locations[::-1]: # head is element n
+            tmp_locations.append(np.array([i, j])) 
 
-        head = temp_locations[-1]
+        head = tmp_locations[-1]
         cls = Snake(head, map_size)
-        cls.locations = temp_locations
+        cls.locations = tmp_locations
 
         if len(cls.locations) > 1:
             # Calculate the facing direction with the head and the next location
@@ -343,29 +339,29 @@ class Snakes:
         return snakes
 
     @classmethod
-    def make_from_lists(cls, map_size, number_of_snakes, snake_locations, snake_health):
+    def make_from_dict(cls, map_size, snake_dicts):
         '''
         Class method to create the Snakes class from a dictionary of snakes
 
         Parameters
         ----------
         map_size: (int, int)
-        number_of_snakes: int
-        snake_locations: {str: [(str, i, j)]}
-            The key of the dictionary indicates the character assigned to the snake.
-            The values indicates [(snake_identifier+index, coord_i, coord_j)] of the snake.
-            The index indicates the index of the location within the snake.
-
-        snake_health: {str: int}
-            The key of ths dictionary indicates the character assigned to the snake.
-            The value indicates the health of the snake
+        snake_dicts: [{}]
+            A list of snake_dict.
+            dictionary are in the form of the battlesnake engine
         '''
+        number_of_snakes = len(snake_dicts)
         cls = Snakes(map_size, number_of_snakes)
         cls.snakes = []
-        for k in snake_locations:
-            v = snake_locations[k]
-            health = snake_health[k]
-            snake = Snake.make_from_list(v, health, map_size)
+        
+        for snake_dict in snake_dicts:
+            locations = []
+
+            for loc in snake_dict["body"]:
+                locations.append((loc["y"], loc["x"]))
+            
+            health = snake_dict["health"]
+            snake = Snake.make_from_list(locations, health, map_size)
             cls.snakes.append(snake)
         return cls
 
