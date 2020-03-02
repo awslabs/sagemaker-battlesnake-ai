@@ -100,8 +100,12 @@ Resources:
           - sagemaker:CreateTransformJob
           - sagemaker:DescribeEndpointConfig
           - sagemaker:CreateEndpointConfig
+          - sagemaker:DeleteEndpointConfig
           - sagemaker:CreateEndpoint
+          - sagemaker:DeleteEndpoint
+          - sagemaker:UpdateEndpoint
           - sagemaker:DescribeEndpoint
+          - sagemaker:InvokeEndpoint
           Resource:
           - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
