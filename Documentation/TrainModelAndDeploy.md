@@ -2,6 +2,18 @@
 
 Here you can develop your own battlesnake bots. This environment includes a reinforcement learning training gym and module for you to write your own routines to override the AI's movement decisions (Heuristics). 
 
+## Architecture
+
+This step add a training instance to the BattleSnake environment:
+
+![Model Training Architecture](images/ArchitectureSagemakerBattleSnakeTraining.png "Model Training Architecture")
+
+## Cost
+
+> __Estimated cost__ : This environment add a training instance to the picture: the free tiers include 50 hours per month for training instance on the first two months.
+> After the free tiers the charge will be $0.269 per hour ($6.5 per 24 hour period) when the training instance is started.
+> __Saving tip__ : Once you have finished training you can stop your training instance to stop consuming free tiers or occuring charge. You can restart them later to continue training.
+
 ## Dependencies
 - gym: `pip install gym`
 
