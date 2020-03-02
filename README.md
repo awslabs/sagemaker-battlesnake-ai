@@ -17,3 +17,12 @@ This project can be used in three steps:
 - __STEP 3: [Train the AI model with your own settings](Documentation/TrainModelAndDeploy.md#Training-a-reinforcement-learning-model)__ : The most challenging one: train the AI again with different settings, visualize your result and publish an upgraded version!
 
 _You have to do STEP 1 in order to be able to do STEP 2 or STEP 3._
+
+## Cost
+
+This project have been design to fit inside the AWS free tiers for some time.
+See each section for duration and cost.
+
+## License
+
+This project is licensed under the Apache-2.0 License.
