@@ -9,9 +9,9 @@ The architecture deployed will be:
 ![Pretrained Architecture](images/ArchitectureSagemakerBattleSnake.png "Pretrained Architecture")
 
 > __Estimated cost__ : If you run this architecture for a limited time, it will fit in the [AWS Free tiers](https://aws.amazon.com/free/). The AWS Free tiers can support 500 000 snake API invokation on a 125 hours period per month on the first two months. The free tiers also include 250 hours per month of this notebook instance on the first two months.
-> After the free tiers the charge will be $0.269 per hour ($6.5 per 24 hour period) of Sagemaker endpoint instance, $0.269 per hour of Sagemaker notebook instance and $6 per million Snake API call.
+> After the free tiers the charge will be $0.269 per hour ($6.5 per 24 hour period) for the endpoint instance, $0.269 per hour for the notebook instance and $6 per million Snake API call.
 > __Saving tip__ : Once you have finished working (respectively participating to games) you can stop your notebook instance (resp. your endpoint instance) to stop consuming free tiers or occuring charge. You can restart them later to continue your work.
-> See pricing details: [Sagemaker pricing](https://aws.amazon.com/sagemaker/pricing/), [Lambda pricing](https://aws.amazon.com/lambda/pricing/), [API Gateway pricing](https://aws.amazon.com/api-gateway/pricing/)
+> See pricing details: [Amazon Sagemaker pricing](https://aws.amazon.com/sagemaker/pricing/), [AWS Lambda pricing](https://aws.amazon.com/lambda/pricing/), [Amazon API Gateway pricing](https://aws.amazon.com/api-gateway/pricing/)
 
 ## Deploy environment
 
@@ -49,9 +49,9 @@ After about 10 minutes you should see somthing like this:
 
 ![Successfull result](images/working.png "Result")
 
-> __Troubleshooting__ : If after 20 minutes the snake is not ready, you can go on AWS Sagemaker in the console and look for Inference Endpoint. If you don't see any, go to Notebook instance, clic on your instance, scroll down and clic on View Logs. Then clic on BattleSnakeNotebook/LifecycleConfigOnStart and see if you find any error.
+> __Troubleshooting__ : If after 20 minutes the snake is not ready, you can go on Amazon Sagemaker in the AWS console and look for Inference Endpoint. If you don't see any, go to Notebook instance, clic on your instance, scroll down and clic on View Logs. Then clic on BattleSnakeNotebook/LifecycleConfigOnStart and see if you find any error.
 
-> If the error is _The account-level service limit 'ml.m5.xlarge for endpoint usage' is 0 Instances_ then delete the stack, and recreate it selecting a different instance type on the cloudformation stack parameter page.
+> If the error is _The account-level service limit 'ml.m5.xlarge for endpoint usage' is 0 Instances_ then delete the stack, and recreate it selecting a different instance type on the AWS CloudFormation stack parameter page.
 
 Again on output tab, the value "Snake URL" is your Snake URL, you can use it on [BattleSnake](https://play.battlesnake.com/) !
 
@@ -67,12 +67,12 @@ Create a game, select your snake by his name, add opponents and start the game:
 
 Once you finish your work for the day or you finish participating to games with your snake you can stop instances.
 
-To stop the notebook instance (dev environment) go to AWS Sagemaker in the AWS console, navigate to notebook instances, select your instance, clic action, and choose stop.
+To stop the notebook instance (dev environment) go to Amazon Sagemaker in the AWS console, navigate to notebook instances, select your instance, clic action, and choose stop.
 
-To stop the endpoint instance (dev environment) go to AWS Sagemaker in the AWS console, navigate to inference endpoint instances, select your instance, clic action, and choose stop.
+To stop the endpoint instance (dev environment) go to Amazon Sagemaker in the AWS console, navigate to inference endpoint instances, select your instance, clic action, and choose stop.
 
 ## Cleanup environment
 
-To cleanup the environment go to cloudformation, select your BattleSnakeEnvironment stack and click delete.
+To cleanup the environment go to AWS CloudFormation, select your BattleSnakeEnvironment stack and click delete.
 
 __WARNING : Delete stack will erase the BattleSnake environment data, logs and code change.__ Make sure you saved your work before doing this.

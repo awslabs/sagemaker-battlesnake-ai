@@ -13,7 +13,7 @@ _If you do clever things, your pull request is welcome!_
 ![Heuristic Dev Architecture](images/ArchitectureSagemakerBattleSnakeHeuristics.png "Heuristic Dev Architecture")
 
 > __Estimated cost__ : This environment does not add any cost to the STEP 1 environment. The free tiers include 250 hours per month of this notebook instance on the first two months.
-> After the free tiers the charge will be $0.269 per hour ($6.5 per 24 hour period) Sagemaker notebook instance.
+> After the free tiers the charge will be $0.269 per hour for the notebook instance ($6.5 per 24 hour period).
 > __Saving tip__ : Once you have finished working you can stop your notebook instance to stop consuming free tiers or occuring charge. You can restart them later to continue your work.
 
 ## How to develop your own heuristic algorithms

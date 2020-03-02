@@ -22,7 +22,7 @@ This step add a training instance to the BattleSnake environment:
 - mxnet (to run reinforcement learning algorithm): For installation see: https://mxnet.apache.org/get_started
 
 ## Setting up on sagemaker
-- Navigate to ``~/Sagemaker` in a sagemaker terminal
+- Navigate to ``~/Sagemaker` in an Amazon SageMaker terminal
 - Enter `Sagemaker-battlesnake-ai/TrainingEnvironment` then run `build.sh`
 
 ## Training a reinforcement learning model
@@ -34,9 +34,9 @@ The openAI gym was designed to follow the rules as provided here: https://docs.b
 ### Installation the gym
 - `pip install -e .`
 
-### Training the MXNet example on sagemaker
-- The main entry point (sagemaker endpoint) of the training the model is [`examples/train.py`](../TrainingEnvironment/examples/train.py)
-- In a sagemaker terminal, run the script with `python examples/train.py --should_render --print_progress --number_of_snakes 4`
+### Training the MXNet example on Amazon SageMaker
+- The main entry point (Amazon SageMaker endpoint) of the training the model is [`examples/train.py`](../TrainingEnvironment/examples/train.py)
+- In an Amazon SageMaker terminal, run the script with `python examples/train.py --should_render --print_progress --number_of_snakes 4`
 - Open and run the notebook in `SagemakerModelTraining.ipynb` and the models will be automatically created.
 
 ### Reinforcement learning and gym details
