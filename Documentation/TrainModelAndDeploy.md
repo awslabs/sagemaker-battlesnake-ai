@@ -36,6 +36,7 @@ The openAI gym was designed to follow the rules as provided here: https://docs.b
 ### Training the MXNet example on Amazon SageMaker
 - Open "SagemakerModelTraining.ipynb" in `<NAME OF FOLDER>`.
 - The notebook contains code on training, hyper parameter optimisation, and automatic deployment of the model.
+- Press ► on the top to run the notebook (see [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use jupyter notebooks).
 - The main entry point (Amazon SageMaker endpoint) of the training the model is [`examples/train.py`](../TrainingEnvironment/examples/train.py)
 
 ### Reinforcement learning and gym details
