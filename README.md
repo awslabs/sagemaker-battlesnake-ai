@@ -23,7 +23,7 @@ This snake is not designed to win the BattleSnake competition, you'll have to im
 
 This project can be used in three steps:
 
-- __[STEP 1 - Deploy the environment](Documentation/DeployTheAIEndpoint.md)__ : Deploy a Snake AI in a single click! You are ready for the competition.
+- __[STEP 1 - Deploy the environment](Documentation/DeployTheAIEndpoint.md)__ : Deploy a Snake AI in a single click! You are ready to participate to a BattleSnake game.
 - __[STEP 2 - Customize the AI heuristics](Documentation/UpdateHeuristicsAndDeploy.md)__ : Customize AI behaviour, visualize your results and publish an upgraded version!
 - __[STEP 3 - Train the AI model with your own settings](Documentation/TrainModelAndDeploy.md)__ : The most challenging one: train the AI again with different settings, visualize your result and publish an upgraded version!
 
