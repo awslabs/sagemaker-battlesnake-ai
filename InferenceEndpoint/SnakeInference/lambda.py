@@ -76,7 +76,7 @@ def start():
 def status():
     time.sleep(0.1)
 
-    #TODO : check if inference endpoint is available or not
+    # Check if inference endpoint is available or not
     status = "unknown"
     endpoint_name = 'battlesnake-endpoint'
     client = boto3.client('sagemaker')
