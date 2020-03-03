@@ -20,10 +20,13 @@ _If you do clever things, your pull request is welcome!_
 
 ## How to develop your own heuristic algorithms
 
-- Open a terminal in jupyter (on the right: New ▼ > Other: Terminal), navigate to /SageMaker/battlesnake then run:
-``` ./buildTraningEnvironment.sh <NAME OF FOLDER>``` and navigate to `<NAME OF FOLDER>`
-- Open and run the `HeuristicDeveloper.ipynb` notebook and ensure that you have a functioning model (if you have altered the inputs model, you may need to configure the inference step in `heuristics_utils.get_action(*args)`). Press ► on the top to run the notebook (see [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use jupyter notebooks).
-- Edit `run` in the class `MyBattlesnakeHeuristics` in `battlesnake_inference/battlesnake_heuristics.py` with your own rules (see the `go_to_food_if_close` for an example). 
+From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _HeuristicsDevEnvironement_:
+
+![Output tab](images/outputs.png "Output tab")
+
+Now that you have the notebook `HeuristicDeveloper.ipynb` open and ensure that you have a functioning model (if you have altered the inputs model, you may need to configure the inference step in `heuristics_utils.get_action(*args)`). Press ► on the top to run the notebook (see [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use jupyter notebooks).
+
+Edit `run` in the class `MyBattlesnakeHeuristics` in `battlesnake_inference/battlesnake_heuristics.py` with your own rules (see the `go_to_food_if_close` for an example). 
 
 ## Visualising your algorithm
 

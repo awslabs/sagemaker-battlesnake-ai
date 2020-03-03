@@ -1,6 +1,6 @@
 # Amazon SageMaker for Battlesnake AI
 
-This project shows how to build and deploy an AI for the game [BattleSnake](https://play.battlesnake.com/) with [Amazon Sagemaker](https://aws.amazon.com/sagemaker/)!
+This project shows how to build and deploy an AI for the platform [BattleSnake](https://play.battlesnake.com/) with [Amazon Sagemaker](https://aws.amazon.com/sagemaker/)!
 
 It is ready to deploy and contains learning materials for AI enthusiast.
 
@@ -39,6 +39,22 @@ If you use  STEP 1, STEP 2 and STEP 3, you will have the following deployed:
 
 This project have been design to fit inside the AWS free tiers for some time.
 See each steps for duration and cost.
+
+### Content
+
+The source code of the project is organized as:
+
+```
+CloudFormation                    # contains the resources to automate deployment         
+InferenceEndpoint                 # contains the code of the Snake Endpoint
+  > PretrainedModels              # models already trained
+  > SnakeInference                # code that expose the Snake API
+TrainingEnvironment
+ > battlesnake_gym                # Open GYM environment that simulate the BattleSnake game engine
+ > notebook
+   > HeuristicsDeveloper.ipynb    # Jupyter notebook for heuristics development
+   > SagemakerModelTraining.ipynb # Jupyter notebook for model training    
+```
 
 ## License
 

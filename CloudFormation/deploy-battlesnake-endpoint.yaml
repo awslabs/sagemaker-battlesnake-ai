@@ -68,6 +68,11 @@ Resources:
      Properties:
        ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
        Operation: CleanupSagemakerBucket
+  CleanupEndpointOnDelete:
+     Type: Custom::CleanupEndpoint
+     Properties:
+       ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
+       Operation: CleanupSagemakerEndpoint
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -96,11 +101,11 @@ Resources:
           - sagemaker:CreateModel
           - sagemaker:DescribeModel
           - sagemaker:DeleteModel
-          - sagemaker:DescribeTransformJob
           - sagemaker:CreateTransformJob
-          - sagemaker:DescribeEndpointConfig
+          - sagemaker:DescribeTransformJob
           - sagemaker:CreateEndpointConfig
           - sagemaker:DeleteEndpointConfig
+          - sagemaker:DescribeEndpointConfig
           - sagemaker:CreateEndpoint
           - sagemaker:DeleteEndpoint
           - sagemaker:UpdateEndpoint
@@ -216,6 +221,9 @@ Resources:
               - sagemaker:DeleteEndpointConfig
               - sagemaker:DeleteEndpoint
               - sagemaker:DeleteModel
+              - sagemaker:DescribeEndpointConfig
+              - sagemaker:DescribeEndpoint
+              - sagemaker:DescribeModel
               Resource:
               - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
         - PolicyName: SagemakerBucketAccess
@@ -253,6 +261,7 @@ Resources:
             - Effect: Allow
               Action:
               - sagemaker:InvokeEndpoint
+              - sagemaker:DescribeEndpoint
               Resource:
               - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
   BattleSnakeAPIFunction:
@@ -288,10 +297,10 @@ Resources:
 Outputs:
   HeuristicsDevEnvironement:
     Description: "Modify, visualize and re-deploy heuristics"
-    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/TrainingEnvironment/notebooks/HeuristicsDeveloper.ipynb"
+    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/LocalEnv/HeuristicsDeveloper.ipynb"
   ModelTrainingEnvironement:
     Description: "Modify, train, visualize and re-deploy model"
-    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/TrainingEnvironment/notebooks/SagemakerModelTraining.ipynb"  
+    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/LocalEnv/SagemakerModelTraining.ipynb"  
   SnakeAPI:
     Description: "Use this URL on the Battlesnake platform"
     Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/snake/"

@@ -77,10 +77,24 @@ def status():
     time.sleep(0.1)
 
     #TODO : check if inference endpoint is available or not
-    status = "ready"
+    status = "unknown"
+    endpoint_name = 'battlesnake-endpoint'
+    client = boto3.client('sagemaker')
+    response = client.describe_endpoint(EndpointName=endpoint_name)
+
+    print(response)
 
     html = "<html><head><title>Snake status</title></head><body>"
-    html += "<b>snake status : </b>" + status
+
+    if( response['EndpointStatus'] == 'InService'):
+        status = "ready"
+        html += "<b>snake status : </b>" + status
+    else:
+        status = "not ready"
+        html += "<b>snake status : </b>" + status + "<br><br>"
+        html += "<b>Sagemaker endpoint status : </b>" + response['EndpointStatus']+ "<br><br>"
+        html += "<i>You can visit the Amazon Sagemaker service page in the AWS Console to see detailed information.</i>"
+
     html += "</body></html>"
 
     return {
