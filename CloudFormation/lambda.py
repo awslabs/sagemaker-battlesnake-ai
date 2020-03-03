@@ -37,6 +37,7 @@ def handler(event, context):
                 s3 = boto3.resource('s3')
                 bucket = s3.Bucket(bucketName)
                 bucket.objects.filter(Prefix='battlesnake-aws/').delete()
+                bucket.objects.filter(Prefix='battlesnake-mxnet/').delete()
         elif operation == 'CleanupSagemakerEndpoint':
             if event['RequestType'] == 'Delete':
                 deployment_name = 'battlesnake-endpoint'

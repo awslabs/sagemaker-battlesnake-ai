@@ -101,11 +101,11 @@ Resources:
           - sagemaker:CreateModel
           - sagemaker:DescribeModel
           - sagemaker:DeleteModel
-          - sagemaker:DescribeTransformJob
           - sagemaker:CreateTransformJob
-          - sagemaker:DescribeEndpointConfig
+          - sagemaker:DescribeTransformJob
           - sagemaker:CreateEndpointConfig
           - sagemaker:DeleteEndpointConfig
+          - sagemaker:DescribeEndpointConfig
           - sagemaker:CreateEndpoint
           - sagemaker:DeleteEndpoint
           - sagemaker:UpdateEndpoint
@@ -221,7 +221,9 @@ Resources:
               - sagemaker:DeleteEndpointConfig
               - sagemaker:DeleteEndpoint
               - sagemaker:DeleteModel
+              - sagemaker:DescribeEndpointConfig
               - sagemaker:DescribeEndpoint
+              - sagemaker:DescribeModel
               Resource:
               - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
         - PolicyName: SagemakerBucketAccess
