@@ -24,8 +24,11 @@ This step add a training instance to the BattleSnake environment:
 - mxnet (to run reinforcement learning algorithm): For installation see: https://mxnet.apache.org/get_started
 
 ## Setting up on sagemaker
-- Navigate to ``~/Sagemaker` in an Amazon SageMaker terminal
-- Run `buildTrainingEnvironment.sh <NAME OF FOLDER>` then navigate to `<NAME OF FOLDER>`
+![Output tab](images/outputs.png "Output tab")
+Similar to the heuritsics developer, check the output tab and open ModelTrainingEnvironment: 
+
+- Once in SagemakerModelTraining.ipynb, run through the notebook to train or run hyperparameter optimization (Press ► on the top to run the notebook (see here for a tutorial on how to use jupyter notebooks).
+- set `run_hpo = False` to train and `run_hpo = True` to run hyperparameter optimization.
 
 ## Training a reinforcement learning model
 
