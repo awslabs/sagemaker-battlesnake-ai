@@ -43,7 +43,7 @@ You can customize the `run` method in the class `MyBattlesnakeHeuristics` in  wi
 - If you want to visualise the model, ensure that you are using *Jupyter* not *JupyterLab* (this is default if you use the links from AWS CloudFormation).
 - The notebook loads a pre-trained model and simulate the actions.
 - After the *Playback the simulation* section, you should see the step-by-step positions, actions, health etc. of each snake.
-- If you want to specify the positions of each snake and food (instead of randomly generating it), you can enter it in `initial_state` in *Define the openAI gym*. initial_state is defined similarly to the [battlesnake API] (https://docs.battlesnake.com/snake-api).
+- If you want to specify the positions of each snake and food (instead of randomly generating it), you can enter it in `initial_state` in *Define the openAI gym*. initial_state is defined similarly to the [battlesnake API](https://docs.battlesnake.com/snake-api).
 
 ![Visualization](images/VisualizingHeuristics.png "Visualise the heuristics")
 
