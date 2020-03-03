@@ -16,17 +16,12 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+mkdir -p $1
+
 if find $1 -mindepth 1 | read > /dev/null; then
    echo "$1 not empty. Please enter an empty directory"
 else
-    echo "Installing the battlesnake gym"
-    cd TrainingEnvironment
-    source activate mxnet_p38
-    pip install -e .
-    cd ..
-    
     echo "Create the entry points"
-    mkdir $1
     cd $1
     mkdir battlesnake_gym/
     mkdir battlesnake_src

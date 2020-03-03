@@ -288,10 +288,10 @@ Resources:
 Outputs:
   HeuristicsDevEnvironement:
     Description: "Modify, visualize and re-deploy heuristics"
-    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/TrainingEnvironment/notebooks/HeuristicsDeveloper.ipynb"
+    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/LocalEnv/HeuristicsDeveloper.ipynb"
   ModelTrainingEnvironement:
     Description: "Modify, train, visualize and re-deploy model"
-    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/TrainingEnvironment/notebooks/SagemakerModelTraining.ipynb"  
+    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/LocalEnv/SagemakerModelTraining.ipynb"  
   SnakeAPI:
     Description: "Use this URL on the Battlesnake platform"
     Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/snake/"
