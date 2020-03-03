@@ -1,6 +1,8 @@
 # STEP 2 - Customize the AI heuristics
 
-Using your customised model from [STEP 3](TrainModelAndDeploy.md) or using the provided pretrained model from [STEP 1](DeployTheAIEndpoint.md), you can add some code to change the AI's movement decision.
+This section explain how to write your own routines to override the AI's movement decisions (Heuristics).
+
+The AI decision can from your customised model if you ran the [STEP 3](TrainModelAndDeploy.md) or the provided pretrained model from [STEP 1](DeployTheAIEndpoint.md).
 
 > __PRE-REQUISITE__: In any case, you need to run __[STEP 1 - Deploy the environment](DeployTheAIEndpoint.md)__ before following this instructions.
 
