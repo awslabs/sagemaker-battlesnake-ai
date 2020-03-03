@@ -35,7 +35,7 @@ The openAI gym was designed to follow the rules as provided here: https://docs.b
 
 ### Training the MXNet example on Amazon SageMaker
 
-From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _ModelTrainingEnvironement_:
+From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _ModelTrainingEnvironment_:
 
 ![Output tab](images/outputs.png "Output tab")
 

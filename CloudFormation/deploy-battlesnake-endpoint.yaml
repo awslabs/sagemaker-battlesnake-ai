@@ -295,10 +295,10 @@ Resources:
     Properties:
       StageName: snake
 Outputs:
-  HeuristicsDevEnvironement:
+  HeuristicsDevEnvironment:
     Description: "Modify, visualize and re-deploy heuristics"
     Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/LocalEnv/HeuristicsDeveloper.ipynb"
-  ModelTrainingEnvironement:
+  ModelTrainingEnvironment:
     Description: "Modify, train, visualize and re-deploy model"
     Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/LocalEnv/SagemakerModelTraining.ipynb"  
   SnakeAPI:

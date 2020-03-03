@@ -20,7 +20,7 @@ _If you do clever things, your pull request is welcome!_
 
 ## How to develop your own heuristic algorithms
 
-From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _HeuristicsDevEnvironement_:
+From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _HeuristicsDevEnvironment_:
 
 ![Output tab](images/outputs.png "Output tab")
 

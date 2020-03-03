@@ -15,7 +15,7 @@ The AI takes movement decision in two steps:
  * __1. Run a Neural Network Model__ 
  * __2. Run Heuristics__ some additionnal code that can override the Model decision (don't colide a wall, eat food if this is safe, ...)
 
-A pre-trained Neural Network model is provided within this project as well as some default heuristics, but the training environement is also provided for you to make modification and retrain.
+A pre-trained Neural Network model is provided within this project as well as some default heuristics, but the training environment is also provided for you to make modification and retrain.
 
 This snake is not designed to win the BattleSnake competition, you'll have to improve it to have a chance.
 
