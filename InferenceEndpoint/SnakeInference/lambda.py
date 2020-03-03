@@ -15,12 +15,10 @@ import json
 import os
 import random
 import time
-import mxnet as mx
 import numpy as np
 import boto3
 import botocore
 
-from battlesnake_heuristics import MyBattlesnakeHeuristics
 from convert_utils import ObservationToStateConverter
 
 #################################
