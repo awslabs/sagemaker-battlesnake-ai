@@ -36,7 +36,7 @@ def handler(event, context):
                 bucket = os.environ['SAGEMAKER_BUCKET_NAME']
                 s3 = boto3.resource('s3')
                 bucket = s3.Bucket(bucket)
-                for obj in bucket.objects.filter():
+                for obj in bucket.objects.filter(prefix='battlesnake-aws'):
                     s3.Object(bucket.name, obj.key).delete()
 
         sendResponseCfn(event, context, "SUCCESS")
