@@ -261,6 +261,7 @@ Resources:
             - Effect: Allow
               Action:
               - sagemaker:InvokeEndpoint
+              - sagemaker:DescribeEndpoint
               Resource:
               - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
   BattleSnakeAPIFunction:
