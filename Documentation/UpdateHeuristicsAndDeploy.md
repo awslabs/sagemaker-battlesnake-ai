@@ -26,6 +26,8 @@ _If you do clever things, your pull request is welcome!_
 
 From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _HeuristicsDevEnvironment_:
 
+> _You need to be authenticated for that link to work. Click on __SourceEditionInNotebook__ link if you are denied_
+
 ![Output tab](images/outputs.png "Output tab")
 
 Now that you have the notebook `HeuristicDeveloper.ipynb` open and ensure that you have a functioning model (if you have altered the inputs model, you may need to configure the inference step in `heuristics_utils.get_action(*args)`). Press ► on the top to run the notebook (_see [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use jupyter notebooks_).
@@ -34,7 +36,7 @@ Now that you have the notebook `HeuristicDeveloper.ipynb` open and ensure that y
 
 From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _SourceEditionInNotebook_:
 
-Then navigate to `battlesnake_inference/battlesnake_heuristics.py`
+Then navigate to `battlesnake/LocalEnv/battlesnake_inference/battlesnake_heuristics.py`
 
 You can customize the `run` method in the class `MyBattlesnakeHeuristics` in  with your own rules (see the `go_to_food_if_close` for an example). 
 
