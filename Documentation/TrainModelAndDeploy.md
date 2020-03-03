@@ -34,6 +34,7 @@ The reinforcement learning component provides an openAI gym to train your battle
 The openAI gym was designed to follow the rules as provided here: https://docs.battlesnake.com/rules.
 
 ### Training the MXNet example on Amazon SageMaker
+- If you haven't done so, open a terminal in jupyter (on the right: New ▼ > Other: Terminal), navigate to /SageMaker/battlesnake then run: ./buildTraningEnvironment.sh <NAME OF FOLDER> and navigate to <NAME OF FOLDER>
 - Open "SagemakerModelTraining.ipynb" in `<NAME OF FOLDER>`.
 - The notebook contains code on training, hyper parameter optimisation, and automatic deployment of the model.
 - Press ► on the top to run the notebook (see [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use jupyter notebooks).
