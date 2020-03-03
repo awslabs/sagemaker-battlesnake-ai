@@ -18,14 +18,6 @@ This step add a training instance to the BattleSnake environment:
 > After the free tiers the charge will be $0.269 per hour ($6.5 per 24 hour period) when the training instance is started.
 > __Saving tip__ : Once you have finished training you can stop your training instance to stop consuming free tiers or occuring charge. You can restart them later to continue training.
 
-## Dependencies
-
-- gym: `pip install gym`
-
-- array2gif: `pip install array2gif`
-
-- mxnet (to run reinforcement learning algorithm): For installation see: https://mxnet.apache.org/get_started
-
 ## Setting up on sagemaker
 
 Similar to the heuritsics developer, check the output tab and open _ModelTrainingEnvironment_:
