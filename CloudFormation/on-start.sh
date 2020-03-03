@@ -30,4 +30,4 @@ nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --Exe
 source /home/ec2-user/anaconda3/bin/deactivate
 
 # Generate the local environment for training & heuristics dev
-../buildTrainingEnvironment.sh LocalEnv
+./buildTrainingEnvironment.sh LocalEnv
