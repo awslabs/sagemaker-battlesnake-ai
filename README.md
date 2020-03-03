@@ -49,8 +49,9 @@ CloudFormation                    # contains the resources to automate deploymen
 InferenceEndpoint                 # contains the code of the Snake Endpoint
   > PretrainedModels              # models already trained
   > SnakeInference                # code that expose the Snake API
+  > SageMakerEndpoint             # code that is used for model inference
 TrainingEnvironment
- > battlesnake_gym                # Open GYM environment that simulate the BattleSnake game engine
+ > battlesnake_gym                # OpenAI Gym environment that simulate the BattleSnake game engine
  > notebook
    > HeuristicsDeveloper.ipynb    # Jupyter notebook for heuristics development
    > SagemakerModelTraining.ipynb # Jupyter notebook for model training    
