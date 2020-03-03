@@ -73,13 +73,17 @@ def transform_fn(models, data, content_type, output_content_type):
     heuristics_turn = np.array(data["turn_count"])[0, 1]
     heuristics_health = data["all_health"]
     
-    print("Heuristisc health {}".format(heuristics_health))
-      
+    converted_heuristic_health = {}
+    for k in heuristics_health:
+        converted_heuristic_health[int(k)] = heuristics_health[k]
+    print("Heuristisc health {}".format(converted_heuristic_health))
+
     print("state {}".format(heuristics_state.shape))
+    print("data json {}".format(data["json"]))
     converted_action = heuristics.run(heuristics_state, 
-                                      heuristics_id,
-                                      heuristics_turn+1,
-                                      heuristics_health, 
+                                      int(heuristics_id),
+                                      int(heuristics_turn)+1,
+                                      converted_heuristic_health, 
                                       json=data["json"],
                                       action=action)
     print("converted_action {}".format(converted_action))

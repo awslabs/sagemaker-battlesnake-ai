@@ -182,7 +182,6 @@ def simulate(env, net, heuristics, number_of_snakes):
             json = convert_state_into_json(state, snake_list, snake_id=i, 
                                            turn_count=info["current_turn"]+1, 
                                            health=info["snake_health"])
-            
             # Add heuristics
             action = heuristics.run(state, snake_id=i,
                                     turn_count=info["current_turn"]+1,

@@ -60,7 +60,7 @@ class MyBattlesnakeHeuristics:
         Indicates the number of elapsed turns
     
         `health`: dict
-        Indicates the health of all snakes in the form of {snake_id: health}
+        Indicates the health of all snakes in the form of {int: snake_id: int:health}
         
         `json`: dict
         Provides the same information as above, in the same format as the battlesnake engine.
@@ -73,9 +73,10 @@ class MyBattlesnakeHeuristics:
         best_action = int(np.argmax(action))
                 
         # Example heuristics to eat food that you are close to.
-        food_direction = self.go_to_food_if_close(state, json)
-        if food_direction:
-            best_action = food_direction
+        if health[snake_id] < 30:
+            food_direction = self.go_to_food_if_close(state, json)
+            if food_direction:
+                best_action = food_direction
 
         # TO DO, add your own heuristics
         
