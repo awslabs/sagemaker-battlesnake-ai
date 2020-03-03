@@ -68,6 +68,11 @@ Resources:
      Properties:
        ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
        Operation: CleanupSagemakerBucket
+  CleanupEndpointOnDelete:
+     Type: Custom::CleanupEndpoint
+     Properties:
+       ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
+       Operation: CleanupSagemakerEndpoint
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
     Properties:

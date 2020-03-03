@@ -33,11 +33,19 @@ def handler(event, context):
 
         if operation == 'CleanupSagemakerBucket':
             if event['RequestType'] == 'Delete':
-                bucket = os.environ['SAGEMAKER_BUCKET_NAME']
+                bucketName = os.environ['SAGEMAKER_BUCKET_NAME']
                 s3 = boto3.resource('s3')
-                bucket = s3.Bucket(bucket)
-                for obj in bucket.objects.filter(prefix='battlesnake-aws'):
-                    s3.Object(bucket.name, obj.key).delete()
+                bucket = s3.Bucket(bucketName)
+                bucket.objects.filter(Prefix='battlesnake-aws/').delete()
+        elif operation == 'CleanupSagemakerEndpoint':
+            if event['RequestType'] == 'Delete':
+                deployment_name = 'my_deployment_name'
+                client = boto3.client('sagemaker')
+                response = client.describe_endpoint_config(EndpointConfigName=deployment_name)
+                model_name = response['ProductionVariants'][0]['ModelName']
+                client.delete_model(ModelName=model_name)    
+                client.delete_endpoint(EndpointName=deployment_name)
+                client.delete_endpoint_config(EndpointConfigName=deployment_name)
 
         sendResponseCfn(event, context, "SUCCESS")
     except Exception as e:
