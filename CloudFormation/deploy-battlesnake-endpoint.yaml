@@ -221,6 +221,7 @@ Resources:
               - sagemaker:DeleteEndpointConfig
               - sagemaker:DeleteEndpoint
               - sagemaker:DeleteModel
+              - sagemaker:DescribeEndpoint
               Resource:
               - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
         - PolicyName: SagemakerBucketAccess

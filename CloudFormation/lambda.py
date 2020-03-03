@@ -39,7 +39,7 @@ def handler(event, context):
                 bucket.objects.filter(Prefix='battlesnake-aws/').delete()
         elif operation == 'CleanupSagemakerEndpoint':
             if event['RequestType'] == 'Delete':
-                deployment_name = 'my_deployment_name'
+                deployment_name = 'battlesnake-endpoint'
                 client = boto3.client('sagemaker')
                 response = client.describe_endpoint_config(EndpointConfigName=deployment_name)
                 model_name = response['ProductionVariants'][0]['ModelName']
