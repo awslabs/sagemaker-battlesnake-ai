@@ -41,9 +41,12 @@ After about 10 minutes, the stack status should be CREATE_COMPLETE:
 
 ![Creation complete](images/create-complete.png "Creation complete")
 
-Open the outputs tab and click on "CheckSnakeStatus" link to see if the Snake is ready:
-
+Open the outputs tab and click on "CheckSnakeStatus" link to see if the Snake is ready.
 ![Output tab](images/outputs.png "Output tab")
+
+Initially, you should see that the snake is being created.
+
+![Snake_not_ready tab](images/Snake_not_ready.png "Snake_not_ready tab")
 
 After about 10 minutes you should see somthing like this:
 
