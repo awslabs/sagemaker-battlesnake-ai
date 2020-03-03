@@ -31,3 +31,5 @@ source /home/ec2-user/anaconda3/bin/deactivate
 
 # Generate the local environment for training & heuristics dev
 ./buildTrainingEnvironment.sh LocalEnv
+
+chown -R ec2-user:ec2-user LocalEnv

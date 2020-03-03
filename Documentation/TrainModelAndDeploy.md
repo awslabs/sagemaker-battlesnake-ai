@@ -1,6 +1,8 @@
 # STEP 3 - Train the AI model with your own settings
 
-Here you can develop your own battlesnake bots. This environment includes a reinforcement learning training gym and module for you to write your own routines to override the AI's movement decisions (Heuristics). 
+This page explain how to train the model again and how to modify the training settings.
+
+This is controlled mainly by a single notebook and will use an training gym environment.
 
 > __PRE-REQUISITE__: You need to run __[STEP 1 - Deploy the environment](DeployTheAIEndpoint.md)__ before following this instructions.
 
@@ -16,16 +18,16 @@ This step add a training instance to the BattleSnake environment:
 > After the free tiers the charge will be $0.269 per hour ($6.5 per 24 hour period) when the training instance is started.
 > __Saving tip__ : Once you have finished training you can stop your training instance to stop consuming free tiers or occuring charge. You can restart them later to continue training.
 
-## Dependencies
-- gym: `pip install gym`
-
-- array2gif: `pip install array2gif`
-
-- mxnet (to run reinforcement learning algorithm): For installation see: https://mxnet.apache.org/get_started
-
 ## Setting up on sagemaker
-- Navigate to ``~/Sagemaker` in an Amazon SageMaker terminal
-- Run `buildTrainingEnvironment.sh <NAME OF FOLDER>` then navigate to `<NAME OF FOLDER>`
+
+Similar to the heuritsics developer, check the output tab and open _ModelTrainingEnvironment_:
+
+> _You need to be authenticated for that link to work. Click on __SourceEditionInNotebook__ link if you are denied_
+
+![Output tab](images/outputs.png "Output tab")
+
+- Once in SagemakerModelTraining.ipynb, run through the notebook to train or run hyperparameter optimization (Press ► on the top to run the notebook (see here for a tutorial on how to use jupyter notebooks).
+- set `run_hpo = False` to train and `run_hpo = True` to run hyperparameter optimization.
 
 ## Training a reinforcement learning model
 
@@ -35,7 +37,7 @@ The openAI gym was designed to follow the rules as provided here: https://docs.b
 
 ### Training the MXNet example on Amazon SageMaker
 
-From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _ModelTrainingEnvironement_:
+From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _ModelTrainingEnvironment_:
 
 ![Output tab](images/outputs.png "Output tab")
 
@@ -46,7 +48,9 @@ Press ► on the top to run the notebook (see [here](https://www.youtube.com/wat
 The main entry point (Amazon SageMaker endpoint) of the training the model is [`examples/train.py`](../TrainingEnvironment/examples/train.py)
 
 ### Reinforcement learning and gym details
+
 #### Observation space: 
+
 This gym provide several options for the options for the observation space. 
 The observation space provided by the gym is of size `N x M x C` where `N` and `M` are the width and height of the map and `C` is the number of snakes + 1 to account for the food). The food is indicated by values of `1` in `C=0`. The snakes in `C=1 to C=num_snakes+1` and represented by 2 [options](../TrainingEnvironment/battlesnake_gym/snake_gym.py) (`51s`, `num`): 
 
@@ -61,13 +65,16 @@ The gym also provides an option to increase the map size by 2 to include -1 in t
 ![alt text](images/border.png "Bordered 51s snake representation")
 
 #### Actions:
+
 For each snake, the possible [actions](../TrainingEnvironment/battlesnake_gym/snake.py) are UP, DOWN, LEFT, RIGHT (0, 1, 2, 3 respectively). Please note that according to the rules of Battsnake, if your snake is facing UP and your snake performs a DOWN action, your snake will die.
 
 #### Food spawning:
+
 The food spawning were not provided in the official battlesnake rules. The gym was designed based on the code provided [here](
 https://github.com/battlesnakeio/engine/blob/master/rules/tick.go#L82)
 
 #### Rewards
+
 Designing the reward function could an avenue of exploration. Currently the gym records the following events: 
 1. Surviving another turn (labelled as: `"another_turn"`)
 3. Eating food (labelled as: `"ate_food"`)
@@ -86,6 +93,7 @@ The current reward function is simple (`"another_turn"=1, "won"=2, "died"=-3, "f
 More complex reward functions with methods that could handle sparse rewards may be greatly beneficial. Also, it is possible to design different rewards for different snakes. 
 
 ### Interacting with the gym
+
 Based on the openAI gym framework, the following functions are used to interact with the gym:
 
 1. >`state, _, dones, info = env.reset()`
@@ -104,8 +112,11 @@ info provides information on the turn count and the health of each snake
 - `human` an openAI plot will be generated
 
 ### The DQN Network
+
 #### Running DQN example
+
 `python examples/train.py --should_render --print_progress --number_of_snakes 4`
+
 *please refer to https://github.com/awslab/sagemaker-battlesnake-ai/TrainingEnvironment/examples/train.py for the other hyperparameters*
 
 This code uses multi-agent DQN to train the bots. The `N` snakes shared the same qnetwork and the network was configured as follows:

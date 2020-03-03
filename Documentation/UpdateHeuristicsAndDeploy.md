@@ -1,8 +1,10 @@
 # STEP 2 - Customize the AI heuristics
 
-Using your customised model or using the provided pretrained model, you can add some code to change the AI's movement decision. 
+This section explain how to write your own routines to override the AI's movement decisions (Heuristics).
 
-> __PRE-REQUISITE__: You need to run __[STEP 1 - Deploy the environment](DeployTheAIEndpoint.md)__ before following this instructions.
+The AI decision can from your customised model if you ran the [STEP 3](TrainModelAndDeploy.md) or the provided pretrained model from [STEP 1](DeployTheAIEndpoint.md).
+
+> __PRE-REQUISITE__: In any case, you need to run __[STEP 1 - Deploy the environment](DeployTheAIEndpoint.md)__ before following this instructions.
 
 For example, you can calculate if the move will make you collide into a snake body or head with a longer body (in both case you die).
 
@@ -20,20 +22,32 @@ _If you do clever things, your pull request is welcome!_
 
 ## How to develop your own heuristic algorithms
 
-From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _HeuristicsDevEnvironement_:
+### Open and load the heuristic dev environment
+
+From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _HeuristicsDevEnvironment_:
+
+> _You need to be authenticated for that link to work. Click on __SourceEditionInNotebook__ link if you are denied_
 
 ![Output tab](images/outputs.png "Output tab")
 
-Now that you have the notebook `HeuristicDeveloper.ipynb` open and ensure that you have a functioning model (if you have altered the inputs model, you may need to configure the inference step in `heuristics_utils.get_action(*args)`). Press ► on the top to run the notebook (see [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use jupyter notebooks).
+Now that you have the notebook `HeuristicDeveloper.ipynb` open and ensure that you have a functioning model (if you have altered the inputs model, you may need to configure the inference step in `heuristics_utils.get_action(*args)`). Press ► on the top to run the notebook (_see [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use jupyter notebooks_).
 
-Edit `run` in the class `MyBattlesnakeHeuristics` in `battlesnake_inference/battlesnake_heuristics.py` with your own rules (see the `go_to_food_if_close` for an example). 
+### Open the heuristic source code
+
+From the Cloudformation stack created at [STEP 1](DeployTheAIEndpoint.md) go on outputs tab and click on the link next to _SourceEditionInNotebook_:
+
+Then navigate to `battlesnake/LocalEnv/battlesnake_inference/battlesnake_heuristics.py`
+
+You can customize the `run` method in the class `MyBattlesnakeHeuristics` in  with your own rules (see the `go_to_food_if_close` for an example). 
+
+> __Dev tools:__ Editing code in Jupyter with no source version control is convenient for test but won't work for big projects. If you want to go further follow the [setup source control](SetupSourceControl.md)
 
 ## Visualising your algorithm
 
-- If you want to visualise the model, ensure that you are using *Jupyter* not *JupyterLab*.
+- If you want to visualise the model, ensure that you are using *Jupyter* not *JupyterLab* (this is default if you use the links from AWS CloudFormation).
 - The notebook loads a pre-trained model and simulate the actions.
 - After the *Playback the simulation* section, you should see the step-by-step positions, actions, health etc. of each snake.
-- If you want to specify the positions of each snake and food (instead of randomly generating it), you can enter it in `initial_state` in *Define the openAI gym*. initial_state is defined similarly to the [battlesnake API] (https://docs.battlesnake.com/snake-api).
+- If you want to specify the positions of each snake and food (instead of randomly generating it), you can enter it in `initial_state` in *Define the openAI gym*. initial_state is defined similarly to the [battlesnake API](https://docs.battlesnake.com/snake-api).
 
 ![Visualization](images/VisualizingHeuristics.png "Visualise the heuristics")
 
