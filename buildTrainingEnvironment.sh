@@ -38,8 +38,8 @@ else
     cp TrainingEnvironment/notebooks/* $1
     
     echo "Create the heuristics code"
-    cp InferenceEndpoint/SnakeInference/predict.py $1/battlesnake_inference/
-    cp InferenceEndpoint/SnakeInference/battlesnake_heuristics.py $1/battlesnake_inference/
+    cp InferenceEndpoint/SageMakerEndpoint/predict.py $1/battlesnake_inference/
+    cp InferenceEndpoint/SageMakerEndpoint/battlesnake_heuristics.py $1/battlesnake_inference/
     
     echo "Copy the pretrained models"
     cd $1

@@ -92,7 +92,7 @@ def run(seed, args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Train a DQG agent for the BattleSnake.IO')
+        description='Train a DQN agent for the BattleSnake.IO')
 
     parser.add_argument('--seeds', nargs="+", type=int, default=[0, 666, 15],
                         help='seed for randomiser. Code will run n times given the number of seeds')
