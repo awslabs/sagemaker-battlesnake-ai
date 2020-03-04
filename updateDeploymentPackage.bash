@@ -16,6 +16,7 @@
 # It will fail for user without AWS credentials
 
 S3_PREFIX="battlesnake-aws-"
+DEV_REGION="ap-northeast-2"
 
 echo
 
@@ -37,7 +38,12 @@ if [ "$1" == "all" ]
         S3_REGIONS=("ca-central-1" "us-west-2" "us-east-1" "sa-east-1" "eu-west-1" "eu-west-3" "ap-southeast-2")
         echo " deploying to all "${#S3_REGIONS[*]}" regions"
     else
-        S3_REGIONS=$1
+        if [ "$1" == "dev" ]
+            then
+                S3_REGIONS=$DEV_REGION
+            else
+                S3_REGIONS=$1
+        fi
         echo " deploying to region "$S3_REGIONS
 fi
 
@@ -86,9 +92,18 @@ updateOrCreateLayer () {
 
 for ix in ${!S3_REGIONS[*]}
 do
-    COMMAND="aws s3 cp CloudFormation/deploy-battlesnake-endpoint.yaml s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-battlesnake-endpoint.yaml $AWS_PROFILE"
+    CF_TEMPLATE_FILE="CloudFormation/deploy-battlesnake-endpoint.yaml"
+    if [ "$1" == "dev" ]
+        then
+            echo
+            echo "DEVELOPEMENT > Replacing github source repo by dev one"
+            echo
+            sed -e "s/https\:\/\/github\.com\/awslabs\/sagemaker-battlesnake-ai\.git/https\:\/\/github\.com\/JohnyFicient\/randomproject\.git/g" CloudFormation/deploy-battlesnake-endpoint.yaml> dev.yaml
+            CF_TEMPLATE_FILE=dev.yaml
+    fi
+    COMMAND="aws s3 cp $CF_TEMPLATE_FILE s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-battlesnake-endpoint.yaml $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy cloudformation scripts to region "${S3_REGIONS[$ix]}
-    
+
     # WARNING:
     # Every time you update the Lambda Layer the version increase by one.
     # So you'll need to update the Cloudformation script with that new number.
@@ -102,4 +117,12 @@ do
     COMMAND="aws s3 cp model-lambda-package.zip s3://$S3_PREFIX${S3_REGIONS[$ix]}/lambda/model-lambda-package.zip $AWS_PROFILE"
     displayEndExecCmd \${COMMAND} " > Copy lambda model inference package to region "${S3_REGIONS[$ix]}
 done
+
+if [ "$1" == "dev" ]
+    then
+    echo
+    echo "DEVELOPEMENT > This is dev env : Go to this URL to deploy"
+    echo "https://$DEV_REGION.console.aws.amazon.com/cloudformation/home?region=$DEV_REGION#/stacks/create/review?templateURL=https://battlesnake-aws-$DEV_REGION.s3.$DEV_REGION.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=BattlesnakeEnvironment"
+    echo
+fi
 
