@@ -99,6 +99,12 @@ do
             echo "DEVELOPEMENT > Replacing github source repo by dev one"
             echo
             sed -e "s/https\:\/\/github\.com\/awslabs\/sagemaker-battlesnake-ai\.git/https\:\/\/github\.com\/JohnyFicient\/randomproject\.git/g" CloudFormation/deploy-battlesnake-endpoint.yaml> dev.yaml
+            
+            # Seoul region doesn't have ml.t3.medium yet, downgrading to ml.t2.medium
+            mv dev.yaml devtmp.yaml
+            sed -e "s/ml\.t3\.medium/ml\.t2\.medium/g" devtmp.yaml > dev.yaml
+            rm -f devtmp.yaml
+
             CF_TEMPLATE_FILE=dev.yaml
     fi
     COMMAND="aws s3 cp $CF_TEMPLATE_FILE s3://$S3_PREFIX${S3_REGIONS[$ix]}/cloudformation/deploy-battlesnake-endpoint.yaml $AWS_PROFILE"
