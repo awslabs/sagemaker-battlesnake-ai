@@ -8,9 +8,9 @@ This is controlled mainly by a single notebook and will use an training gym envi
 
 ## Architecture
 
-This step add a training instance to the BattleSnake environment:
+This step add a training instance to the Battlesnake environment:
 
-![Model Training Architecture](images/ArchitectureSagemakerBattleSnakeTraining.png "Model Training Architecture")
+![Model Training Architecture](images/ArchitectureSagemakerBattlesnakeTraining.png "Model Training Architecture")
 
 ## Cost
 
