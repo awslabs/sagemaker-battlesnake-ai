@@ -15,7 +15,7 @@ import argparse
 import os
 import json
 
-from battlesnake_gym.snake_gym import BattleSnakeGym
+from battlesnake_gym.snake_gym import BattlesnakeGym
 from mxboard import SummaryWriter
 
 from dqn_run import trainer
@@ -44,7 +44,7 @@ def run(seed, args):
         writer = None
 
     # Initialise the environment
-    env = BattleSnakeGym(map_size=map_size, observation_type=args.snake_representation)
+    env = BattlesnakeGym(map_size=map_size, observation_type=args.snake_representation)
     env.seed(seed)
 
     # Initialise agent
@@ -92,7 +92,7 @@ def run(seed, args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Train a DQN agent for the BattleSnake.IO')
+        description='Train a DQN agent for the Battlesnake.IO')
 
     parser.add_argument('--seeds', nargs="+", type=int, default=[0, 666, 15],
                         help='seed for randomiser. Code will run n times given the number of seeds')

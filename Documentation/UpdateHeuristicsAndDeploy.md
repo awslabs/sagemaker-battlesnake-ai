@@ -14,7 +14,7 @@ _If you do clever things, your pull request is welcome!_
 
 ## Architecture
 
-![Heuristic Dev Architecture](images/ArchitectureSagemakerBattleSnakeHeuristics.png "Heuristic Dev Architecture")
+![Heuristic Dev Architecture](images/ArchitectureSagemakerBattlesnakeHeuristics.png "Heuristic Dev Architecture")
 
 > __Estimated cost__ : This environment does not add any cost to the [STEP 1 environment](DeployTheAIEndpoint.md). The free tiers include 250 hours per month of this notebook instance on the first two months.
 > After the free tiers the charge will be $0.269 per hour for the notebook instance ($6.5 per 24 hour period).

@@ -15,7 +15,7 @@ import os
 import time
 
 
-from battlesnake_gym.snake_gym import BattleSnakeGym
+from battlesnake_gym.snake_gym import BattlesnakeGym
 from battlesnake_gym.snake import Snake
 
 from .test_utils import simulate_snake
@@ -51,7 +51,7 @@ def test_gym_performance(map_sizes, number_of_snakes):
             food_location = [(map_size[0]-1, map_size[1]-1)]*max_turns_num*max_turns_num
             print(snake_locations)
             # Create the gym
-            env = BattleSnakeGym(map_size=map_size, number_of_snakes=num_snakes,
+            env = BattlesnakeGym(map_size=map_size, number_of_snakes=num_snakes,
                                  snake_spawn_locations=snake_locations,
                                  food_spawn_locations=food_location)
 

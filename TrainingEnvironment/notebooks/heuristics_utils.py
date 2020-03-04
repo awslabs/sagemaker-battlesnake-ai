@@ -139,7 +139,7 @@ def get_action(net, state, snake_id, turn_count, health, memory):
     - `batch_size` should be set to 1
     - `sequence_length` provides the number of timesteps back the model considers. Give `t` is the current time step, `c=0`   refers to `t-1` and `c=1` is t.
     - Each `c` slide refers to the *food*, *current snake*, and *other snakes* respectively.
-    - `map_size` is based on the size of the BattleSnakeGym +2 for the -1 border.
+    - `map_size` is based on the size of the BattlesnakeGym +2 for the -1 border.
 
     `snake_id`: *nd.array* of size (batch_size, sequence_length=2)
     - Provides the id of the snake, which is a i \in [0...number_of_snakes-1]

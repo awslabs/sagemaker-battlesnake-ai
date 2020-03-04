@@ -49,7 +49,7 @@ Parameters:
       - ml.m5.xlarge
       - ml.m4.xlarge
 Resources:
-  BattleSnakeDeployFunction:
+  BattlesnakeDeployFunction:
     Type: AWS::Serverless::Function
     Properties:
       Timeout: 90 # Adapt duration depending on cleanup need
@@ -66,12 +66,12 @@ Resources:
   CleanupBucketOnDelete:
      Type: Custom::CleanupBucket
      Properties:
-       ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
+       ServiceToken: !GetAtt BattlesnakeDeployFunction.Arn
        Operation: CleanupSagemakerBucket
   CleanupEndpointOnDelete:
      Type: Custom::CleanupEndpoint
      Properties:
-       ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
+       ServiceToken: !GetAtt BattlesnakeDeployFunction.Arn
        Operation: CleanupSagemakerEndpoint
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
@@ -177,7 +177,7 @@ Resources:
       DirectInternetAccess: Enabled
       InstanceType: ml.t3.medium
       LifecycleConfigName: !GetAtt LifeCycleConfig.NotebookInstanceLifecycleConfigName
-      NotebookInstanceName: BattleSnakeNotebook
+      NotebookInstanceName: BattlesnakeNotebook
       RoleArn: !GetAtt NotebookInstanceExecutionRole.Arn
       VolumeSizeInGB: 14
   LifeCycleConfig:
@@ -264,7 +264,7 @@ Resources:
               - sagemaker:DescribeEndpoint
               Resource:
               - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
-  BattleSnakeAPIFunction:
+  BattlesnakeAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
       Events:
@@ -297,7 +297,7 @@ Resources:
 Outputs:
   SourceEditionInNotebook:
     Description: "Open Jupyter IDE. This authenticate you against Jupyter."
-    Value: !Sub "https://console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/BattleSnakeNotebook?view=classic"  
+    Value: !Sub "https://console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/BattlesnakeNotebook?view=classic"  
   HeuristicsDevEnvironment:
     Description: "Modify, visualize and re-deploy heuristics. You need to click first on 'SourceEditionInNotebook' to be authenticated."
     Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/LocalEnv/HeuristicsDeveloper.ipynb"

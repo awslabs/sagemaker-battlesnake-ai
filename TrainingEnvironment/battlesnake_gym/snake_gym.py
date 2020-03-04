@@ -24,14 +24,14 @@ from .game_state_parser import Game_state_parser
 from .rewards import SimpleRewards
 from .utils import get_random_coordinates, MultiAgentActionSpace, get_distance
 
-class BattleSnakeGym(gym.Env):
+class BattlesnakeGym(gym.Env):
     metadata = {
         "render.modes": ["human", "rgb_array", "ascii"],
         "observation.types": ["flat-num", "bordered-num",
                               "flat-51s", "bordered-51s"]
     }
     '''
-    OpenAI Gym for BattleSnakeIO 
+    OpenAI Gym for BattlesnakeIO 
     Behaviour of snakes in Battlesnake.io based on https://docs.battlesnake.com/rules
 
     Parameters:

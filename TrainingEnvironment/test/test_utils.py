@@ -16,7 +16,7 @@ import time
 
 import numpy as np
 
-from battlesnake_gym.snake_gym import BattleSnakeGym
+from battlesnake_gym.snake_gym import BattlesnakeGym
 from battlesnake_gym.snake import Snake
 
 def simulate_snake(env, actions, render=False, break_with_done=True):
@@ -25,7 +25,7 @@ def simulate_snake(env, actions, render=False, break_with_done=True):
 
     Parameters:
     ----------
-    env: BattleSnakeGym
+    env: BattlesnakeGym
     actions: [np.array(number_of_snakes)]
         A list of np.arrays corresponding to the actions taken at each time step.
         The size of the np.array is equal to the number of snakes in env
@@ -34,7 +34,7 @@ def simulate_snake(env, actions, render=False, break_with_done=True):
         Boolean to indicat should the gym be visualised
 
     break_with_done: Bool, optional, default: True
-        By default, BattleSnakeGym will send a done signal if there is only one snake
+        By default, BattlesnakeGym will send a done signal if there is only one snake
         remaining (an indication that the game is over). This boolean allows testing to
         occur even if there is only 1 snake
 
@@ -72,7 +72,7 @@ def grow_snake():
                      (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0),
                      (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0),
                      (0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0)]
-    env = BattleSnakeGym(map_size=(9, 9), number_of_snakes=1,
+    env = BattlesnakeGym(map_size=(9, 9), number_of_snakes=1,
                          snake_spawn_locations=snake_location,
                          food_spawn_locations=food_location,
                          verbose=True)
@@ -95,7 +95,7 @@ def grow_two_snakes(snake_starting_positions):
     snake_location = snake_starting_positions
     food_location = [(2, 0), (2, 2), (4, 2), (2, 4), (4, 6),
                      (7, 5), (7, 4), (7, 3), (7, 2)] + [(0, 0)] * 100
-    env = BattleSnakeGym(map_size=(9, 9), number_of_snakes=2,
+    env = BattlesnakeGym(map_size=(9, 9), number_of_snakes=2,
                          snake_spawn_locations=snake_location,
                          food_spawn_locations=food_location,
                          verbose=True)

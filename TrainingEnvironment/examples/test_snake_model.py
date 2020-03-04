@@ -16,7 +16,7 @@ import argparse
 import time
 import mxnet as mx
 
-from battlesnake_gym.snake_gym import BattleSnakeGym
+from battlesnake_gym.snake_gym import BattlesnakeGym
 from examples.networks.dqn_agent_mxnet import Agent_mxnet
 from examples.networks.utils import sort_states_for_snake_id
 
@@ -29,7 +29,7 @@ def run(args):
     number_of_snakes = args.number_of_snakes
     state_shape = (map_size[0], map_size[1], (1+number_of_snakes))
 
-    env = BattleSnakeGym(map_size=map_size, number_of_snakes=number_of_snakes)
+    env = BattlesnakeGym(map_size=map_size, number_of_snakes=number_of_snakes)
 
     agents = []
 
@@ -54,7 +54,7 @@ def run(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Train a DQG agent for the BattleSnake.IO')
+        description='Train a DQG agent for the Battlesnake.IO')
 
     parser.add_argument('--map_size', nargs="+", type=int, default=[16, 16],
                         metavar="MS", help='map size')

@@ -13,7 +13,7 @@
  
 import numpy as np
 
-class BattleSnakeGame:
+class BattlesnakeGame:
     
     FOOD_INDEX = 0
     YOU_INDEX = 1
@@ -31,7 +31,7 @@ class BattleSnakeGame:
         self.board_h = game_state['board']['height']
         self.board_w = game_state['board']['width']
         self.num_snakes = len(game_state['board']['snakes'])
-        self.snake_to_ids = {game_state['you']['id']: BattleSnakeGame.YOU_INDEX}
+        self.snake_to_ids = {game_state['you']['id']: BattlesnakeGame.YOU_INDEX}
         # Get the snake IDs
         k = 2
         for snake in game_state['board']['snakes']:
@@ -75,7 +75,7 @@ class ObservationToStateConverter:
         
         # Put the food on the board
         for coord in game_state['board']['food']:
-            state[coord['y']+border_size, coord['x']+border_size, BattleSnakeGame.FOOD_INDEX] = 1
+            state[coord['y']+border_size, coord['x']+border_size, BattlesnakeGame.FOOD_INDEX] = 1
             
         # Add the snakes
         for snake in game_state['board']['snakes']:
@@ -83,7 +83,7 @@ class ObservationToStateConverter:
             
             # Set the snakes channels to 2 if one vs all
             if self.style == 'one_versus_all':
-                snake_channel = BattleSnakeGame.SNAKES_INDEX if game.snake_to_ids[snake['id']] != BattleSnakeGame.YOU_INDEX else BattleSnakeGame.YOU_INDEX
+                snake_channel = BattlesnakeGame.SNAKES_INDEX if game.snake_to_ids[snake['id']] != BattlesnakeGame.YOU_INDEX else BattlesnakeGame.YOU_INDEX
             else:
                 snake_channel = game.snake_to_ids[snake['id']]
             for coord in snake['body']:
@@ -96,7 +96,7 @@ class ObservationToStateConverter:
     def get_game_state(self, game_state):
         game_id = game_state['game']['id']+game_state['you']['id']
         if game_id not in self.games:
-            self.games[game_id]= {'game':BattleSnakeGame(game_state), 'previous_state':None}
+            self.games[game_id]= {'game':BattlesnakeGame(game_state), 'previous_state':None}
             
         game_record = self.games[game_id]
         current_state = self._convert_to_state(game_state, game_record['game'])

@@ -4,7 +4,7 @@ Description: "Stack to test the deployment lambda"
 Resources:
   SagemakerBucket:
     Type: AWS::S3::Bucket
-  BattleSnakeDeployFunction:
+  BattlesnakeDeployFunction:
     Type: AWS::Serverless::Function
     Properties:
       Timeout: 900
@@ -21,7 +21,7 @@ Resources:
   CleanupBucketOnDelete:
      Type: Custom::CleanupBucket
      Properties:
-       ServiceToken: !GetAtt BattleSnakeDeployFunction.Arn
+       ServiceToken: !GetAtt BattlesnakeDeployFunction.Arn
        Operation: CleanupSagemakerBucket
   LambdaDeploymentRole:
     Type: AWS::IAM::Role

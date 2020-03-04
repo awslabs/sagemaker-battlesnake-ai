@@ -17,14 +17,14 @@ import unittest
 
 import numpy as np
 
-from battlesnake_gym.snake_gym import BattleSnakeGym
+from battlesnake_gym.snake_gym import BattlesnakeGym
 from battlesnake_gym.snake import Snake
 
 from .test_utils import grow_snake, grow_two_snakes, should_render, simulate_snake
 
-class TestBattleSnakeGym(unittest.TestCase):
+class TestBattlesnakeGym(unittest.TestCase):
     '''
-    Test the behaviours of the BattleSnakeGym including:
+    Test the behaviours of the BattlesnakeGym including:
     - Test spawnning 
     - Test deterministic spawning (spawning food and snakes in certain locations for testing)
     - Test that the snakes moves correctly
@@ -57,7 +57,7 @@ class TestBattleSnakeGym(unittest.TestCase):
         snake_location = [(4, 1), (4, 12)]
         food_location = [(4, 2), (4, 9), (4, 3), (4, 8), 
                          (0, 0), (0, 0), (0, 0)]
-        env = BattleSnakeGym(map_size=(13, 13), number_of_snakes=2,
+        env = BattlesnakeGym(map_size=(13, 13), number_of_snakes=2,
                              snake_spawn_locations=snake_location,
                              food_spawn_locations=food_location,
                              verbose=True)
@@ -203,7 +203,7 @@ class TestBattleSnakeGym(unittest.TestCase):
 
         snake_location = [(0, 0)]
         food_location = [(5, 5) for _ in range(0, 200)]
-        env = BattleSnakeGym(map_size=(9, 10), number_of_snakes=1,
+        env = BattlesnakeGym(map_size=(9, 10), number_of_snakes=1,
                           snake_spawn_locations=snake_location,
                           food_spawn_locations=food_location,
                           verbose=True)
@@ -249,7 +249,7 @@ class TestBattleSnakeGym(unittest.TestCase):
         '''
         snake_location = [(4, 4)]
         food_location = [(5, 5)]
-        env = BattleSnakeGym(map_size=(9, 10), number_of_snakes=1,
+        env = BattlesnakeGym(map_size=(9, 10), number_of_snakes=1,
                           snake_spawn_locations=snake_location,
                           food_spawn_locations=food_location)
 
@@ -282,7 +282,7 @@ class TestBattleSnakeGym(unittest.TestCase):
         '''
         Test that snakes and food are correct when randomly spawned
         '''
-        env = BattleSnakeGym(map_size=(9, 9), number_of_snakes=1)
+        env = BattlesnakeGym(map_size=(9, 9), number_of_snakes=1)
 
         # Check that a snake is spawned on the board        
         self.assertTrue(len(env.snakes.snakes) > 0)
@@ -297,7 +297,7 @@ class TestBattleSnakeGym(unittest.TestCase):
         '''
         snake_location = [(4, 4)]
         food_location = [(5, 5)]
-        env = BattleSnakeGym(map_size=(9, 9), number_of_snakes=1,
+        env = BattlesnakeGym(map_size=(9, 9), number_of_snakes=1,
                           snake_spawn_locations=snake_location,
                           food_spawn_locations=food_location)
 
@@ -314,7 +314,7 @@ class TestBattleSnakeGym(unittest.TestCase):
         '''
         snake_location = [(0, 0)]
         food_location = [(1, 0), (1, 2), (2, 0), (2, 0), (2, 0)]
-        env = BattleSnakeGym(map_size=(3, 3), number_of_snakes=1,
+        env = BattlesnakeGym(map_size=(3, 3), number_of_snakes=1,
                           snake_spawn_locations=snake_location,
                           food_spawn_locations=food_location)
         env.food.max_turns_to_next_food_spawn = 2 #Hack to make sure that food is spawned every turn

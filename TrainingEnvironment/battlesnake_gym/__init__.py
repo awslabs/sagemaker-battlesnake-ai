@@ -11,4 +11,4 @@
 # express or implied. See the License for the specific language governing 
 # permissions and limitations under the License.
 
-from .snake_gym import BattleSnakeGym
+from .snake_gym import BattlesnakeGym
