@@ -68,6 +68,7 @@ class Snake:
         head = tmp_locations[-1]
         cls = Snake(head, map_size)
         cls.locations = tmp_locations
+        cls.health = health
 
         if len(cls.locations) > 1:
             # Calculate the facing direction with the head and the next location

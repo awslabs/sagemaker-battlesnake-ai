@@ -28,10 +28,15 @@ class MyBattlesnakeHeuristics:
         '''
         # Get the position of the snake head
         your_snake_body = json["you"]["body"]
-        i, j = your_snake_body[0]["x"], your_snake_body[0]["y"]
+        i, j = your_snake_body[0]["y"], your_snake_body[0]["x"]
         
         # Set food_direction towards food
         food = state[:, :, self.FOOD_INDEX]
+        
+        # Note that there is a -1 border around state so i = i + 1, j = j + 1
+        if -1 in state:
+            i, j = i+1, j+1
+        
         food_direction = None
         if food[i-1, j] == 1:
             food_direction = 0 # up
@@ -41,7 +46,6 @@ class MyBattlesnakeHeuristics:
             food_direction = 2 # left
         if food[i, j+1] == 1:
             food_direction = 3 # right
-            
         return food_direction
     
     def run(self, state, snake_id, turn_count, health, json, action):
@@ -50,8 +54,9 @@ class MyBattlesnakeHeuristics:
         
         Parameters:
         -----------
-        `state`: np.array of size (map_size[0]+2, map_size[1]+2, 3)
-        Provides the current observation of the gym
+        `state`: np.array of size (map_size[0]+2, map_size[1]+2, 1+number_of_snakes)
+        Provides the current observation of the gym.
+        Your target snake is state[:, :, snake_id+1]
     
         `snake_id`: int
         Indicates the id where id \in [0...number_of_snakes]

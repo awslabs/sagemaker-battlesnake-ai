@@ -28,7 +28,7 @@ def convert_food_maxtrix_to_list(in_array):
     food: [{"x": int, "y": int}]
     '''
     food = []
-    x, y = np.where(in_array==1)
+    y, x = np.where(in_array==1)
     for x_, y_ in zip(x, y):
         food.append({"x": x_, "y": y_})
     return food
@@ -49,15 +49,15 @@ def make_snake_lists(env):
     snake_locations = []
     for snakes in env.snakes.snakes:
         snake_location = []
-        for coord in snakes.locations:
-            snake_location.append({"x": coord[0], "y": coord[1]})
+        for coord in snakes.locations[::-1]:
+            snake_location.append({"x": coord[1], "y": coord[0]})
         snake_locations.append(snake_location)
     return snake_locations
 
 def convert_state_into_json(state, snake_list, snake_id, turn_count, health):
     '''
     Helper function to build a JSON from the battlesnake gym.
-    The JSON mimics the 
+    The JSON mimics the battlesnake engine
     '''
     FOOD_INDEX = 0
     
@@ -85,6 +85,7 @@ def convert_state_into_json(state, snake_list, snake_id, turn_count, health):
                     "food": food, 
                     "snakes": other_snake_dict_list}
     json["you"] = your_snake_dict_list
+        
     return json
 
 def get_action(net, state, snake_id, turn_count, health, memory):
@@ -162,35 +163,35 @@ def simulate(env, net, heuristics, number_of_snakes):
     '''
     Memory = namedtuple("Memory", "state turn_count health")
     
-    state, _, _, info = env.reset()
+    state, _, _, infos = env.reset()
     
     rgb_arrays = [env.render(mode="rgb_array")]
-    infos_array = [info]
+    infos_array = [infos]
     actions_array = [[4, 4, 4, 4]]
 
-    memory = Memory(state=np.zeros(state.shape), turn_count=info["current_turn"], health=info["snake_health"])
+    memory = Memory(state=np.zeros(state.shape), turn_count=infos["current_turn"], health=infos["snake_health"])
     while True:
-        info["current_turn"] += 1
+        infos["current_turn"] += 1
         actions = []
         for i in range(number_of_snakes):
             action = get_action(net, state, snake_id=i,
-                                turn_count=info["current_turn"]+1,
-                                health=info["snake_health"],
+                                turn_count=infos["current_turn"]+1,
+                                health=infos["snake_health"],
                                 memory=memory)
 
             snake_list = make_snake_lists(env)
             json = convert_state_into_json(state, snake_list, snake_id=i, 
-                                           turn_count=info["current_turn"]+1, 
-                                           health=info["snake_health"])
+                                           turn_count=infos["current_turn"]+1, 
+                                           health=infos["snake_health"])
             # Add heuristics
             action = heuristics.run(state, snake_id=i,
-                                    turn_count=info["current_turn"]+1,
-                                    health=info["snake_health"],
+                                    turn_count=infos["current_turn"]+1,
+                                    health=infos["snake_health"],
                                     json=json,
                                     action=action)
             actions.append(action)
-        memory = Memory(state=state, turn_count=info["current_turn"], 
-                        health=info["snake_health"])
+        memory = Memory(state=state, turn_count=infos["current_turn"], 
+                        health=infos["snake_health"])
         next_state, reward, dones, infos = env.step(np.array(actions))
 
         # Check if only 1 snake remains
