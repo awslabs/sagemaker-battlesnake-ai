@@ -29,6 +29,8 @@ Similar to the heuritsics developer, check the output tab and open _ModelTrainin
 - Once in SagemakerModelTraining.ipynb, run through the notebook to train or run hyperparameter optimization (Press ► on the top to run the notebook (see here for a tutorial on how to use jupyter notebooks).
 - set `run_hpo = False` to train and `run_hpo = True` to run hyperparameter optimization.
 
+> __Dev tools:__ Editing code in Jupyter with no source version control is convenient for test but won't work for big projects. If you want to go further follow the [setup source control](SetupSourceControl.md)
+
 ## Training a reinforcement learning model
 
 The reinforcement learning component provides an openAI gym to train your battlesnake bots (https://play.battlesnake.com/) and an mxnet example train your own network.
