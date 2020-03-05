@@ -40,6 +40,12 @@ See each steps for duration and cost.
 
 ### Content
 
+The two notebooks contains a step by step Battlesnake visualizer:
+
+![Battlesnake visualizer](Documentation/images/battlesnake-debugger.png "Battlesnake visualizer")
+
+You can load any initial state into it to test how your snake behave in various situations (see [Visualize your algorithm](Documentation/UpdateHeuristicsAndDeploy.md#visualising-your-algorithm) section for the full list of features.
+
 The source code of the project is organized as:
 
 ```
