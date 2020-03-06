@@ -136,10 +136,13 @@ class BattlesnakeGym(gym.Env):
         dones = {i:False for i in range(self.number_of_snakes)}
         
         snakes_health = {}
+        snake_info = {}
         for i, snake in enumerate(self.snakes.get_snakes()):
             snakes_health[i] = snake.health
+            snake_info[i] = "Did not colide" 
         info = {'current_turn': self.turn_count,
-                'snake_health': snakes_health}
+                'snake_health': snakes_health,
+                 'snake_info': snake_info}
         return self._get_observation(), {}, dones, info
 
     def _did_snake_collide(self, snake):
@@ -296,6 +299,8 @@ class BattlesnakeGym(gym.Env):
         # check for food and collision
         number_of_food_eaten = 0
         number_of_snakes_alive = 0
+        snake_info = {}
+
         for i, snake in enumerate(self.snakes.get_snakes()):
             if not snake.is_alive():
                 continue
@@ -304,6 +309,7 @@ class BattlesnakeGym(gym.Env):
 
             # Check for collisions with the snake
             should_kill_snake, outcome = self._did_snake_collide(snake)
+            snake_info[i] = outcome
             if should_kill_snake:
                 snake.kill_snake()
 
@@ -370,9 +376,10 @@ class BattlesnakeGym(gym.Env):
         snakes_health = {}
         for i, snake in enumerate(self.snakes.get_snakes()):
             snakes_health[i] = snake.health
-        
+                
         return self._get_observation(), reward, snake_alive_dict, {'current_turn': self.turn_count,
-                                                                   'snake_health': snakes_health}
+                                                                   'snake_health': snakes_health,
+                                                                    'snake_info': snake_info}
                 
     def _get_observation(self):
         '''

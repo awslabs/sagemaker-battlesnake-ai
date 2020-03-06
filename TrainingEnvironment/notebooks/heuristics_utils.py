@@ -168,10 +168,14 @@ def simulate(env, net, heuristics, number_of_snakes):
     rgb_arrays = [env.render(mode="rgb_array")]
     infos_array = [infos]
     actions_array = [[4, 4, 4, 4]]
+        
+    heuristics_log_array = [{k: "" for k in range(number_of_snakes)}]
 
     memory = Memory(state=np.zeros(state.shape), turn_count=infos["current_turn"], health=infos["snake_health"])
     while True:
         infos["current_turn"] += 1
+
+        heuristics_log = {}
         actions = []
         for i in range(number_of_snakes):
             action = get_action(net, state, snake_id=i,
@@ -184,16 +188,20 @@ def simulate(env, net, heuristics, number_of_snakes):
                                            turn_count=infos["current_turn"]+1, 
                                            health=infos["snake_health"])
             # Add heuristics
-            action = heuristics.run(state, snake_id=i,
-                                    turn_count=infos["current_turn"]+1,
-                                    health=infos["snake_health"],
-                                    json=json,
-                                    action=action)
+            action, heuristics_log_string = heuristics.run(
+                                                state, snake_id=i,
+                                                turn_count=infos["current_turn"]+1,
+                                                health=infos["snake_health"],
+                                                json=json,
+                                                action=action)
+            heuristics_log[i] = heuristics_log_string
+            
             actions.append(action)
         memory = Memory(state=state, turn_count=infos["current_turn"], 
                         health=infos["snake_health"])
+        
         next_state, reward, dones, infos = env.step(np.array(actions))
-
+        
         # Check if only 1 snake remains
         number_of_snakes_alive = sum(list(dones.values()))
         if number_of_snakes - number_of_snakes_alive <= 1:
@@ -209,4 +217,6 @@ def simulate(env, net, heuristics, number_of_snakes):
         rgb_arrays.append(rgb_array.copy())
         infos_array.append(infos)
         actions_array.append(actions)
-    return infos_array, rgb_arrays, actions_array
+        heuristics_log_array.append(heuristics_log)
+
+    return infos_array, rgb_arrays, actions_array, heuristics_log_array
