@@ -168,6 +168,7 @@ def simulate(env, net, heuristics, number_of_snakes):
     rgb_arrays = [env.render(mode="rgb_array")]
     infos_array = [infos]
     actions_array = [[4, 4, 4, 4]]
+    json_array = [env.get_json()]
         
     heuristics_log_array = [{k: "" for k in range(number_of_snakes)}]
 
@@ -202,6 +203,13 @@ def simulate(env, net, heuristics, number_of_snakes):
         
         next_state, reward, dones, infos = env.step(np.array(actions))
         
+        rgb_array = env.render(mode="rgb_array")
+        rgb_arrays.append(rgb_array.copy())
+        infos_array.append(infos)
+        actions_array.append(actions)
+        heuristics_log_array.append(heuristics_log)
+        json_array.append(env.get_json())
+        
         # Check if only 1 snake remains
         number_of_snakes_alive = sum(list(dones.values()))
         if number_of_snakes - number_of_snakes_alive <= 1:
@@ -213,10 +221,5 @@ def simulate(env, net, heuristics, number_of_snakes):
         if done:
             print("Completed")
             break  
-        rgb_array = env.render(mode="rgb_array")
-        rgb_arrays.append(rgb_array.copy())
-        infos_array.append(infos)
-        actions_array.append(actions)
-        heuristics_log_array.append(heuristics_log)
 
-    return infos_array, rgb_arrays, actions_array, heuristics_log_array
+    return infos_array, rgb_arrays, actions_array, heuristics_log_array, json_array

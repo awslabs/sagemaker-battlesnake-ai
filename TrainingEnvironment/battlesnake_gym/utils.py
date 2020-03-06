@@ -57,7 +57,7 @@ def generate_coordinate_list_from_binary_map(map_image):
     coordinate_list = []
     for i in range(map_image.shape[0]):
         for j in range(map_image.shape[1]):
-            if map_image[i][j] == 1:
+            if map_image[i][j] > 0:
                 coordinate_list.append((i, j))
     return coordinate_list
 
