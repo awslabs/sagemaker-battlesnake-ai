@@ -125,7 +125,7 @@ This function renders the environment based on its current state.
 
 `python examples/train.py --should_render --print_progress --number_of_snakes 4`
 
-*Please refer to https://github.com/awslab/sagemaker-battlesnake-ai/TrainingEnvironment/examples/train.py for the other hyperparameters*
+*Please refer to https://github.com/awslabs/sagemaker-battlesnake-ai/blob/master/TrainingEnvironment/examples/train.py for the other hyperparameters*
 
 This code uses multi-agent DQN to train the bots. The `N` snakes share the same Qnetwork and the network is configured as follows:
 
