@@ -81,4 +81,4 @@ Go to __[STEP 2 - Customize the AI heuristics](UpdateHeuristicsAndDeploy.md)__ t
 
 To clean up the environment, go to AWS CloudFormation within the AWS console, select your BattlesnakeEnvironment stack, and click 'delete'.
 
-__WARNING : Deleting your stack will erase the Battlesnake environment data, logs, and any code changes.__ Make sure that you have saved your work before doing this!
+__WARNING : Deleting your stack will erase the Battlesnake environment data, and any code changes.__ Make sure that you have saved your work before doing this!
