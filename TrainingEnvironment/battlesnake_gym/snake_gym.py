@@ -465,10 +465,19 @@ class BattlesnakeGym(gym.Env):
                     board[t_i1 + box_margin:t_i2 - box_margin,
                           t_j1 + box_margin:t_j2 - box_margin] = [255, 0, 0]
 
-                # If state contains a snake
-                if state_value[SNAKE_INDEXES].any():
+                # If state contains a snake body
+                if 1 in state_value[SNAKE_INDEXES]:
                     snake_present_in = np.argmax(state_value[SNAKE_INDEXES])
                     board[t_i1:t_i2, t_j1:t_j2] = snake_colours[snake_present_in]
+                    
+                # If state contains a snake head
+                if 5 in state_value[SNAKE_INDEXES]:
+                    snake_present_in = np.argmax(state_value[SNAKE_INDEXES])
+                    board[t_i1:t_i2, t_j1:t_j2] = snake_colours[snake_present_in]
+                    t_i_h = 10
+                    t_j_h = 10
+                    board[(t_i1+t_i_h):(t_i2-t_i_h), (t_j1+t_j_h):(t_j2-t_j_h)] = [255, 255, 255]
+
         return board
     
     def get_json(self):
