@@ -72,7 +72,8 @@ class MyBattlesnakeHeuristics:
 
         `action`: np.array of size 4
         The qvalues of the actions calculated. The 4 values correspond to [up, down, left, right]
-        '''    
+        '''
+        log_string = ""
         # The default `best_action` to take is the one that provides has the largest Q value.
         # If you think of something else, you can edit how `best_action` is calculated
         best_action = int(np.argmax(action))
@@ -82,8 +83,10 @@ class MyBattlesnakeHeuristics:
             food_direction = self.go_to_food_if_close(state, json)
             if food_direction:
                 best_action = food_direction
+                log_string = "Went to food if close."
+                
 
         # TO DO, add your own heuristics
         
         assert best_action in [0, 1, 2, 3], "{} is not a valid action.".format(best_action)
-        return best_action
+        return best_action, log_string
