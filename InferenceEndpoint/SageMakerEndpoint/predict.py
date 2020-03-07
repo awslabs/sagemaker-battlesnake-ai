@@ -80,7 +80,7 @@ def transform_fn(models, data, content_type, output_content_type):
 
     print("state {}".format(heuristics_state.shape))
     print("data json {}".format(data["json"]))
-    converted_action = heuristics.run(heuristics_state, 
+    converted_action, _ = heuristics.run(heuristics_state, 
                                       int(heuristics_id),
                                       int(heuristics_turn)+1,
                                       converted_heuristic_health, 
