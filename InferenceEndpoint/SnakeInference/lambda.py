@@ -19,6 +19,7 @@ import numpy as np
 import boto3
 import botocore
 
+from botocore.exceptions import ClientError
 from convert_utils import ObservationToStateConverter
 
 #################################
@@ -76,22 +77,38 @@ def status():
 
     # Check if inference endpoint is available or not
     status = "unknown"
+    endpoint_status = "unknown"
     endpoint_name = 'battlesnake-endpoint'
     client = boto3.client('sagemaker')
-    response = client.describe_endpoint(EndpointName=endpoint_name)
-
-    print(response)
+    try:
+        response = client.describe_endpoint(EndpointName=endpoint_name)
+        endpoint_status = response['EndpointStatus']
+    except ClientError as e:
+        error_code = e.response['Error']['Code']
+        print(e.response['Error'])
+        endpoint_status = 'Endpoint does not exist'
 
     html = "<html><head><title>Snake status</title></head><body>"
 
-    if( response['EndpointStatus'] == 'InService'):
+    if( endpoint_status == 'InService'):
         status = "ready"
         html += "<b>snake status : </b>" + status
     else:
-        status = "not ready"
-        html += "<b>snake status : </b>" + status + "<br><br>"
-        html += "<b>Sagemaker endpoint status : </b>" + response['EndpointStatus']+ "<br><br>"
-        html += "<i>You can visit the Amazon Sagemaker service page in the AWS Console to see detailed information.</i>"
+        if( endpoint_status == 'Endpoint does not exist'):
+            status = "deployment failed"
+            html += "<b>snake status : </b>" + status + "<br><br>"
+            html += "<b>Sagemaker endpoint status : </b>" + endpoint_status + "<br><br>"
+            html += "<i>The Amazon SageMaker endpoint creation have failed. This is probably because your account cannot launch ml.m5.xlarge instance yet.</i><br><br>"
+            html += "<b>What you should fo now:</b><br><br>"
+            html += "1. Go in CloudFormation service in the AWS console and delete the stack<br>"
+            html += "2. Recreate the stack following one of the two options below:<br>"
+            html += "<ul><li>Click on the 'deploy' link from Github and before clicking 'create stack' change the selector SagemakerInstanceType to ml.t2.medium. This instance type is allowed by default in every account. Note that it is not free.</li>"
+            html += "<li>Open a support ticket and ask to be allowed to launch ml.m5.xlarge instances. Once approved, recreate the stack with default settings</li></ul>"
+        else:
+            status = "not ready"
+            html += "<b>snake status : </b>" + status + "<br><br>"
+            html += "<b>Sagemaker endpoint status : </b>" + endpoint_status + "<br><br>"
+            html += "<i>You can visit the Amazon Sagemaker service page in the AWS Console to see detailed information.</i>"
 
     html += "</body></html>"
 

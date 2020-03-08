@@ -18,6 +18,7 @@ import json
 import os
 import boto3
 import requests
+from botocore.exceptions import ClientError
 
 def handler(event, context):
     try:
@@ -27,18 +28,26 @@ def handler(event, context):
             if event['RequestType'] == 'Delete':
                 bucketName = os.environ['SAGEMAKER_BUCKET_NAME']
                 s3 = boto3.resource('s3')
-                bucket = s3.Bucket(bucketName)
-                bucket.objects.filter(Prefix='battlesnake-aws/').delete()
-                bucket.objects.filter(Prefix='battlesnake-mxnet/').delete()
+                try:
+                    bucket = s3.Bucket(bucketName)
+                    bucket.objects.filter(Prefix='battlesnake-aws/').delete()
+                    bucket.objects.filter(Prefix='battlesnake-mxnet/').delete()
+                except ClientError as e:
+                    print('Bucket did not exist, skipping')
+                    print(e.response['Error'])
         elif operation == 'CleanupSagemakerEndpoint':
             if event['RequestType'] == 'Delete':
                 deployment_name = 'battlesnake-endpoint'
                 client = boto3.client('sagemaker')
-                response = client.describe_endpoint_config(EndpointConfigName=deployment_name)
-                model_name = response['ProductionVariants'][0]['ModelName']
-                client.delete_model(ModelName=model_name)    
-                client.delete_endpoint(EndpointName=deployment_name)
-                client.delete_endpoint_config(EndpointConfigName=deployment_name)
+                try:
+                    response = client.describe_endpoint_config(EndpointConfigName=deployment_name)
+                    model_name = response['ProductionVariants'][0]['ModelName']
+                    client.delete_model(ModelName=model_name)    
+                    client.delete_endpoint(EndpointName=deployment_name)
+                    client.delete_endpoint_config(EndpointConfigName=deployment_name)
+                except ClientError as e:
+                    print('Endpoint did not exist, skipping')
+                    print(e.response['Error'])
 
         sendResponseCfn(event, context, "SUCCESS")
     except Exception as e:
