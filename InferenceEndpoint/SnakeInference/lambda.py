@@ -97,7 +97,7 @@ def status():
         if( endpoint_status == 'Endpoint does not exist'):
             status = "deployment failed"
             html += "<b>snake status : </b>" + status + "<br><br>"
-            html += "<b>Sagemaker endpoint status : </b>" + endpoint_status + "<br><br>"
+            html += "<b>Amazon SageMaker endpoint status : </b>" + endpoint_status + "<br><br>"
             html += "<i>The Amazon SageMaker endpoint creation have failed. This is probably because your account cannot launch ml.m5.xlarge instance yet.</i><br><br>"
             html += "<b>What you should fo now:</b><br><br>"
             html += "1. Go in CloudFormation service in the AWS console and delete the stack<br>"
@@ -107,8 +107,8 @@ def status():
         else:
             status = "not ready"
             html += "<b>snake status : </b>" + status + "<br><br>"
-            html += "<b>Sagemaker endpoint status : </b>" + endpoint_status + "<br><br>"
-            html += "<i>You can visit the Amazon Sagemaker service page in the AWS Console to see detailed information.</i>"
+            html += "<b>Amazon SageMaker endpoint status : </b>" + endpoint_status + "<br><br>"
+            html += "<i>You can visit the Amazon SageMaker service page in the AWS Console to see detailed information.</i>"
 
     html += "</body></html>"
 
