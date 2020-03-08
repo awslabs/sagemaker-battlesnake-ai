@@ -136,10 +136,13 @@ class BattlesnakeGym(gym.Env):
         dones = {i:False for i in range(self.number_of_snakes)}
         
         snakes_health = {}
+        snake_info = {}
         for i, snake in enumerate(self.snakes.get_snakes()):
             snakes_health[i] = snake.health
+            snake_info[i] = "Did not colide" 
         info = {'current_turn': self.turn_count,
-                'snake_health': snakes_health}
+                'snake_health': snakes_health,
+                 'snake_info': snake_info}
         return self._get_observation(), {}, dones, info
 
     def _did_snake_collide(self, snake):
@@ -186,14 +189,15 @@ class BattlesnakeGym(gym.Env):
         for other_snake in self.snakes.get_snakes():
             if other_snake == snake:
                 continue
-            other_snake_head = other_snake.get_head()
-            if np.array_equal(snake_head_location, other_snake_head):
-                if other_snake.get_size() >= snake.get_size():
-                    outcome = "Snake was eaten - same tile"
-                    if self.verbose: print(outcome)
-                    return True, outcome
-                else:
-                    return False, "Ate another snake"
+            if other_snake.is_alive():
+                other_snake_head = other_snake.get_head()
+                if np.array_equal(snake_head_location, other_snake_head):
+                    if other_snake.get_size() >= snake.get_size():
+                        outcome = "Snake was eaten - same tile"
+                        if self.verbose: print(outcome)
+                        return True, outcome
+                    else:
+                        return False, "Ate another snake"
                 
         # 2.2) Check if snake's head collided with another snakes head when they were adjacent to one another
         # (i.e., that the heads swapped positions)
@@ -207,16 +211,17 @@ class BattlesnakeGym(gym.Env):
             # Check if snake swapped places with the other_snake.
             # 1) check if heads are adjacent
             # 2) check if heads swapped places
-            other_snake_head = other_snake.get_head()
-            if get_distance(snake_head_location, other_snake_head) == 1:
-                if np.array_equal(snake_head_location, other_snake.get_previous_snake_head())\
-                   and np.array_equal(other_snake_head, snake.get_previous_snake_head()):
-                    if other_snake.get_size() >= snake.get_size():
-                        outcome = "Snake was eaten - adjacent tile"
-                        if self.verbose: print(outcome)
-                        return True, outcome
-                    else:
-                        return False, "Ate another snake"
+            if other_snake.is_alive():
+                other_snake_head = other_snake.get_head()
+                if get_distance(snake_head_location, other_snake_head) == 1:
+                    if np.array_equal(snake_head_location, other_snake.get_previous_snake_head())\
+                       and np.array_equal(other_snake_head, snake.get_previous_snake_head()):
+                        if other_snake.get_size() >= snake.get_size():
+                            outcome = "Snake was eaten - adjacent tile"
+                            if self.verbose: print(outcome)
+                            return True, outcome
+                        else:
+                            return False, "Ate another snake"
         
         # 3.1) Check if snake ran into it's own body
         outcome = "Snake hit body - hit itself"
@@ -237,10 +242,11 @@ class BattlesnakeGym(gym.Env):
         for other_snake in self.snakes.get_snakes():
             if other_snake == snake:
                 continue
-            other_snake_head = other_snake.get_head()
-            for location in snake.get_body():
-                if np.array_equal(location, other_snake_head):
-                    return False, "Other snake hit body"
+            if other_snake.is_alive():
+                other_snake_head = other_snake.get_head()
+                for location in snake.get_body():
+                    if np.array_equal(location, other_snake_head):
+                        return False, "Other snake hit body"
         
         return False, "Did not colide"
 
@@ -273,6 +279,7 @@ class BattlesnakeGym(gym.Env):
 
         # setup reward dict
         reward = {}
+        snake_info = {}
 
         # Reduce health and move
         for i, snake in enumerate(self.snakes.get_snakes()):
@@ -285,6 +292,7 @@ class BattlesnakeGym(gym.Env):
             if snake.health == 0:
                 snake.kill_snake()
                 reward[i] += self.rewards.get_reward("starved", i, episodes)
+                snake_info[i] = "starved"
                 continue
 
             action = actions[i] 
@@ -292,10 +300,12 @@ class BattlesnakeGym(gym.Env):
             if is_forbidden:
                 snake.kill_snake()
                 reward[i] += self.rewards.get_reward("forbidden_move", i, episodes)
-
+                snake_info[i] = "forbidden move"
+            
         # check for food and collision
         number_of_food_eaten = 0
         number_of_snakes_alive = 0
+
         for i, snake in enumerate(self.snakes.get_snakes()):
             if not snake.is_alive():
                 continue
@@ -304,6 +314,7 @@ class BattlesnakeGym(gym.Env):
 
             # Check for collisions with the snake
             should_kill_snake, outcome = self._did_snake_collide(snake)
+            snake_info[i] = outcome
             if should_kill_snake:
                 snake.kill_snake()
 
@@ -370,9 +381,10 @@ class BattlesnakeGym(gym.Env):
         snakes_health = {}
         for i, snake in enumerate(self.snakes.get_snakes()):
             snakes_health[i] = snake.health
-        
+                
         return self._get_observation(), reward, snake_alive_dict, {'current_turn': self.turn_count,
-                                                                   'snake_health': snakes_health}
+                                                                   'snake_health': snakes_health,
+                                                                    'snake_info': snake_info}
                 
     def _get_observation(self):
         '''
@@ -453,11 +465,60 @@ class BattlesnakeGym(gym.Env):
                     board[t_i1 + box_margin:t_i2 - box_margin,
                           t_j1 + box_margin:t_j2 - box_margin] = [255, 0, 0]
 
-                # If state contains a snake
-                if state_value[SNAKE_INDEXES].any():
+                # If state contains a snake body
+                if 1 in state_value[SNAKE_INDEXES]:
                     snake_present_in = np.argmax(state_value[SNAKE_INDEXES])
                     board[t_i1:t_i2, t_j1:t_j2] = snake_colours[snake_present_in]
+                    
+                # If state contains a snake head
+                if 5 in state_value[SNAKE_INDEXES]:
+                    snake_present_in = np.argmax(state_value[SNAKE_INDEXES])
+                    board[t_i1:t_i2, t_j1:t_j2] = snake_colours[snake_present_in]
+                    t_i_h = 10
+                    t_j_h = 10
+                    board[(t_i1+t_i_h):(t_i2-t_i_h), (t_j1+t_j_h):(t_j2-t_j_h)] = [255, 255, 255]
+
         return board
+    
+    def get_json(self):
+        '''
+        Generate a json representation of the gym following the same input as the battlesnake
+        engine.
+        
+        Return:
+        -------
+        json: {}
+            Json in the same representation of board.
+        '''
+        json = {}
+        json["turn"] = self.turn_count
+        
+        # Get food
+        food_list = []
+        y, x = np.where(self.food.locations_map==1)
+        for x_, y_ in zip(x, y):
+            food_list.append({"x": x_, "y": y_})
+        
+        # Get snakes
+        snake_dict_list = []
+        for i, snakes in enumerate(self.snakes.snakes):
+            snake_location = []
+            for coord in snakes.locations[::-1]:
+                snake_location.append({"x": coord[1], "y": coord[0]})
+                
+            snake_dict = {}
+            snake_dict["health"] = snakes.health
+            snake_dict["body"] = snake_location
+            snake_dict["id"] = i
+            snake_dict["name"] = "Snake {}".format(i)
+            snake_dict_list.append(snake_dict)
+
+        json["board"] = {"height": self.map_size[0],
+                         "width": self.map_size[1],
+                         "food": food_list,
+                         "snakes": snake_dict_list 
+                        }
+        return json
 
     def _get_ascii(self):
         '''
