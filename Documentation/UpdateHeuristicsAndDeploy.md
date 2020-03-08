@@ -1,10 +1,10 @@
 # STEP 2 - Customize the AI heuristics
 
-In [STEP 1 - Deploy the environment](DeployTheAIEndpoint.md) you deployed a snake using a pre-trained deep learning model. However, deep learning models can sometimes choose sub-optimal actions which can result in undesirable outcomes for your snake, such as colliding with a wall or facing off with an opponent snake that has a longer body (in both cases, your snake will die).
+In [STEP 1](DeployTheAIEndpoint.md) you deployed a snake using a pre-trained deep learning model. However, deep learning models can sometimes choose sub-optimal actions which can result in undesirable outcomes for your snake, such as colliding with a wall or facing off with an opponent snake that has a longer body (in both cases, your snake will die).
 
 So in this section, you will write some heuristics that serve as ground rules for your snake. These ground rules will override any decisions made by the deep learning model. For example, you can write a routine that will determine if a given movement decision will result in a collision with a wall, or if your snake can be able to defeat another shorter snake by colliding with it, head to head.
 
-In the next section, you will you "deeper" and customize your deep learning model [STEP 3](TrainModelAndDeploy.md).
+In the next section, you will you "deeper" and customize your deep learning model [STEP 3 - Train the AI model with your own settings](TrainModelAndDeploy.md).
 
 Let's begin!
 
