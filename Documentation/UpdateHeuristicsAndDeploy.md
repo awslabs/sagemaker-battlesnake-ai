@@ -1,14 +1,14 @@
-# STEP 2 - Customize the AI heuristics
+# Step 2 - Build some Heuristics
 
-In [STEP 1](DeployTheAIEndpoint.md) you deployed a snake using a pre-trained deep learning model. However, deep learning models can sometimes choose sub-optimal actions which can result in undesirable outcomes for your snake, such as colliding with a wall or facing off with an opponent snake that has a longer body (in both cases, your snake will die).
+In [Step 1](DeployTheAIEndpoint.md) you deployed a snake using a pre-trained deep learning model. However, deep learning models can sometimes choose sub-optimal actions which can result in undesirable outcomes for your snake, such as colliding with a wall or facing off with an opponent snake that has a longer body (in both cases, your snake will die).
 
 So in this section, you will write some heuristics that serve as ground rules for your snake. These ground rules will override any decisions made by the deep learning model. For example, you can write a routine that will determine if a given movement decision will result in a collision with a wall, or if your snake can be able to defeat another shorter snake by colliding with it, head to head.
 
-In the next section, you will you "deeper" and customize your deep learning model [STEP 3 - Train the AI model with your own settings](TrainModelAndDeploy.md).
+In the next section, you will you "deeper" and customize your deep learning model.
 
 Let's begin!
 
-> __PRE-REQUISITE__: You need to run __[STEP 1 - Deploy the environment](DeployTheAIEndpoint.md)__ before completing STEP 2 or STEP 3.
+> __PRE-REQUISITE__: You need to run __[Step 1](DeployTheAIEndpoint.md)__ before completing this step.
 
 ---
 _If you do clever things, your pull request is welcome!_
@@ -17,7 +17,7 @@ _If you do clever things, your pull request is welcome!_
 
 ![Heuristic Dev Architecture](images/ArchitectureSagemakerBattlesnakeHeuristics.png "Heuristic Dev Architecture")
 
-> __Estimated cost__ : This environment does not add any cost to the [STEP 1 environment](DeployTheAIEndpoint.md). The free tiers include 250 hours per month of this notebook instance during the first two months.
+> __Estimated cost__ : This environment does not add any cost to [Step 1](DeployTheAIEndpoint.md). The free tiers include 250 hours per month of this notebook instance during the first two months.
 > After the free tiers, the charge will be $0.269 per hour for the notebook instance ($6.5 per 24 hour period).
 > __Cost savings tip__ : Once you have finished working, you can stop your notebook instance in order to stop consuming free tiers or incurring charges. You can easily restart them at a later date to continue with your work.
 
@@ -25,7 +25,7 @@ _If you do clever things, your pull request is welcome!_
 
 ### Open and load the heuristic dev environment
 
-From the Cloudformation stack created during [STEP 1](DeployTheAIEndpoint.md), go to the 'Outputs' tab and click on the link next to _HeuristicsDevEnvironment_:
+From the Cloudformation stack created during [Step 1](DeployTheAIEndpoint.md), go to the 'Outputs' tab and click on the link next to _HeuristicsDevEnvironment_:
 
 > _You need to be authenticated for that link to work. Click on __SourceEditionInNotebook__ link if you are denied access_
 
@@ -35,7 +35,7 @@ Now that you have the notebook `HeuristicDeveloper.ipynb` open, ensure that you 
 
 ### Open the heuristic source code
 
-From the Cloudformation stack created during [STEP 1](DeployTheAIEndpoint.md), go to the 'Outputs' tab and click on the link next to _SourceEditionInNotebook_:
+From the Cloudformation stack created during [Step 1](DeployTheAIEndpoint.md), go to the 'Outputs' tab and click on the link next to _SourceEditionInNotebook_:
 
 Then navigate to `battlesnake/LocalEnv/battlesnake_inference/battlesnake_heuristics.py`
 
@@ -60,4 +60,4 @@ You can customize the `run()` method in the class `MyBattlesnakeHeuristics` with
 
 ## Next step: customize the Model
 
-Go to __[STEP 3 - Train the AI model with your own settings](TrainModelAndDeploy.md)__ to train the model again with your own settings.
+Go to __[Step 3 - Upgrade your Model](TrainModelAndDeploy.md)__ to train the model again with your own settings.

@@ -1,10 +1,10 @@
-# STEP 3 - Train the AI model with your own settings
+# Step 3 - Upgrade your Model
 
 This page explains how to retrain the model, and how to modify the training settings.
 
 This is controlled mainly by a single notebook and will use a training gym environment.
 
-> __PRE-REQUISITE__: You need to run __[STEP 1 - Deploy the environment](DeployTheAIEndpoint.md)__ before following these instructions.
+> __PRE-REQUISITE__: You need to run __[Step 1](DeployTheAIEndpoint.md)__ before following these instructions.
 
 ## Architecture
 
@@ -14,7 +14,7 @@ This step adds a training instance to the Battlesnake environment:
 
 ## Cost
 
-> __Estimated cost__ : This environment adds a training instance to the [STEP 1 base environment](DeployTheAIEndpoint.md): the free tiers include 50 hours per month for the training instance during the first two months.
+> __Estimated cost__ : This environment adds a training instance to [Step 1](DeployTheAIEndpoint.md): the free tiers include 50 hours per month for the training instance during the first two months.
 > After the free tiers are exceeded, the charge will be $0.269 per hour ($6.5 per 24 hour period) when the training instance is running.
 > __Cost savings tip__ : Once you have finished training, you can stop your training instance in order to stop consuming free tiers or incurring charges. You can easily restart them at a later date to continue with training.
 

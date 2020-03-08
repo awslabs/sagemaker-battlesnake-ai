@@ -1,4 +1,4 @@
-# STEP 1 - Deploy a pretrained AI
+# Step 1 - Deploy a Snake
 
 This section will deploy a pre-trained AI into your AWS account. This AI will expose the [Battlesnake API](https://docs.battlesnake.com/snake-api).
 
@@ -10,7 +10,7 @@ The deployed architecture will consist of the following components:
 
 > __Estimated cost__ : If you run this architecture for a limited time, it will fit within the [AWS Free tiers](https://aws.amazon.com/free/). The AWS Free tiers can support 500,000 snake API invocations over a 125 hour period per month for the first two months. The free tiers also include 250 hours per month of this notebook instance for the first two months.
 > After the free tiers are exceeded, the charges will be approximately $0.269 per hour ($6.5 per 24 hour period) for the endpoint instance, $0.269 per hour for the notebook instance, and $6 per million Snake API calls.
-> __Cost savings tip__ : Once you have finished working (ex: participating in games) you can stop your SageMaker notebook instance in order to stop consuming free tiers or incurring charges. You can easily restart these components at a later date in order to continue your work. You can also delete the SageMaker Inference Endpoint and recreate it when needed (manually or using the _Deploy the SageMaker endpoint_ section of the heuristic dev notebook from [STEP 2](UpdateHeuristicsAndDeploy.md)).
+> __Cost savings tip__ : Once you have finished working (ex: participating in games) you can stop your SageMaker notebook instance in order to stop consuming free tiers or incurring charges. You can easily restart these components at a later date in order to continue your work. You can also delete the SageMaker Inference Endpoint and recreate it when needed (manually or using the _Deploy the SageMaker endpoint_ section of the heuristic dev notebook from [Step 2](UpdateHeuristicsAndDeploy.md)).
 > See pricing details: [Amazon Sagemaker pricing](https://aws.amazon.com/sagemaker/pricing/), [AWS Lambda pricing](https://aws.amazon.com/lambda/pricing/), [Amazon API Gateway pricing](https://aws.amazon.com/api-gateway/pricing/)
 
 ## Deploy environment
@@ -75,7 +75,7 @@ Once you finish your work for the day or you finish participating in games with 
 
 ## Next step: customize snake
 
-Go to __[STEP 2 - Customize the AI heuristics](UpdateHeuristicsAndDeploy.md)__ to start making changes to the snake's behavior.
+Go to __[Step 2](UpdateHeuristicsAndDeploy.md)__ to start making changes to the snake's behavior.
 
 ## Clean up environment
 
