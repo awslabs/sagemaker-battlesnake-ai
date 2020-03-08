@@ -1,17 +1,16 @@
 # STEP 2 - Customize the AI heuristics
 
-This section explains how to write your own routines to override the AI's movement decisions using heuristics.
+In [STEP 1 - Deploy the environment](DeployTheAIEndpoint.md) you deployed a snake using a pre-trained deep learning model. However, deep learning models can sometimes choose sub-optimal actions which can result in undesirable outcomes for your snake, such as colliding with a wall or facing off with an opponent snake that has a longer body (in both cases, your snake will die).
+
+So in this section, you will write some heuristics that serve as ground rules for your snake. These ground rules will override any decisions made by the deep learning model. For example, you can write a routine that will determine if a given movement decision will result in a collision with a wall, or if your snake can be able to defeat another shorter snake by colliding with it, head to head.
+
+In the next section, you will you "deeper" and customize your deep learning model [STEP 3](TrainModelAndDeploy.md).
+
+Let's begin!
 
 > __PRE-REQUISITE__: You need to run __[STEP 1 - Deploy the environment](DeployTheAIEndpoint.md)__ before completing STEP 2 or STEP 3.
 
 ---
-
-The AI can make movement decisions using either your customised model (if you ran through [STEP 3](TrainModelAndDeploy.md) ) or the provided pretrained model (from [STEP 1](DeployTheAIEndpoint.md) ).
-
-In some situations, the neural network model might choose a sub-optimal action. This can result in undesirable outcomes for your snake, such as colliding with a wall or facing off with an opponent snake that has a longer body (in both cases, your snake will die).  
-
-One way to overcome this issue is to pass the neural network's decision through a set of routines that will attempt to avoid such undesirable events. For example, you can write a routine that will determine if a given movement decision will result in a collision with a wall. Another routine might try to detect if you may be able to defeat another shorter snake by colliding with it, head to head.
-
 _If you do clever things, your pull request is welcome!_
 
 ## Architecture
