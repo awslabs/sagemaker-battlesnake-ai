@@ -29,7 +29,7 @@ def trainer(env, agents, number_of_snakes, name,
             should_render, writer, print_progress):
     """Deep Q-Learning.
 
-    Adapted from torch code provided in 
+    Inspired from torch code provided in 
     https://github.com/udacity/deep-reinforcement-learning/blob/master/dqn/solution/Deep_Q_Network_Solution.ipynb
     """
     scores = [[] for _ in range(number_of_snakes)]
