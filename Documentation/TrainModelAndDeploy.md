@@ -29,6 +29,8 @@ Similar to accessing the heuristics developer environment, check the CloudFormat
 - Once you have opened the SagemakerModelTraining.ipynb notebook, run through the notebook in order to train the model or run hyperparameter optimization (Press ► on the top to run the notebook). See [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use Jupyter Notebooks.
 - set `run_hpo = False` to train your model, or `run_hpo = True` to run hyperparameter optimization.
 
+> __Dev tools:__ Editing code in Jupyter with no source version control is convenient for test but won't work for big projects. If you want to go further follow the [setup source control](SetupSourceControl.md)
+
 ## Training a reinforcement learning model
 
 The reinforcement learning components of this project include an OpenAI gym to train your Battlesnake AI (https://play.battlesnake.com/) and an MXNet example notebook to train your own neural network.
