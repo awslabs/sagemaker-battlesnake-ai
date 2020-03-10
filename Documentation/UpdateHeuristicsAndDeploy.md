@@ -43,14 +43,14 @@ You can customize the `run()` method in the class `MyBattlesnakeHeuristics` with
 
 > __Dev tools:__ Editing code in Jupyter notebooks with no source version control is convenient for testing purposes,  but isn't practical for larger projects. If you are interested in implementing source code version control, see: [setup source control](SetupSourceControl.md)
 
-## Visualising your algorithm
+## Visualizing your algorithm
 
 - If you want to visualize your AI in action, ensure that you are using *Jupyter* instead of *JupyterLab* (this is the default if you use the links from the CloudFormation 'Outputs' tab).
 - The notebook loads a pre-trained model and allows your AI to interact with the environment
 - After the *Playback the simulation* section, you should see the step-by-step positions, actions, health etc. of each snake.
 - If you want to specify the positions of each snake and food (instead of randomly generating it), you can enter it in `initial_state` in *Define the openAI gym*. initial_state is defined similarly to the [battlesnake API](https://docs.battlesnake.com/snake-api).
 
-![Visualization](images/VisualizingHeuristics.png "Visualise the heuristics")
+![Visualization](images/VisualizingHeuristics.png "Visualize the heuristics")
 
 ## Deploy your own custom snake
 
@@ -60,4 +60,4 @@ You can customize the `run()` method in the class `MyBattlesnakeHeuristics` with
 
 ## Next step: customize the Model
 
-Go to __[Step 3 - Upgrade your Model](TrainModelAndDeploy.md)__ to train the model again with your own settings.
+Go to __[Step 3](TrainModelAndDeploy.md)__ to train the model again with your own settings.
