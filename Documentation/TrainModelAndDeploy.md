@@ -1,4 +1,4 @@
-# Step 3 - Upgrade your Model
+# Step 3 - Upgrade your Reinforcement Learning Model
 
 This page explains how to retrain the model, and how to modify the training settings.
 

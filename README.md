@@ -21,9 +21,9 @@ Several pre-trained neural network models are provided within this project as we
 
 This project can be used in three steps:
 
-- __[Step 1 - Deploy Snake](Documentation/DeployTheAIEndpoint.md)__ : Deploy a snake with pre-trained AI. After this step, you'll be able to participate in a Battlesnake game! **Don't skip this step!** This step also deploys a local environment which is needed for the following steps.)
-- __[Step 2 - Build some Heuristics](Documentation/UpdateHeuristicsAndDeploy.md)__ : Write some rules for your snake to navigate common scenarios, visualize your results, and publish the upgraded version of your snake!
-- __[Step 3 - Upgrade your Model](Documentation/TrainModelAndDeploy.md)__ : This is the most rewarding step. Retrain your snake with different settings, visualize your results, and publish an upgraded version!
+- __[Step 1 - Deploy a Snake](Documentation/DeployTheAIEndpoint.md)__ : Deploy a snake with pre-trained AI. After this step, you'll be able to participate in a Battlesnake game! **Don't skip this step!** This step also deploys a local environment which is needed for the following steps.)
+- __[Step 2 - Build some Heuristics](Documentation/UpdateHeuristicsAndDeploy.md)__ : Write some rules for your snake to navigate common scenarios, visualize your snake, and publish the upgraded version of your snake!
+- __[Step 3 - Upgrade your Reinforcement Learning Model](Documentation/TrainModelAndDeploy.md)__ : This is the most rewarding step. Retrain your snake with different settings, visualize your snake, and publish an upgraded version!
 
 ### Architecture
 
@@ -38,11 +38,11 @@ Refer to each step above in order to understand the costs that may be incurred a
 
 ### Content
 
-The included Jupyter notebooks are bundled with a step by step Battlesnake visualizer:
+The included Jupyter notebooks are bundled with a step-by-step Battlesnake visualizer:
 
 ![Battlesnake visualizer](Documentation/images/battlesnake-debugger.png "Battlesnake visualizer")
 
-With the Battlesnake visualizer, you can load any initial state and test how your snake will behave in various situations (See the [Visualize your algorithm](Documentation/UpdateHeuristicsAndDeploy.md#visualising-your-algorithm) section for the full list of features.)
+With the Battlesnake visualizer, you can load any initial state and test how your snake will behave in various situations (See the [Visualize your algorithm](Documentation/UpdateHeuristicsAndDeploy.md#visualizing-your-algorithm) section for the full list of features.)
 
 The source code of the project is organized as follows:
 
