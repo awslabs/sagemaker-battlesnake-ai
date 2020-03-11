@@ -41,8 +41,8 @@ Parameters:
     Default: freckled
     Type: String
   SagemakerInstanceType:
-    Description: "Instance type used for the inference endpoint and training. m5 is default it is in free tiers and most performant. In case of unavailability of the instance on your account use m4 (also free) or t2 (not free but cheap)"
-    Default: ml.m5.xlarge
+    Description: "Instance type used for the inference endpoint and training. t2 is default because this is the only instance that can be launch in a new AWS account just after creation. m5 or m4 are in the free tiers, choose them if your account exist for some time already"
+    Default: ml.t2.medium
     Type: String
     AllowedValues:
       - ml.t2.medium
