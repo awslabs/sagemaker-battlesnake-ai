@@ -1,3 +1,6 @@
+| __BLOG POST DOCUMENTATION__: Consider reading our detailed [blog post](https://aws.amazon.com/blogs/machine-learning/building-an-ai-powered-battlesnake-with-reinforcement-learning-on-amazon-sagemaker/) about this project. |
+| --- |
+
 # Amazon SageMaker for Battlesnake AI
 
 This project shows how to build and deploy an AI for the platform [Battlesnake](https://play.battlesnake.com/) on AWS with [Amazon Sagemaker](https://aws.amazon.com/sagemaker/)!
