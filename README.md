@@ -1,5 +1,5 @@
-| __BLOG POST DOCUMENTATION__ | Consider reading our detailed [blog post](https://aws.amazon.com/blogs/machine-learning/building-an-ai-powered-battlesnake-with-reinforcement-learning-on-amazon-sagemaker/) about this project. |
-| --- | --- |
+| --- | 
+| __BLOG POST DOCUMENTATION__ Consider reading our detailed [blog post](https://aws.amazon.com/blogs/machine-learning/building-an-ai-powered-battlesnake-with-reinforcement-learning-on-amazon-sagemaker/) about this project. |
 
 # Amazon SageMaker for Battlesnake AI
 
