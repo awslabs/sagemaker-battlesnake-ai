@@ -4,7 +4,7 @@ In [Step 1](DeployTheAIEndpoint.md) you deployed a snake using a pre-trained dee
 
 So in this section, you will write some heuristics that serve as ground rules for your snake. These ground rules will override any decisions made by the deep learning model. For example, you can write a routine that will determine if a given movement decision will result in a collision with a wall, or if your snake can be able to defeat another shorter snake by colliding with it, head to head.
 
-In the next section, you will you "deeper" and customize your deep learning model.
+In the next section, you will go "deeper" and customize your deep learning model.
 
 Let's begin!
 
