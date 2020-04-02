@@ -19,15 +19,24 @@ import os
 ## MultiAgentEnv wrapper for battlesnake_gym
 class MultiAgentBattlesnake(MultiAgentEnv):
 
-    def __init__(self, num_agents, map_height):
+    MAX_MAP_HEIGHT = 21
+    def __init__(self, observation_type, num_agents, map_height):
         self.env = BattlesnakeGym(
-            observation_type="flat-51s",
+            observation_type=observation_type,
             number_of_snakes=num_agents, 
             map_size=(map_height, map_height))
+        
+        if "bordered" in observation_type:
+            if "max-bordered" in observation_type:
+                self.observation_height = self.MAX_MAP_HEIGHT
+            else: # If only bordered with 2 rows of -1
+                self.observation_height = map_height + 2
+        else: # Flat without border
+            self.observation_height = map_height
 
         self.action_space = self.env.action_space[0]
 
-        self.observation_space = gym.spaces.Box(low=-1.0, high=5.0, shape=(map_height, map_height, (num_agents+1)*2), dtype=np.float32)
+        self.observation_space = gym.spaces.Box(low=-1.0, high=5.0, shape=(self.observation_height, self.observation_height, (num_agents+1)*2), dtype=np.float32)
         self.num_agents = num_agents
         self.map_height = map_height
 
@@ -37,7 +46,7 @@ class MultiAgentBattlesnake(MultiAgentEnv):
         obs = {}
 
         # add empty map placeholders for use until we've seen 2 steps
-        empty_map = np.zeros((self.map_height, self.map_height, self.num_agents+1))
+        empty_map = np.zeros((self.observation_height, self.observation_height, self.num_agents+1))
         self.old_obs1 = np.array(new_obs, dtype=np.float32)
 
         merged_map = np.concatenate((empty_map, self.old_obs1), axis=-1)

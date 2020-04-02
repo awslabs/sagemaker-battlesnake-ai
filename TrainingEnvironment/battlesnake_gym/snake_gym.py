@@ -28,7 +28,9 @@ class BattlesnakeGym(gym.Env):
     metadata = {
         "render.modes": ["human", "rgb_array", "ascii"],
         "observation.types": ["flat-num", "bordered-num",
-                              "flat-51s", "bordered-51s"]
+                              "max-bordered-num",
+                              "flat-51s", "bordered-51s", 
+                              "max-bordered-51s"]
     }
     '''
     OpenAI Gym for BattlesnakeIO 

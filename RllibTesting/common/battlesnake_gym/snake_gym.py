@@ -28,7 +28,9 @@ class BattlesnakeGym(gym.Env):
     metadata = {
         "render.modes": ["human", "rgb_array", "ascii"],
         "observation.types": ["flat-num", "bordered-num",
-                              "flat-51s", "bordered-51s"]
+                              "max-bordered-num",
+                              "flat-51s", "bordered-51s", 
+                              "max-bordered-51s"]
     }
     '''
     OpenAI Gym for BattlesnakeIO 
@@ -44,9 +46,11 @@ class BattlesnakeGym(gym.Env):
         3- "flat-51s" is the same as the flat option but the snake head is labeleld as 5 and the rest
            is labelled as 1
         4- "bordered-51s" similar to flat-51s
+        5- "max-bordered-num" option will provide borders of -1 until a maximum map size of 21, 21
+        6- "max-bordered-51s" similar to max-bordered-num
     
     map_size: (int, int), optional, default=(15, 15)
-
+    
     number_of_snakes: int, optional, default=1
 
     snake_spawn_locations: [(int, int)] optional, default=[]
@@ -64,7 +68,7 @@ class BattlesnakeGym(gym.Env):
         Dict is in the same form as in the battlesnake engine
         https://docs.battlesnake.com/snake-api
     '''
-    
+    MAX_BORDER = (21, 21) # Largest map size (19, 19) + 2 for -1 borders
     def __init__(self, observation_type="flat-51s", map_size=(15, 15),
                  number_of_snakes=4, 
                  snake_spawn_locations=[], food_spawn_locations=[],
@@ -90,9 +94,13 @@ class BattlesnakeGym(gym.Env):
                                                        self.number_of_snakes+1),
                                                 dtype=np.uint8)
         elif "bordered" in self.observation_type:
+            if "max-bordered" in self.observation_type:
+                border_size = self.MAX_BORDER[0] - self.map_size[0]
+            else:
+                border_size = 2
             self.observation_space = spaces.Box(low=0, high=2,
-                                                shape=(self.map_size[0]+2,
-                                                       self.map_size[1]+2,
+                                                shape=(self.map_size[0]+border_size,
+                                                       self.map_size[1]+border_size,
                                                        self.number_of_snakes+1),
                                                 dtype=np.uint8)
         self.viewer = None
@@ -394,10 +402,18 @@ class BattlesnakeGym(gym.Env):
             return self._get_state()
         elif "bordered" in self.observation_type:
             state = self._get_state()
-            bordered_state_shape = (state.shape[0]+2, state.shape[1]+2,
+
+            if "max-bordered" in self.observation_type:
+                border_size = self.MAX_BORDER[0] - self.map_size[0]
+            else: 
+                border_size = 2
+                
+            bordered_state_shape = (state.shape[0]+border_size, state.shape[1]+border_size,
                                     state.shape[2])
             bordered_state = np.ones(shape=bordered_state_shape)*-1
-            bordered_state[1:-1, 1:-1,:] = state
+            
+            b = int(border_size/2)
+            bordered_state[b:-b, b:-b,:] = state
             return bordered_state
 
     def _get_state(self):
@@ -571,7 +587,7 @@ class BattlesnakeGym(gym.Env):
                 elif ascii_array[i][j] == "*":
                     ascii_string += "\t - *"
                 elif ascii_array[i][j] is None:
-                   ascii_string += "\t . |"
+                    ascii_string += "\t . |"
                 else:
                     ascii_string += ascii_array[i][j] + "\t . |"
             ascii_string += "\n"
