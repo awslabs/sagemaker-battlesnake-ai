@@ -1,0 +1,42 @@
+To restore from a checkpoint (for incremental training) first copy your checkpoint
+files from S3 into this directory. Then edit src/train_mabs.py and specify the
+checkpoint from which you would like to restore (~line 47).
+
+You must copy the checkpoint directory in its entirety. For example:
+
+
+sh-4.2$ pwd
+/home/ec2-user/SageMaker/battlesnake_rllib/checkpoints
+
+sh-4.2$ ls
+checkpoint_10   checkpoint_140  checkpoint_190  checkpoint_230  checkpoint_50  events.out.tfevents.1584848117.algo-1
+checkpoint_100  checkpoint_150  checkpoint_20   checkpoint_240  checkpoint_60  params.json
+checkpoint_110  checkpoint_160  checkpoint_200  checkpoint_250  checkpoint_70  params.pkl
+checkpoint_120  checkpoint_170  checkpoint_210  checkpoint_30   checkpoint_80  progress.csv
+checkpoint_130  checkpoint_180  checkpoint_220  checkpoint_40   checkpoint_90  result.json
+
+
+
+With the checkpoint files in place, we could then specify "checkpoint_250" as the restore point in
+src/train_mabs.py:
+
+
+<snip>
+        return {
+          "training": { 
+            "env": "MultiAgentBattlesnake-v1",
+            "restore": "/opt/ml/code/checkpoints/checkpoint_250/checkpoint-250",  # <- HERE 
+            "run": "PPO",
+            "stop": {
+              "training_iteration": self.num_iters,
+            },
+</snip>
+
+
+
+The 'restore' path above references "/opt/ml/code/checkpoints/" as this is the path into
+which the checkpoint files will be copied within the SageMaker training container, during
+your training job.
+
+
+

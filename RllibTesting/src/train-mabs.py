@@ -44,6 +44,7 @@ class MyLauncher(SageMakerRayLauncher):
         return {
           "training": { 
             "env": "MultiAgentBattlesnake-v1",
+#            "restore": "/opt/ml/code/checkpoints/checkpoint_250/checkpoint-250",
             "run": "PPO",
             "stop": {
               "training_iteration": self.num_iters,
@@ -55,13 +56,13 @@ class MyLauncher(SageMakerRayLauncher):
                 'kl_coeff': 0.2,
                 'clip_rewards': True,
                 'vf_clip_param': 175.0,
-                'train_batch_size': 11520,
+                'train_batch_size': 36864,
                 'sample_batch_size': 96,
-                'sgd_minibatch_size': 64,
+                'sgd_minibatch_size': 2048,
                 'num_sgd_iter': 3,
                 'num_workers': (self.num_cpus-1),
-                'num_envs_per_worker': 2,
-                'batch_mode': 'truncate_episodes',
+                'num_envs_per_worker': 4,
+                'batch_mode': 'complete_episodes',
                 'observation_filter': 'NoFilter',
                 'vf_share_layers': False,
                 'num_gpus': self.num_gpus,
@@ -69,7 +70,10 @@ class MyLauncher(SageMakerRayLauncher):
                 'lr': 5.0e-4,
                 'log_level': 'ERROR',
                 'simple_optimizer': False,
-                'model': {"custom_model": "my_model", 'use_lstm': True, "max_seq_len": 60 },
+                'model': {"custom_model": "my_model", 
+                    'use_lstm': False, 
+                    "max_seq_len": 60,
+                },
                 'multiagent': {
                     'policies': policies,
                     'policy_mapping_fn': lambda agent_id: policy_ids[int(agent_id[6:])],
