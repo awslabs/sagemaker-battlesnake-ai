@@ -24,27 +24,33 @@ else
     echo "Create the entry points"
     cd $1
     mkdir battlesnake_gym/
-    mkdir battlesnake_src
-    mkdir battlesnake_inference
-    cd ..
-    cp -a TrainingEnvironment/battlesnake_gym $1/battlesnake_gym/battlesnake_gym
-    cp -a TrainingEnvironment/setup.py $1/battlesnake_gym/
-    cp -a TrainingEnvironment/requirements.txt $1/battlesnake_gym/
+    mkdir mxnet_src
+    mkdir mxnet_inference
+    mkdir mxnet_inference/src
+    mkdir mxnet_inference/pretrained_models
+    mkdir rllib_src
+    mkdir rllib_common
+    mkdir rllib_inference
+    mkdir heuristics
 
-    cp -a TrainingEnvironment/examples/. $1/battlesnake_src/
-    cp TrainingEnvironment/requirements.txt $1/battlesnake_src/
-
-    echo "Create the notebooks"
-    cp TrainingEnvironment/notebooks/* $1
-    
-    echo "Create the heuristics code"
-    cp InferenceEndpoint/SageMakerEndpoint/predict.py $1/battlesnake_inference/
-    cp InferenceEndpoint/SageMakerEndpoint/battlesnake_heuristics.py $1/battlesnake_inference/
-    
-    echo "Copy the pretrained models"
-    cd $1
-    mkdir pretrained_models
     cd ..
-    cp -r InferenceEndpoint/PretrainedModels/* $1/pretrained_models/
+    
+    echo "Copying battlesnake gym"
+    cp -a BattlesnakeGym/. $1/battlesnake_gym/
+    
+    echo "Copying heuristics"
+    cp -a Heuristics/. $1/heuristics/.
+    
+    echo "Copying MXNet environment"
+    cp -a MXNet/MXNetTrainingEnvironment/src/. $1/mxnet_src/
+    cp -a MXNet/MXNetTrainingEnvironment/notebooks/. $1
+    cp -a MXNet/MXNetInferenceEndpoint/PretrainedModels/. $1/mxnet_inference/pretrained_models
+    cp -a MXNet/MXNetInferenceEndpoint/endpoint/. $1/mxnet_inference/src
+        
+    echo "Copying RLlib environment"
+    cp -a RLlib/RLlibTrainingEnvironment/src/. $1/rllib_src/
+    cp -a RLlib/RLlibTrainingEnvironment/common/. $1/rllib_common/
+    cp -a RLlib/RLlibTrainingEnvironment/RLlibPolicyTraining.ipynb $1
+    
+    cp -a RLlib/RLLibInferenceEndpoint/. $1/rllib_inference
 fi
-
