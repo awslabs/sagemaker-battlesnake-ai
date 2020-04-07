@@ -87,26 +87,35 @@ class BattlesnakeGym(gym.Env):
             [spaces.Discrete(4) for _ in range(number_of_snakes)])
 
         self.observation_type = observation_type
+        self.observation_space = self.get_observation_space()
+        
+        self.viewer = None
+        self.state = None
+        self.verbose = verbose
+        self.rewards = rewards
+        
+    def get_observation_space(self):
+        '''
+        Helper function to define the observation space given self.map_size, self.number_of_snakes
+        and self.observation_type
+        '''
         if "flat" in self.observation_type:
-            self.observation_space = spaces.Box(low=0, high=2,
-                                                shape=(self.map_size[0],
-                                                       self.map_size[1],
-                                                       self.number_of_snakes+1),
-                                                dtype=np.uint8)
+            observation_space = spaces.Box(low=-1, high=5,
+                                           shape=(self.map_size[0],
+                                                  self.map_size[1],
+                                                  self.number_of_snakes+1),
+                                           dtype=np.uint8)
         elif "bordered" in self.observation_type:
             if "max-bordered" in self.observation_type:
                 border_size = self.MAX_BORDER[0] - self.map_size[0]
             else:
                 border_size = 2
-            self.observation_space = spaces.Box(low=0, high=2,
-                                                shape=(self.map_size[0]+border_size,
-                                                       self.map_size[1]+border_size,
-                                                       self.number_of_snakes+1),
-                                                dtype=np.uint8)
-        self.viewer = None
-        self.state = None
-        self.verbose = verbose
-        self.rewards = rewards
+            observation_space = spaces.Box(low=-1, high=5,
+                                           shape=(self.map_size[0]+border_size,
+                                                  self.map_size[1]+border_size,
+                                                  self.number_of_snakes+1),
+                                           dtype=np.uint8)
+        return observation_space
 
     def initialise_game_state(self, game_state_dict):
         '''
@@ -128,10 +137,19 @@ class BattlesnakeGym(gym.Env):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def reset(self):
+    def reset(self, map_size=None):
         '''
         Inherited function of the openAI gym to reset the environment.
+
+        Parameters:
+        -----------
+        map_size: (int, int), default None
+            Optional paramter to reset the map size
         '''
+        if map_size is not None:
+            self.observation_space = self.get_observation_space()
+            self.map_size = map_size
+        
         if self.initial_game_state is not None:
             self.snakes, self.food, self.turn_count = self.initialise_game_state(self.initial_game_state)
         else:
