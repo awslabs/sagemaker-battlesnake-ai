@@ -34,6 +34,44 @@ class MyLauncher(SageMakerRayLauncher):
                 register_env("MultiAgentBattlesnake-v1", lambda _: MultiAgentBattlesnake(observation_type=self.observation_type,
                                                                                          num_agents=self.num_agents, 
                                                                                          map_height=self.map_height))
+    # Callback function that is executed after each training iteration
+    # Used to implement curriculum learning, inject custom metrics, etc.
+    def on_train_result(self, info):
+        # Add reformatted metrics for SageMaker
+        info['result']['sm__episode_len_mean'] = info['result']['episode_len_mean']
+        info['result']['sm__episode_reward_min'] = info['result']['episode_reward_min']
+        info['result']['sm__episode_reward_max'] = info['result']['episode_reward_max']
+        info['result']['sm__episode_reward_mean'] = info['result']['episode_reward_mean']
+        info['result']['sm__policy_0_reward_max'] = info['result']['policy_reward_max']['policy_0']
+        info['result']['sm__policy_0_reward_min'] = info['result']['policy_reward_min']['policy_0']
+        info['result']['sm__policy_0_reward_mean'] = info['result']['policy_reward_mean']['policy_0']
+
+        # curriculum learning -
+        # here we adjust effective map size based on current training iteration
+        # you could also adjust based on mean rewards, mean episode length, etc.
+        iteration = info['result']['training_iteration']
+        if iteration < 50:
+            eff_map_size = 7
+        elif iteration < 100:
+            eff_map_size = 9
+        elif iteration < 150:
+            eff_map_size = 11
+        elif iteration < 200:
+            eff_map_size = 13
+        elif iteration < 300:
+            eff_map_size = 15
+        elif iteration < 500:
+            eff_map_size = 17
+        else:
+            eff_map_size = 19        
+
+        info['result']['sm__effective_map_size'] = eff_map_size
+
+        trainer = info["trainer"]
+        trainer.workers.foreach_worker(
+                lambda ev: ev.foreach_env(
+                    lambda env: env.set_effective_map_size(eff_map_size)))
+
         
     def get_experiment_config(self):        
         tmp_env = MultiAgentBattlesnake(observation_type=self.observation_type, num_agents=self.num_agents, map_height=self.map_height)
@@ -51,18 +89,22 @@ class MyLauncher(SageMakerRayLauncher):
               "training_iteration": self.num_iters,
             },
             'config': {
+                'callbacks': { 
+                    'on_train_result': self.on_train_result,
+                },
                 'monitor': False,  # Record videos.
                 'lambda': 0.90,
                 'gamma': 0.999,
                 'kl_coeff': 0.2,
                 'clip_rewards': True,
                 'vf_clip_param': 175.0,
-                'train_batch_size': 36864,
+                'train_batch_size': 9216,
                 'sample_batch_size': 96,
-                'sgd_minibatch_size': 2048,
-                'num_sgd_iter': 3,
+                'sgd_minibatch_size': 256,
+                'num_sgd_iter': 1,
                 'num_workers': (self.num_cpus-1),
-                'num_envs_per_worker': 4,
+#                'num_workers': 16,
+                'num_envs_per_worker': 1,
                 'batch_mode': 'complete_episodes',
                 'observation_filter': 'NoFilter',
                 'vf_share_layers': False,

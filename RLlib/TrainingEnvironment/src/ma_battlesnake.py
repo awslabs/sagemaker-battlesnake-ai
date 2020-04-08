@@ -38,7 +38,14 @@ class MultiAgentBattlesnake(MultiAgentEnv):
 
         self.observation_space = gym.spaces.Box(low=-1.0, high=5.0, shape=(self.observation_height, self.observation_height, (num_agents+1)*2), dtype=np.float32)
         self.num_agents = num_agents
-        self.map_height = map_height
+#        self.map_height = map_height
+        self.observation_type = observation_type
+
+
+    def set_effective_map_size(self, eff_map_size):
+        self.__init__(self.observation_type, self.num_agents, eff_map_size)
+        self.reset()
+
 
     def reset(self):
         new_obs, _, _, info = self.env.reset()
