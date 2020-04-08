@@ -88,6 +88,7 @@ class MyLauncher(SageMakerRayLauncher):
             "stop": {
               "training_iteration": self.num_iters,
             },
+            "checkpoint_freq": 50,
             'config': {
                 'callbacks': { 
                     'on_train_result': self.on_train_result,
@@ -101,9 +102,8 @@ class MyLauncher(SageMakerRayLauncher):
                 'train_batch_size': 9216,
                 'sample_batch_size': 96,
                 'sgd_minibatch_size': 256,
-                'num_sgd_iter': 1,
+                'num_sgd_iter': 3,
                 'num_workers': (self.num_cpus-1),
-#                'num_workers': 16,
                 'num_envs_per_worker': 1,
                 'batch_mode': 'complete_episodes',
                 'observation_filter': 'NoFilter',
