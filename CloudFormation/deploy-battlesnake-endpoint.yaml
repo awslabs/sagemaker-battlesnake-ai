@@ -64,10 +64,8 @@ Parameters:
       - ml.m5.xlarge
       - ml.m4.xlarge
 Conditions:
-  isRLlib:
-    - !Equals [RLlib, !Ref RLMethod]
-  isMXNet:
-    - !Equals [MXNet, !Ref RLMethod]
+  isRLlib: !Equals [RLlib, !Ref RLMethod]
+  isMXNet: !Equals [MXNet, !Ref RLMethod]
 Resources:
   BattlesnakeDeployFunction:
     Type: AWS::Serverless::Function
@@ -214,20 +212,26 @@ Resources:
                 - rm -rf .git
                 - Fn::If:
                     - isRLlib
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/TrainingEnvironment/RLlibPolicyTraining.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/InferenceEndpoint/deployEndpoint.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/TrainingEnvironment/RLlibPolicyTraining.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/InferenceEndpoint/deployEndpoint.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
+                    - !Join
+                      - ";"
+                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/TrainingEnvironment/RLlibPolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/InferenceEndpoint/deployEndpoint.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/TrainingEnvironment/RLlibPolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/InferenceEndpoint/deployEndpoint.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
+                    - ls
                 - Fn::If:
                     - isMXNet
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/TrainingEnvironment/RLlibPolicyTraining.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/InferenceEndpoint/deployEndpoint.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/TrainingEnvironment/RLlibPolicyTraining.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/InferenceEndpoint/deployEndpoint.ipynb"
-                    - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
+                    - !Join
+                      - ";"
+                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/TrainingEnvironment/RLlibPolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/InferenceEndpoint/deployEndpoint.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/TrainingEnvironment/RLlibPolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/InferenceEndpoint/deployEndpoint.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
+                    - ls
                 - !Sub "/bin/bash CloudFormation/on-start.sh ${RLMethod}"
   LambdaDeploymentRole:
     Type: AWS::IAM::Role
