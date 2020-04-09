@@ -254,3 +254,65 @@ class QNetworkConcat(gluon.nn.HybridBlock):
             x = self.predict(ts)
         
         return x
+    
+class QNetworkVision(gluon.nn.HybridBlock):
+    def __init__(self, state_shape, action_size,
+                 starting_channels,
+                 number_of_conv_layers,
+                 number_of_dense_layers,
+                 number_of_hidden_states,
+                 kernel_size,
+                 repeat_size,
+                 activation_type,
+                 sequence_length,
+                 seed):
+        """Initialize parameters and build model.
+        Params
+        ======
+            state_shape (int, int, int): Dimension of each state
+            action_size (int): Dimension of each action
+            starting_channels (int):
+            number_of_conv_layers (int)
+            number_of_dense_layers (int)
+            number_of_hidden_states (int)
+            repeat_size (int)
+            activation_type (str)
+            sequence_length (int)
+            seed (int): Random seed
+        """
+        super(QNetworkVision, self).__init__()
+        self.sequence_length = sequence_length
+        self.repeat_size = repeat_size
+        mx.random.seed(seed)
+        self.net = gluon.nn.HybridSequential()
+        with self.net.name_scope():
+            for i in range(number_of_conv_layers):
+                self.net.add(gluon.nn.Conv2D(starting_channels*(i+1),
+                                             kernel_size=kernel_size,
+                                             strides=2,
+                                             activation=activation_type))
+             
+            for _ in range(number_of_dense_layers):
+                self.net.add(gluon.nn.Dense(number_of_hidden_states,
+                                            activation=activation_type)) 
+
+        self.net.collect_params().initialize(mx.init.Xavier(), ctx=ctx)
+       
+        self.predict = gluon.nn.HybridSequential()
+        self.predict.add(gluon.nn.Dense(number_of_hidden_states, activation=activation_type))
+        self.predict.add(gluon.nn.Dense(action_size))
+        self.predict.collect_params().initialize(mx.init.Xavier(), ctx=ctx)
+   
+    def hybrid_forward(self, F, state_sequence, snake_id_sequence, turn_count_sequence, snake_health_sequence):
+        """Build a network that maps states -> action values."""
+
+        resized_state_sequence = state_sequence.repeat(
+                axis=3, repeats=self.repeat_size).repeat(
+                    axis=4,repeats=self.repeat_size)
+        new_state_sequence = resized_state_sequence.reshape((-1, -3, -2))
+                
+        state_dense = self.net(new_state_sequence).flatten()
+
+        x = self.predict(state_dense)
+
+        return x

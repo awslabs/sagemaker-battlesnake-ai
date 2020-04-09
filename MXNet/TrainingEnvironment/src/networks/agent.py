@@ -7,7 +7,7 @@ import numpy as np
 import mxnet as mx
 from mxnet import nd, autograd, gluon
 
-from networks.qnetworks import QNetworkConcat, QNetworkAttention
+from networks.qnetworks import QNetworkConcat, QNetworkAttention, QNetworkVision
 from networks.utils import sort_states_for_snake_id
 
 ctx = mx.gpu(0) if mx.context.num_gpus() > 0 else mx.cpu()
@@ -75,11 +75,21 @@ class MultiAgentsCollection:
                                number_of_hidden_states, kernel_size,
                                repeat_size, activation_type, sequence_length,
                                seed]
+        elif qnetwork_type == "vision":
+            qnetwork_params = [state_shape, action_size, starting_channels,
+                               number_of_conv_layers, number_of_dense_layers,
+                               number_of_hidden_states, kernel_size,
+                               repeat_size, activation_type, sequence_length,
+                               seed]
+
         if qnetwork_type == "concat":
             qnetwork = QNetworkConcat(*qnetwork_params)
         elif qnetwork_type == "attention":
             qnetwork = QNetworkAttention(*qnetwork_params)
-        qnetwork.hybridize(static_alloc=True, static_shape=True)
+        elif qnetwork_type == "vision":
+            qnetwork = QNetworkVision(*qnetwork_params)
+
+        #qnetwork.hybridize(static_alloc=True, static_shape=True)
 
         if load is not None:
             if load_only_conv_layers:
