@@ -39,7 +39,7 @@ def build_state_for_snake(obs, snake_i, prev_state=None):
     obs = sort_states_for_snake_id(obs, snake_i+1)
     merged_map = np.concatenate((prev_state, obs), axis=-1)
 
-    return merged_map
+    return merged_map, obs
 
 def make_snake_lists(env):
     '''
@@ -103,6 +103,7 @@ def get_action(net, state):
                prev_action=tf.constant([-1], dtype=tf.int64),
                prev_reward=tf.constant([-1], dtype=tf.float32), 
                is_training=tf.constant(False, dtype=tf.bool))
+    print(predict)
     action = predict["actions"].numpy()[0]
     return action
 
@@ -129,9 +130,9 @@ def simulate(env, net, heuristics, number_of_snakes):
         for i in range(number_of_snakes):
             agent_id = "agent_{}".format(i)
             
-            state_i = build_state_for_snake(state, i, previous_state[agent_id])
-                        
-            action = get_action(net, state)
+            state_i, obs = build_state_for_snake(state, i, previous_state[agent_id])
+            
+            action = get_action(net, state_i)
 
             snake_list = make_snake_lists(env)
             json = convert_state_into_json(state, snake_list, snake_id=i, 
@@ -147,7 +148,7 @@ def simulate(env, net, heuristics, number_of_snakes):
             heuristics_log[i] = heuristics_log_string
             
             actions.append(action)
-            previous_state[agent_id] = state_i
+            previous_state[agent_id] = obs
         
         next_state, reward, dones, infos = env.step(actions)
         
