@@ -33,8 +33,12 @@ def sort_states_for_snake_id(state, snake_id, one_versus_all):
         output_states[:, :, 1] = self_state
         if other_states[0, 0, 0] == -1: # if states are bordered
             output_states[:, :, 2] = -1
-            output_states[1:-1, 1:-1, 2] = np.sum(other_states[1:-1, 1:-1, :],
-                                                  axis=2)
+
+            # Find all values excluding the border, assuming borders are -1
+            other_states = np.sum(other_states, axis=2)
+            other_states[other_states<0] = -1
+
+            output_states[:, :, 2] = other_states
         else:
             output_states[:, :, 2] = np.sum(other_states, axis=2)
 

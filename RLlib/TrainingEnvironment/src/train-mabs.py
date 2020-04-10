@@ -26,13 +26,11 @@ class MyLauncher(SageMakerRayLauncher):
         super().__init__()
         self.hparams = json.loads(os.environ.get("SM_HPS", "{}"))
         self.num_agents = self.hparams['num_agents']
-        self.map_height = self.hparams['map_height']
         self.num_iters = self.hparams['num_iters']
-        self.observation_type = self.hparams['observation_type']
-    
+        self.map_height = 7
+            
     def register_env_creator(self):
-                register_env("MultiAgentBattlesnake-v1", lambda _: MultiAgentBattlesnake(observation_type=self.observation_type,
-                                                                                         num_agents=self.num_agents, 
+                register_env("MultiAgentBattlesnake-v1", lambda _: MultiAgentBattlesnake(num_agents=self.num_agents, 
                                                                                          map_height=self.map_height))
     # Callback function that is executed after each training iteration
     # Used to implement curriculum learning, inject custom metrics, etc.
@@ -74,7 +72,7 @@ class MyLauncher(SageMakerRayLauncher):
 
         
     def get_experiment_config(self):        
-        tmp_env = MultiAgentBattlesnake(observation_type=self.observation_type, num_agents=self.num_agents, map_height=self.map_height)
+        tmp_env = MultiAgentBattlesnake(num_agents=self.num_agents, map_height=self.map_height)
         policies = {'policy_{}'.format(i): (None, tmp_env.observation_space, tmp_env.action_space, {}) for i in range(self.num_agents)}
         policy_ids = list(policies.keys())
         

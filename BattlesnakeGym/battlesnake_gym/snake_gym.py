@@ -458,7 +458,7 @@ class BattlesnakeGym(gym.Env):
         if "51s" in self.observation_type:
             state[:, :, SNAKE_INDEXES] = self.snakes.get_snake_depth_51_map()
         else:
-            state[:, :, SNAKE_INDEXES] = self.snakes.get_snake_depth_numbered_map()        
+            state[:, :, SNAKE_INDEXES] = self.snakes.get_snake_depth_numbered_map()   
         return state
 
     def _get_board(self, state):

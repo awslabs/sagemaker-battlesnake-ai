@@ -51,10 +51,6 @@ else
     echo "Copying battlesnake gym"
     cp -a BattlesnakeGym/. $1/battlesnake_gym/
 
-    echo "Copying heuristics"
-    cp -a Heuristics/heuristics_utils.py $1/heuristics_utils.py
-    cp -a Heuristics/HeuristicsDeveloper.ipynb $1/HeuristicsDeveloper.ipynb
-
     if [ $2 == "MXNet" ]; then
         echo "Copying MXNet environment"
         cp -a MXNet/TrainingEnvironment/src/. $1/mxnet_src/
@@ -63,6 +59,8 @@ else
         cp -a MXNet/InferenceEndpoint/endpoint/. $1/mxnet_inference/src
         cp -a MXNet/InferenceEndpoint/deployEndpoint.ipynb $1/deployEndpoint.ipynb
         
+        cp -a MXNet/HeuristicsDevelopment/heuristics_utils.py $1
+        cp -a MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb $1
         cp -a Heuristics/battlesnake_heuristics.py $1/mxnet_inference/src/battlesnake_heuristics.py
     else
         echo "Copying RLlib environment"
@@ -73,6 +71,8 @@ else
         cp -a RLlib/InferenceEndpoint/model.tar.gz $1/rllib_inference/.
         cp -a RLlib/InferenceEndpoint/deployEndpoint.ipynb $1/deployEndpoint.ipynb
 
+        cp -a RLlib/HeuristicsDevelopment/heuristics_utils.py $1
+        cp -a RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb $1
         cp -a Heuristics/battlesnake_heuristics.py $1/rllib_inference/src/battlesnake_heuristics.py
     fi
 fi
