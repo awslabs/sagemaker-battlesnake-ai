@@ -5,12 +5,13 @@ from collections import namedtuple
 
 ctx = mx.gpu() if mx.context.num_gpus() > 0 else mx.cpu()
 
-def remove_borders_from_state(state):
+def remove_borders_from_state(state, map_size):
     '''
     Helper function to remove the -1 borders from the state representation
     '''
     if -1 in state:
-        return state[1:-1, 1:-1, :]
+        y, x = map_size
+        return state[int(y/2):-int(y/2), int(x/2):-int(x/2), :]
     else:
         return state
     
@@ -54,14 +55,14 @@ def make_snake_lists(env):
         snake_locations.append(snake_location)
     return snake_locations
 
-def convert_state_into_json(state, snake_list, snake_id, turn_count, health):
+def convert_state_into_json(map_size, state, snake_list, snake_id, turn_count, health):
     '''
     Helper function to build a JSON from the battlesnake gym.
     The JSON mimics the battlesnake engine
     '''
     FOOD_INDEX = 0
     
-    state = remove_borders_from_state(state)
+    state = remove_borders_from_state(state, map_size)
     food = convert_food_maxtrix_to_list(state[:, :, FOOD_INDEX])
     
     # Make snake_dict from snake_list
@@ -185,7 +186,8 @@ def simulate(env, net, heuristics, number_of_snakes):
                                 memory=memory)
 
             snake_list = make_snake_lists(env)
-            json = convert_state_into_json(state, snake_list, snake_id=i, 
+            map_size = env.map_size
+            json = convert_state_into_json(map_size, state, snake_list, snake_id=i, 
                                            turn_count=infos["current_turn"]+1, 
                                            health=infos["snake_health"])
             # Add heuristics
