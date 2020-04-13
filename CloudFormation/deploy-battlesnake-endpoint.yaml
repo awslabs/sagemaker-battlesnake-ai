@@ -214,10 +214,10 @@ Resources:
                     - isRLlib
                     - !Join
                       - ";"
-                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/TrainingEnvironment/RLlibPolicyTraining.ipynb"
+                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/TrainingEnvironment/PolicyTraining.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/InferenceEndpoint/deployEndpoint.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/TrainingEnvironment/RLlibPolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/TrainingEnvironment/PolicyTraining.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/InferenceEndpoint/deployEndpoint.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
                     - ls
@@ -225,10 +225,10 @@ Resources:
                     - isMXNet
                     - !Join
                       - ";"
-                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/TrainingEnvironment/RLlibPolicyTraining.ipynb"
+                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/TrainingEnvironment/PolicyTraining.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/InferenceEndpoint/deployEndpoint.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/TrainingEnvironment/RLlibPolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/TrainingEnvironment/PolicyTraining.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/InferenceEndpoint/deployEndpoint.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
                     - ls
