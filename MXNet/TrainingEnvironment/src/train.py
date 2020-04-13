@@ -39,7 +39,7 @@ def run(seed, args):
         load = os.environ['SM_CHANNEL_WEIGHTS'] + "//" + load
     
     if args.writer:
-        writer = SummaryWriter("logs/{}-seed{}".format(run_name, seed), verbose=False)
+        writer = SummaryWriter("logs/{}-seed{}".format(args.run_name, seed), verbose=False)
     else:
         writer = None
 
@@ -88,7 +88,7 @@ def run(seed, args):
             args.save_only_best_models,
             args.save_model_every,
             args.render_steps, args.should_render,
-            args.writer, args.print_progress)
+            writer, args.print_progress)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
