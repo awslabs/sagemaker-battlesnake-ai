@@ -175,7 +175,7 @@ def remoteInferenceMXNet(previous_state, current_state, data):
 def remoteInferenceRLib(previous_state, current_state, data):
     map_width = data['board']['width']
     state = np.concatenate((previous_state, current_state), axis=2)
-    state = np.expand_dims(state.transpose(), 0).transpose(0, 2, 3, 1)
+    state = np.expand_dims(state, 0)
 
     health_dict = make_health_dict(data)
 
