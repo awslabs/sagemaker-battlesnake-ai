@@ -110,7 +110,8 @@ class ObservationToStateConverter:
         
         if game_record['previous_state'] is None:
             game_record['previous_state'] = current_state
-            return current_state, current_state
+            previous_state = np.zeros(shape=current_state.shape)
+            return current_state, previous_state
         
         previous_state = game_record['previous_state']
         game_record['previous_state'] = current_state
