@@ -54,7 +54,7 @@ else
     if [ $2 == "MXNet" ]; then
         echo "Copying MXNet environment"
         cp -a MXNet/TrainingEnvironment/src/. $1/mxnet_src/
-        cp -a MXNet/TrainingEnvironment/MxNetPolicyTraining.ipynb $1
+        cp -a MXNet/TrainingEnvironment/PolicyTraining.ipynb $1
         cp -a MXNet/InferenceEndpoint/PretrainedModels/. $1/mxnet_inference/pretrained_models
         cp -a MXNet/InferenceEndpoint/endpoint/. $1/mxnet_inference/src
         cp -a MXNet/InferenceEndpoint/deployEndpoint.ipynb $1/deployEndpoint.ipynb
@@ -66,7 +66,7 @@ else
         echo "Copying RLlib environment"
         cp -a RLlib/TrainingEnvironment/src/. $1/rllib_src/
         cp -a RLlib/TrainingEnvironment/common/. $1/rllib_common/
-        cp -a RLlib/TrainingEnvironment/RLlibPolicyTraining.ipynb $1
+        cp -a RLlib/TrainingEnvironment/PolicyTraining.ipynb $1
         cp -a RLlib/InferenceEndpoint/endpoint/. $1/rllib_inference/src
         cp -a RLlib/InferenceEndpoint/model.tar.gz $1/rllib_inference/.
         cp -a RLlib/InferenceEndpoint/deployEndpoint.ipynb $1/deployEndpoint.ipynb

@@ -48,20 +48,23 @@ class MyLauncher(SageMakerRayLauncher):
         # here we adjust effective map size based on current training iteration
         # you could also adjust based on mean rewards, mean episode length, etc.
         iteration = info['result']['training_iteration']
-        if iteration < 50:
+        
+        iteration = iteration % 70
+
+        if iteration <= 10:
             eff_map_size = 7
-        elif iteration < 100:
+        elif iteration <= 20:
             eff_map_size = 9
-        elif iteration < 150:
+        elif iteration <= 30:
             eff_map_size = 11
-        elif iteration < 200:
+        elif iteration <= 40:
             eff_map_size = 13
-        elif iteration < 300:
+        elif iteration <= 50:
             eff_map_size = 15
-        elif iteration < 500:
+        elif iteration <= 60:
             eff_map_size = 17
         else:
-            eff_map_size = 19        
+            eff_map_size = 19
 
         info['result']['sm__effective_map_size'] = eff_map_size
 
@@ -70,7 +73,6 @@ class MyLauncher(SageMakerRayLauncher):
                 lambda ev: ev.foreach_env(
                     lambda env: env.set_effective_map_size(eff_map_size)))
 
-        
     def get_experiment_config(self):        
         tmp_env = MultiAgentBattlesnake(num_agents=self.num_agents, map_height=self.map_height)
         policies = {'policy_{}'.format(i): (None, tmp_env.observation_space, tmp_env.action_space, {}) for i in range(self.num_agents)}
@@ -123,7 +125,6 @@ class MyLauncher(SageMakerRayLauncher):
             }
           }
         }
-
     
 if __name__ == "__main__":
     
