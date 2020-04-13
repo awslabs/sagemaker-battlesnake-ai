@@ -21,7 +21,7 @@ set -e
 # PARAMETERS
 
 ENVIRONMENT=python3
-NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/InferenceEndpoint/deployEndpoint.ipynb
+NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/LocalEnv/deployEndpoint.ipynb
 RL_METHOD=$1
 
 # Generate the local environment for training & heuristics dev
