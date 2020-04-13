@@ -135,7 +135,7 @@ TMP_BUILD_FOLDER=buildLambaTmpFolder
 
 mkdir $TMP_BUILD_FOLDER
 cd $TMP_BUILD_FOLDER
-cp -r ../InferenceEndpoint/SnakeInference/* .
+cp -r ../LambdaGateway/* .
 
 # display package content for debug
 echo
