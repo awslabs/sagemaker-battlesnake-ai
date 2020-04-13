@@ -1,6 +1,6 @@
 # Step 3 - Upgrade your Reinforcement Learning Model
 
-This page explains how to retrain the model, and how to modify the training settings.
+This page explains how to retrain the model, and how to modify the training settings with MXNet or with RLlib
 
 This is controlled mainly by a single notebook and will use a training gym environment.
 
@@ -35,17 +35,17 @@ The reinforcement learning components of this project include an OpenAI gym to t
 
 The OpenAI gym was designed to follow the official Battlesnake rules outlined here: https://docs.battlesnake.com/rules.
 
-### Training the MXNet example on Amazon SageMaker
+### Training on Amazon SageMaker
 
 From the Cloudformation stack created during [STEP 1](DeployTheAIEndpoint.md), go to the  'Outputs' tab and click on the link next to _ModelTrainingEnvironment_:
 
 ![Output tab](images/outputs.png "Output tab")
 
-The notebook contains code for training, hyperparameter optimisation, and automatic deployment of the model.
+The notebook contains code for training and automatic deployment of the model.
 
 Press ► on the top to run the notebook (see [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use jupyter notebooks).
 
-The main entry point (Amazon SageMaker endpoint) of the training the model is [`examples/train.py`](../TrainingEnvironment/examples/train.py)
+The main entry point (Amazon SageMaker endpoint) of the training the model is [`mxnet_src/train.py`](../TrainingEnvironment/examples/train.py) for MXNet and [rllib_src/train.py`](../TrainingEnvironment/examples/train.py) for RLlib.
 
 ### Reinforcement learning and gym details
 
@@ -76,18 +76,19 @@ https://github.com/battlesnakeio/engine/blob/master/rules/tick.go#L82)
 #### Rewards
 
 Designing an appropriate reward function is an important aspect of reinforcement learning. Currently, the gym records the following events that can be used to help shape your reward function:
+
 1. Surviving another turn (labelled as: `"another_turn"`)
-3. Eating food (labelled as: `"ate_food"`)
-4. Winning the game (labelled as: `"won"`)
-5. Losing the game (labelled as: `"died"`)
-6. Eating another snake (labelled as: `"ate_another_snake"`)
-7. Dying by hitting a wall (labelled as: `"hit_wall"`)
-8. Hitting another snake (labelled as: `"hit_other_snake"`)
-9. Hitting yourself (labelled as: `"hit_self"`)
-10. Was eaten by another snake (labelled as: `"was_eaten"`)
-11. Another snake hits your body (labelled as: `"other_snake_hit_body"`)
-12. Performing a forbidden move (i.e., moving south when facing north) (labelled as: `"forbidden_move"`)
-13. Dying by starving (labelled as: `"starved"`)
+2. Eating food (labelled as: `"ate_food"`)
+3. Winning the game (labelled as: `"won"`)
+4. Losing the game (labelled as: `"died"`)
+5. Eating another snake (labelled as: `"ate_another_snake"`)
+6. Dying by hitting a wall (labelled as: `"hit_wall"`)
+7. Hitting another snake (labelled as: `"hit_other_snake"`)
+8. Hitting yourself (labelled as: `"hit_self"`)
+9. Was eaten by another snake (labelled as: `"was_eaten"`)
+10. Another snake hits your body (labelled as: `"other_snake_hit_body"`)
+11. Performing a forbidden move (i.e., moving south when facing north) (labelled as: `"forbidden_move"`)
+12. Dying by starving (labelled as: `"starved"`)
 
 The current reward function is simple (`"another_turn"=1, "won"=2, "died"=-3, "forbidden_move"=-1`).
 More complex reward functions with methods that can handle sparse rewards may be greatly beneficial. Also, it is possible to design different rewards for different snakes. 
@@ -115,15 +116,16 @@ This function executes one time step within the environment, based on the set of
 This function renders the environment based on its current state.
 
 `mode` can be `rbg_array`, `ascii`, `human` 
+
 - `rbg_array` outputs an expanded numpy array that can be used for creating gifs
 - `ascii` outputs a text based representation that can be printed in the command prompt
 - `human` an OpenAI plot will be generated
 
-### The DQN Network
+### The MXNet DQN Network
 
 #### Running DQN example
 
-`python examples/train.py --should_render --print_progress --number_of_snakes 4`
+`python mxnet_src/train.py --should_render --print_progress --number_of_snakes 4`
 
 *Please refer to https://github.com/awslabs/sagemaker-battlesnake-ai/blob/master/TrainingEnvironment/examples/train.py for the other hyperparameters*
 
@@ -135,14 +137,3 @@ This code uses multi-agent DQN to train the bots. The `N` snakes share the same 
 Given a state representation `N x M x C` to get the action of snake `i`, the network expects that `C=1` is the representation of snake `i` and `C=2 ... num_snakes+1` are the remaining snakes (note that `C=0` represents the food).
 
 The inputs 'snake health' and 'snake ID' in the figure correspond to the health and ID of Snake `i`.
-
-### Testing the environment
-
-Render env:
-`BATTLESNAKE_RENDER=1 python -m unittest test.test_battlesnake_gym`
-
-Without env rendering:
-`BATTLESNAKE_RENDER=0 python -m unittest test.test_battlesnake_gym`
-
-Performance tests:
-`python -m test.measure_performance`

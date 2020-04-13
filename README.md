@@ -14,8 +14,9 @@ __What is Battlesnake?__ (taken from [battlesnake.com](https://docs.battlesnake.
 
 This project contains a ready-to-use AI for Battlesnake as well as a development environment that can be used to modify and improve the AI.
 The included AI makes movement decisions in two steps:
- 1. __Run a Neural Network Model__ 
- 2. __Run Heuristics__ (ie: additional code that can override the Neural Network's predicted best action so that your snake avoids colliding with walls, eats food if it is safe to do so, attempts to eat a competitor snake, ...)
+
+  1. __Run a Neural Network Model__ 
+  2. __Run Heuristics__ (ie: additional code that can override the Neural Network's predicted best action so that your snake avoids colliding with walls, eats food if it is safe to do so, attempts to eat a competitor snake, ...)
 
 Several pre-trained neural network models are provided within this project as well as some default heuristics. These pre-trained models (snakes) are not designed to win the Battlesnake competition, so you'll have to improve them in order to have a chance of winning. The training environment is provided for you to make modifications and to retrain the neural network models in order to obtain better results.
 
@@ -26,6 +27,10 @@ This project can be used in three steps:
 - __[Step 1 - Deploy a Snake](Documentation/DeployTheAIEndpoint.md)__ : Deploy a snake with pre-trained AI. After this step, you'll be able to participate in a Battlesnake game! **Don't skip this step!** This step also deploys a local environment which is needed for the following steps.)
 - __[Step 2 - Build some Heuristics](Documentation/UpdateHeuristicsAndDeploy.md)__ : Write some rules for your snake to navigate common scenarios, visualize your snake, and publish the upgraded version of your snake!
 - __[Step 3 - Upgrade your Reinforcement Learning Model](Documentation/TrainModelAndDeploy.md)__ : This is the most rewarding step. Retrain your snake with different settings, visualize your snake, and publish an upgraded version!
+
+### Reinforcement learning packages
+
+The repository includes options of using the in-built SageMaker reinforcement learning package (based on RLlib) and an implementation written in MXNet.
 
 ### Architecture
 
@@ -50,15 +55,17 @@ The source code of the project is organized as follows:
 
 ```
 CloudFormation                    # contains the templates and scripts to automate deployment
-InferenceEndpoint                 # contains the code for the Snake Endpoint
-  > PretrainedModels              # existing models that are already trained
-  > SnakeInference                # code that exposes the Snake API
-  > SageMakerEndpoint             # code that is used for model inference with SageMaker
-TrainingEnvironment
- > battlesnake_gym                # OpenAI Gym environment that simulates the Battlesnake game engine
- > notebook
-   > HeuristicsDeveloper.ipynb    # Jupyter notebook for heuristics development
-   > SagemakerModelTraining.ipynb # Jupyter notebook for model training    
+BattlesnakeGym										# OpenAI Gym environment that simulates the Battlesnake game
+Heuristics												# your custom heuristics
+LambdaGateway               			# code that exposes the Snake API
+MXNet															# training environment with the MXNet implementation
+  > TrainingEnvironment           # contains the Jupyter notebook for model training
+  > InferenceEndpoint             # contains the code for the Snake Endpoint
+  > HeuristicDevelopment          # contains the Jupyter notebook for heuristics development
+RLlib			
+  > TrainingEnvironment           # contains the Jupyter notebook for model training
+  > InferenceEndpoint             # contains the code for the Snake Endpoint
+  > HeuristicDevelopment          # contains the Jupyter notebook for heuristics development
 ```
 
 ## License
