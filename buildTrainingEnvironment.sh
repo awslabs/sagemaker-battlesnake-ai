@@ -16,6 +16,14 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+if [ -z "$2" ]; then
+    echo "Please a training environment choices: [MXNet, RLlib]"
+    exit 1
+elif [ "$2" != "MXNet" ] && [ "$2" != "RLlib" ]; then
+    echo "Please a valid training environment choices: [MXNet, RLlib]"
+    exit 1
+fi
+
 mkdir -p $1
 
 if find $1 -mindepth 1 | read > /dev/null; then
@@ -24,27 +32,47 @@ else
     echo "Create the entry points"
     cd $1
     mkdir battlesnake_gym/
-    mkdir battlesnake_src
-    mkdir battlesnake_inference
-    cd ..
-    cp -a TrainingEnvironment/battlesnake_gym $1/battlesnake_gym/battlesnake_gym
-    cp -a TrainingEnvironment/setup.py $1/battlesnake_gym/
-    cp -a TrainingEnvironment/requirements.txt $1/battlesnake_gym/
+    if [ $2 == "MXNet" ]; then
 
-    cp -a TrainingEnvironment/examples/. $1/battlesnake_src/
-    cp TrainingEnvironment/requirements.txt $1/battlesnake_src/
+        mkdir mxnet_src
+        mkdir mxnet_inference
+        mkdir mxnet_inference/src
+        mkdir mxnet_inference/pretrained_models
+    
+    else
+        mkdir rllib_src
+        mkdir rllib_common
+        mkdir rllib_inference
+        mkdir rllib_inference/src
+    fi
 
-    echo "Create the notebooks"
-    cp TrainingEnvironment/notebooks/* $1
-    
-    echo "Create the heuristics code"
-    cp InferenceEndpoint/SageMakerEndpoint/predict.py $1/battlesnake_inference/
-    cp InferenceEndpoint/SageMakerEndpoint/battlesnake_heuristics.py $1/battlesnake_inference/
-    
-    echo "Copy the pretrained models"
-    cd $1
-    mkdir pretrained_models
     cd ..
-    cp -r InferenceEndpoint/PretrainedModels/* $1/pretrained_models/
+    
+    echo "Copying battlesnake gym"
+    cp -a BattlesnakeGym/. $1/battlesnake_gym/
+
+    if [ $2 == "MXNet" ]; then
+        echo "Copying MXNet environment"
+        cp -a MXNet/TrainingEnvironment/src/. $1/mxnet_src/
+        cp -a MXNet/TrainingEnvironment/MxNetPolicyTraining.ipynb $1
+        cp -a MXNet/InferenceEndpoint/PretrainedModels/. $1/mxnet_inference/pretrained_models
+        cp -a MXNet/InferenceEndpoint/endpoint/. $1/mxnet_inference/src
+        cp -a MXNet/InferenceEndpoint/deployEndpoint.ipynb $1/deployEndpoint.ipynb
+        
+        cp -a MXNet/HeuristicsDevelopment/heuristics_utils.py $1
+        cp -a MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb $1
+        cp -a Heuristics/battlesnake_heuristics.py $1/mxnet_inference/src/battlesnake_heuristics.py
+    else
+        echo "Copying RLlib environment"
+        cp -a RLlib/TrainingEnvironment/src/. $1/rllib_src/
+        cp -a RLlib/TrainingEnvironment/common/. $1/rllib_common/
+        cp -a RLlib/TrainingEnvironment/RLlibPolicyTraining.ipynb $1
+        cp -a RLlib/InferenceEndpoint/endpoint/. $1/rllib_inference/src
+        cp -a RLlib/InferenceEndpoint/model.tar.gz $1/rllib_inference/.
+        cp -a RLlib/InferenceEndpoint/deployEndpoint.ipynb $1/deployEndpoint.ipynb
+
+        cp -a RLlib/HeuristicsDevelopment/heuristics_utils.py $1
+        cp -a RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb $1
+        cp -a Heuristics/battlesnake_heuristics.py $1/rllib_inference/src/battlesnake_heuristics.py
+    fi
 fi
-

@@ -1,0 +1,164 @@
+<html>
+<head>
+<script>
+// viz_snakes.html
+// 2020.03.16 perrysc@amazon.com
+//
+
+bcols =  ["#E8F0F4", "crimson", "#1E526A", "#E2E064", "#0E34A0", "#BF0744",
+    "#58355E", "#32837D", "#D0DB97", "#6368A3"] 
+hcols =  ["#E8F0F4", "crimson", "#052433", "#CECC5B", "#081D58", "#690426", 
+    "#201423", "#0E2423", "#98A06E", "#1B1D2D"]
+
+boxSize = 33;
+data = null;
+target = null;
+pause_ms = 80;
+isPaused = true;
+then = Date.now();
+
+
+// advance frames one by one. self-invokes after first call via setTimeout()
+function stepFrame() {
+    if (data && !isPaused) {
+        step = parseInt(document.getElementById('seek_time').value);
+//        step += 1;
+        if (step+1 >= data.length) {
+            document.getElementById('seek_time').value = 0;
+        }
+        else { document.getElementById('seek_time').value = step+1; }
+        pause_ms = document.getElementById('pause_slider').value;
+    }
+    setTimeout(stepFrame, pause_ms);
+}
+
+
+// update the snake world display
+function updateHud(ts) {
+    if (Date.now() - then > (1000/60)) {
+        height = data[0].length;
+        width = data[0][0].length;
+        snakes = data[0][0][0].length;
+
+        frame = document.getElementById('seek_time').value;
+        e = data[frame];
+        tmp = "";
+        bodyMap = Array(height).fill(0).map(a=>Array(width).fill(0));
+        headMap = Array(height).fill(0).map(a=>Array(width).fill(0));
+
+        // build the combined map view and individual matrix views
+        for (y=0; y<height; y++) { 
+            for (s=0; s<snakes; s++) {
+                for (x=0; x<width; x++) {
+                    if (e[x][y][s] > 0) { 
+                        bodyMap[x][y] = s+1; 
+                        tmp += "<span style='color: navy; font-weight: bolder;'>" + e[x][y][s] + "</span>";
+                    }
+                    else { tmp += e[x][y][s]; }
+
+                    if (e[x][y][s] == 5) { headMap[x][y] = s+1; }
+                }
+                tmp += " ";
+            }
+            tmp += "<br/>";
+        }
+
+        target.innerHTML = tmp + "<br/>Step: " + frame + " / " + (data.length-1);
+
+        const canvas = document.getElementById('canvas');
+        canvas.height = height * boxSize;
+        canvas.width = width * boxSize;
+        canvas.style = "margin-left: 20px; margin-top: 10px; border:" 
+            + Math.ceil(boxSize/4) + "px solid #777;";
+        const ctx = canvas.getContext('2d');
+
+        for (x=0; x<width; x++) {
+            for (y=0; y<height; y++) {
+                ctx.fillStyle = bcols[bodyMap[x][y]];
+                if (bodyMap[x][y] == 1) { 
+                    ctx.fillStyle = bcols[0];
+                    ctx.fillRect(x * boxSize, y * boxSize, boxSize, boxSize); 
+                    ctx.fillStyle = bcols[1];
+                    ctx.fillRect(x * boxSize + 0.33*boxSize, y * boxSize + 0.33*boxSize, boxSize/3, boxSize/3); 
+                }
+                else {
+                    ctx.fillRect(x * boxSize, y * boxSize, boxSize, boxSize); 
+                }
+                if (headMap[x][y] > 0) {
+                    ctx.fillStyle = hcols[headMap[x][y]];
+                    ctx.fillRect(x * boxSize, y * boxSize, boxSize, boxSize); 
+                }
+            }
+        }
+        then = Date.now();
+        boxSize = document.getElementById('box_size').value;
+    }
+    window.requestAnimationFrame(updateHud);
+}
+
+
+// pause / unpause
+function togglePause() {
+    isPaused = !isPaused;
+}
+
+// eat space key presses to prevent scrolling the browser window
+window.onkeydown = function(e) {
+  return !(e.keyCode == 32);
+};
+
+// space key toggles pause mode
+function checkForSpace(ev) {
+    if (ev.which == 32) { togglePause(); }
+}
+
+document.addEventListener("keydown", event => { if (event.keyCode == 32) { togglePause(); } });
+
+// reset steps back to zero for a replay
+function resetSteps() { document.getElementById("seek_time").value=0; }
+
+
+// parse JSON file
+var openFile = function(event) {
+    var input = event.target;
+    var reader = new FileReader();
+
+    reader.onload = function() {
+        target = document.getElementById('output');
+        data = JSON.parse(reader.result)
+        document.getElementById('seek_time').max = data.length-1;
+        document.getElementById('seek_time').value = 0;
+        window.requestAnimationFrame(updateHud);
+    };
+
+    reader.readAsText(input.files[0]);
+};
+
+
+// initiate the frame stepper loop
+setTimeout(stepFrame, 100);
+
+</script>
+</head>
+<body>
+<div style="padding: 17px; font-size: 14px; font-family: Monaco; border-bottom: 3px solid #ddd; margin-bottom: 10px; ">
+<input type='file' accept='text/json' onchange='openFile(event)' style='display: none;' id='myfile'/>
+<label for='myfile' style='border: 1px solid #333; padding: 5px'>Open JSON file</label>
+&nbsp;
+<label onClick='resetSteps()' style='border: 1px solid #333; padding: 5px'>Replay</label>
+&nbsp;&nbsp;Animation delay:
+<input type="range" min="0" max="200" step="2" value="100" id='pause_slider' style='width: 100px;' />
+&nbsp;&nbsp;Grid size:
+<input type="range" min="5" max="150" step="2" value="33" id='box_size' style='width: 100px;' />
+&nbsp;&nbsp;Seek:
+<input type="range" min="0" max="100" step="1" value="0" id='seek_time' style='width: 175px;' />
+&nbsp;&nbsp;
+</div>
+<div>
+<canvas id='canvas' height="0" width="0" style="margin-left: 20px;" onMouseDown='togglePause()' ></canvas>
+</div>
+<div id='output' style="font-size: 18px; font-family: monospace; font-weight: bold; padding: 20px; color: #999;">
+Load a JSON file and cross your fingers :)
+</div>
+</body>
+</html>
