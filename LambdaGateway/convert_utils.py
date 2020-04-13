@@ -47,16 +47,23 @@ class ObservationToStateConverter:
     were trained with
     
     """
-    def __init__(self, style="layered", use_border=True):
+    def __init__(self, style="layered", border_option="1"):
         self.games = {}
         self.style = style
-        self.use_border = use_border
+        self.border_option = border_option
 
     def _convert_to_state(self, game_state, game):
         
         # Get the border size
-        border_size = 1 if self.use_border else 0
-        
+        if self.border_option == "1":
+            border_size = 1
+        elif self.border_option == "None":
+            border_size = 0
+        elif self.border_option == "max":
+            border_size = int((21 - game.board_h)/2)
+        else:
+            raise ValueError("Unkown border_option {}".format(self.border_option))
+            
         # Get the style of state
         if self.style == 'layered':
             channels = game.num_snakes+1
@@ -69,7 +76,7 @@ class ObservationToStateConverter:
         state = np.zeros((game.board_h + 2*border_size, game.board_w + 2*border_size, channels))
         
         # Add the borders
-        if self.use_border:
+        if self.border_option in ["1", "max"]:
             state = state - 1
             state[border_size:border_size+game.board_h, border_size:border_size+game.board_w,:] = 0
         
@@ -108,4 +115,3 @@ class ObservationToStateConverter:
         previous_state = game_record['previous_state']
         game_record['previous_state'] = current_state
         return current_state, previous_state
-    

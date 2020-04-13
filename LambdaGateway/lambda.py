@@ -26,7 +26,11 @@ from convert_utils import ObservationToStateConverter
 #              Init             #
 #################################
 
-converter = ObservationToStateConverter(style='one_versus_all', use_border=True)
+if os.environ['SELECTED_RL_METHOD'] == "MXNet":
+    converter = ObservationToStateConverter(style='one_versus_all', border_option="1")
+else:
+    converter = ObservationToStateConverter(style='one_versus_all', border_option="max")
+   
 config = botocore.config.Config(read_timeout=200)
 runtime = boto3.client('runtime.sagemaker', config=config)
 
@@ -124,7 +128,7 @@ def move(body):
     data = json.loads(body)
     current_state, previous_state = converter.get_game_state(data)
 
-    if True:
+    if os.environ['SELECTED_RL_METHOD'] == "MXNet":
         direction_index = remoteInferenceMXNet(previous_state, current_state, data)
     else:
         direction_index = remoteInferenceRLib(previous_state, current_state, data)
@@ -170,11 +174,12 @@ def remoteInferenceMXNet(previous_state, current_state, data):
 
 def remoteInferenceRLib(previous_state, current_state, data):
     map_width = data['board']['width']
-    state = np.expand_dims(np.stack([previous_state, current_state]), 0).transpose(0, 1, 4, 2, 3)
+    state = np.concatenate((previous_state, current_state), axis=2)
+    state = np.expand_dims(state.transpose(), 0).transpose(0, 2, 3, 1)
 
     health_dict = make_health_dict(data)
 
-    data = {"state": state, "prev_action": -1, 
+    data = {"state": state.tolist(), "prev_action": -1, 
             "prev_reward": -1, "seq_lens": -1,  
             "all_health": health_dict, "json": data}
 
@@ -183,7 +188,7 @@ def remoteInferenceRLib(previous_state, current_state, data):
                                        ContentType='application/json',
                                        Body=payload)
     direction_index = json.loads(response['Body'].read().decode())
-
+    direction_index = direction_index["outputs"]["heuristisc_action"]
     return direction_index
 
 def end():
