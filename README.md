@@ -55,10 +55,10 @@ The source code of the project is organized as follows:
 
 ```
 CloudFormation                    # contains the templates and scripts to automate deployment
-BattlesnakeGym										# OpenAI Gym environment that simulates the Battlesnake game
-Heuristics												# your custom heuristics
-LambdaGateway               			# code that exposes the Snake API
-MXNet															# training environment with the MXNet implementation
+BattlesnakeGym                    # OpenAI Gym environment that simulates the Battlesnake game
+Heuristics                        # your custom heuristics
+LambdaGateway			  # code that exposes the Snake API
+MXNet				  # training environment with the MXNet implementation
   > TrainingEnvironment           # contains the Jupyter notebook for model training
   > InferenceEndpoint             # contains the code for the Snake Endpoint
   > HeuristicDevelopment          # contains the Jupyter notebook for heuristics development
