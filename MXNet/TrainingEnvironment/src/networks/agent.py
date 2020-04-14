@@ -89,7 +89,7 @@ class MultiAgentsCollection:
         elif qnetwork_type == "vision":
             qnetwork = QNetworkVision(*qnetwork_params)
 
-        #qnetwork.hybridize(static_alloc=True, static_shape=True)
+        qnetwork.hybridize(static_alloc=True, static_shape=True)
 
         if load is not None:
             if load_only_conv_layers:
