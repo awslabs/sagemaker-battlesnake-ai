@@ -33,6 +33,8 @@ class QNetworkAttention(gluon.nn.HybridBlock):
         """
         super(QNetworkAttention, self).__init__()
 
+        self.take_additional_forward_arguments = True
+        
         self.dS = dS
         self.dH = d
         self.dT = d
@@ -189,6 +191,8 @@ class QNetworkConcat(gluon.nn.HybridBlock):
             seed (int): Random seed
         """
         super(QNetworkConcat, self).__init__()
+        self.take_additional_forward_arguments = True
+
         self.sequence_length = sequence_length
         self.repeat_size = repeat_size
         mx.random.seed(seed)
@@ -281,6 +285,8 @@ class QNetworkVision(gluon.nn.HybridBlock):
             seed (int): Random seed
         """
         super(QNetworkVision, self).__init__()
+        self.take_additional_forward_arguments = False
+
         self.sequence_length = sequence_length
         self.repeat_size = repeat_size
         mx.random.seed(seed)
@@ -303,7 +309,7 @@ class QNetworkVision(gluon.nn.HybridBlock):
         self.predict.add(gluon.nn.Dense(action_size))
         self.predict.collect_params().initialize(mx.init.Xavier(), ctx=ctx)
    
-    def hybrid_forward(self, F, state_sequence, snake_id_sequence, turn_count_sequence, snake_health_sequence):
+    def hybrid_forward(self, F, state_sequence):
         """Build a network that maps states -> action values."""
 
         resized_state_sequence = state_sequence.repeat(
