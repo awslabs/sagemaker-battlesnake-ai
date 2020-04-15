@@ -68,7 +68,7 @@ class BattlesnakeGym(gym.Env):
         Dict is in the same form as in the battlesnake engine
         https://docs.battlesnake.com/snake-api
     '''
-    MAX_BORDER = (25, 25) # Largest map size (19, 19) + 2 for -1 borders
+    MAX_BORDER = (21, 21) # Largest map size (19, 19) + 2 for -1 borders
     def __init__(self, observation_type="flat-51s", map_size=(15, 15),
                  number_of_snakes=4, 
                  snake_spawn_locations=[], food_spawn_locations=[],
