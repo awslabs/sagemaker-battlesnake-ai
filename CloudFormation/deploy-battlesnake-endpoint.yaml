@@ -144,10 +144,10 @@ Resources:
             Action:
               - ec2:CreateVpcEndpoint
               - ec2:DescribeRouteTables
+              - cloudwatch:PutMetricData
             Resource: "*"
           - Effect: Allow
             Action:
-              - cloudwatch:PutMetricData
               - cloudwatch:GetMetricData
               - cloudwatch:GetMetricStatistics
               - cloudwatch:ListMetrics
