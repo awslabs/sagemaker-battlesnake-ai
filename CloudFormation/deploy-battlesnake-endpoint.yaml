@@ -41,7 +41,7 @@ Parameters:
     Default: freckled
     Type: String
   RLMethod:
-    Description: "Select the Reinfforcement Method you want to use"
+    Description: "Select the Reinforcement method you want to use"
     Default: RLlib
     Type: String
     AllowedValues:
