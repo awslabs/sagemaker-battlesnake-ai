@@ -258,10 +258,14 @@ class Agent:
 
                 snake_id_sequence = mx.nd.array(np.array([snake_id]*self.sequence_length),
                                                 ctx=ctx).expand_dims(0)
-                action_values = self.qnetwork_local(state_sequence,
-                                                    snake_id_sequence,
-                                                    turn_count_sequence,
-                                                    snake_health_sequence)
+                
+                if self.qnetwork_local.take_additional_forward_arguments:
+                    action_values = self.qnetwork_local(state_sequence,
+                                                        snake_id_sequence,
+                                                        turn_count_sequence,
+                                                        snake_health_sequence)
+                else:
+                    action_values = self.qnetwork_local(state_sequence)
 
             return np.argmax(action_values.asnumpy())
         else:
@@ -312,9 +316,11 @@ class Agent:
         
         # Get max predicted Q values (for next states) from target model
         with autograd.predict_mode():
-            Q_targets_next = self.qnetwork_target(
-                next_states, snake_id, turn_count,
-                snake_health).max(1).expand_dims(1)
+            if self.qnetwork_target.take_additional_forward_arguments:
+                Q_targets_next = self.qnetwork_target(next_states, snake_id, turn_count, snake_health
+                                                 ).max(1).expand_dims(1)
+            else:
+                Q_targets_next = self.qnetwork_target(next_states).max(1).expand_dims(1)
         
         # Compute Q targets for current states
         dones = dones.astype(np.float32)
@@ -327,7 +333,11 @@ class Agent:
         last_actions = nd.concat(action_indices.expand_dims(1), last_action, dim=1)
         
         with autograd.record():
-            predicted_actions = self.qnetwork_local(states, snake_id, turn_count, snake_health)
+            if self.qnetwork_local.take_additional_forward_arguments:
+                predicted_actions = self.qnetwork_local(states, snake_id, turn_count, snake_health)
+            else:
+                predicted_actions = self.qnetwork_local(states)
+
             Q_expected = nd.gather_nd(predicted_actions, last_actions.T)
 
             # Compute loss
