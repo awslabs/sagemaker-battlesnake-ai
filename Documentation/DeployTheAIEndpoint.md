@@ -31,7 +31,13 @@ _Note: Before deploying the environment, you need to be logged into the AWS acco
 
 _\*The official Battlesnake platform runs in us-west-2. Selecting this region will provide you with the lowest latency_
 
-Customize your snake's appearance (color, head, tail) or leave the default values and scroll down at the end of the page. Then check all permissions:
+On the stack creation page you can optionnaly:
+ * customize your snake's appearance (color, head, tail)
+ * change the instance type for training and inference
+ * select the training method: MXNet or RLLib (faster)
+
+Once done scroll down at the end of the page.
+Then check all permissions:
 
 ![Accept Permissions](images/create-stack.png "Permission checkboxes")
 
