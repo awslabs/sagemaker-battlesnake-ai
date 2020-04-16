@@ -34,7 +34,7 @@ _\*The official Battlesnake platform runs in us-west-2. Selecting this region wi
 On the stack creation page you can optionnaly:
  * customize your snake's appearance (color, head, tail)
  * change the instance type for training and inference
- * select the training method: MXNet or RLLib (faster)
+ * select the training method: MXNet or RLLib (Tensorflow)
 
 Once done scroll down at the end of the page.
 Then check all permissions:
