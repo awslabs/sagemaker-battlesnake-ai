@@ -30,7 +30,12 @@ This project can be used in three steps:
 
 ### Reinforcement learning packages
 
-The repository includes options of using the in-built SageMaker reinforcement learning package (based on RLlib) and an implementation written in MXNet.
+The repository includes two training method and framework options:
+
+* the in-built SageMaker reinforcement learning package (based on __RLlib__ and __Tensorflow__) 
+* an implementation written in __MXNet__
+
+You can choose which one to use when you deploy the stack.
 
 ### Architecture
 
