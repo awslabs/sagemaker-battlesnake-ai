@@ -81,16 +81,25 @@ Resources:
       CodeUri:
         Bucket: !Sub "battlesnake-aws-${AWS::Region}"
         Key: lambda/deployment-lambda-package.zip
+      Tags:
+        - Key: app
+          Value: battlesnake
   CleanupBucketOnDelete:
     Type: Custom::CleanupBucket
     Properties:
       ServiceToken: !GetAtt BattlesnakeDeployFunction.Arn
       Operation: CleanupSagemakerBucket
+      Tags:
+        - Key: app
+          Value: battlesnake
   CleanupEndpointOnDelete:
     Type: Custom::CleanupEndpoint
     Properties:
       ServiceToken: !GetAtt BattlesnakeDeployFunction.Arn
       Operation: CleanupSagemakerEndpoint
+      Tags:
+        - Key: app
+          Value: battlesnake
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -103,6 +112,9 @@ Resources:
                 - sagemaker.amazonaws.com
             Action:
               - "sts:AssumeRole"
+      Tags:
+        - Key: app
+          Value: battlesnake
   NotebookInstanceIAMPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -189,6 +201,9 @@ Resources:
             Resource:
               - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}"
               - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
+      Tags:
+        - Key: app
+          Value: battlesnake
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
     Properties:
@@ -198,6 +213,9 @@ Resources:
       NotebookInstanceName: BattlesnakeNotebook
       RoleArn: !GetAtt NotebookInstanceExecutionRole.Arn
       VolumeSizeInGB: 14
+      Tags:
+        - Key: app
+          Value: battlesnake
   LifeCycleConfig:
     Type: AWS::SageMaker::NotebookInstanceLifecycleConfig
     Properties:
@@ -233,6 +251,9 @@ Resources:
                         - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
                     - ls
                 - !Sub "/bin/bash CloudFormation/on-start.sh ${RLMethod}"
+      Tags:
+        - Key: app
+          Value: battlesnake
   LambdaDeploymentRole:
     Type: AWS::IAM::Role
     Properties:
@@ -300,6 +321,9 @@ Resources:
                   - sagemaker:DescribeEndpoint
                 Resource:
                   - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
+      Tags:
+        - Key: app
+          Value: battlesnake
   BattlesnakeAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -327,10 +351,16 @@ Resources:
       CodeUri:
         Bucket: !Sub "battlesnake-aws-${AWS::Region}"
         Key: lambda/model-lambda-package.zip
+      Tags:
+        - Key: app
+          Value: battlesnake
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: snake
+      Tags:
+        - Key: app
+          Value: battlesnake
 Outputs:
   SourceEditionInNotebook:
     Description: "Open Jupyter IDE. This authenticate you against Jupyter."
