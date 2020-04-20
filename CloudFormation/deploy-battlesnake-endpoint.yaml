@@ -82,8 +82,7 @@ Resources:
         Bucket: !Sub "battlesnake-aws-${AWS::Region}"
         Key: lambda/deployment-lambda-package.zip
       Tags:
-        - Key: app
-          Value: battlesnake
+        app: battlesnake
   CleanupBucketOnDelete:
     Type: Custom::CleanupBucket
     Properties:
@@ -201,9 +200,6 @@ Resources:
             Resource:
               - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}"
               - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
-      Tags:
-        - Key: app
-          Value: battlesnake
   NotebookInstance:
     Type: AWS::SageMaker::NotebookInstance
     Properties:
@@ -251,9 +247,6 @@ Resources:
                         - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
                     - ls
                 - !Sub "/bin/bash CloudFormation/on-start.sh ${RLMethod}"
-      Tags:
-        - Key: app
-          Value: battlesnake
   LambdaDeploymentRole:
     Type: AWS::IAM::Role
     Properties:
@@ -352,15 +345,13 @@ Resources:
         Bucket: !Sub "battlesnake-aws-${AWS::Region}"
         Key: lambda/model-lambda-package.zip
       Tags:
-        - Key: app
-          Value: battlesnake
+        app: battlesnake
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: snake
       Tags:
-        - Key: app
-          Value: battlesnake
+        app: battlesnake
 Outputs:
   SourceEditionInNotebook:
     Description: "Open Jupyter IDE. This authenticate you against Jupyter."
