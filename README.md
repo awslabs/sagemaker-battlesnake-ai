@@ -1,5 +1,5 @@
 __BLOG POST DOCUMENTATION__ : _Consider reading our detailed blog posts about this project:_
-* _[Introduction](https://aws.amazon.com/blogs/machine-learning/building-an-ai-powered-battlesnake-with-reinforcement-learning-on-amazon-sagemaker/)_
+* _[Introduction with MXNet](https://aws.amazon.com/blogs/machine-learning/building-an-ai-powered-battlesnake-with-reinforcement-learning-on-amazon-sagemaker/)_
 * _[Improvement with RLlib](https://aws.amazon.com/blogs/machine-learning/scaling-your-ai-powered-battlesnake-with-distributed-reinforcement-learning-in-amazon-sagemaker/)_
 
 # Amazon SageMaker for Battlesnake AI
