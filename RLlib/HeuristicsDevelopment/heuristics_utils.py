@@ -93,12 +93,11 @@ def convert_state_into_json(map_size, state, snake_list, snake_id, turn_count, h
         snake_dict = {}
         snake_dict["health"] = health[i]
         snake_dict["body"] = snake
-        snake_dict["id"] = snake_id
-        snake_dict["name"] = "Snake {}".format(snake_id)
+        snake_dict["id"] = i
+        snake_dict["name"] = "Snake {}".format(i)
         snake_dict_list.append(snake_dict)
-        
+
     your_snake_dict_list = snake_dict_list[snake_id]
-    del snake_dict_list[snake_id]
     other_snake_dict_list = snake_dict_list
     
     # Create board

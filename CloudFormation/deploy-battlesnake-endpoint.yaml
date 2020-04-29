@@ -81,16 +81,24 @@ Resources:
       CodeUri:
         Bucket: !Sub "battlesnake-aws-${AWS::Region}"
         Key: lambda/deployment-lambda-package.zip
+      Tags:
+        app: battlesnake
   CleanupBucketOnDelete:
     Type: Custom::CleanupBucket
     Properties:
       ServiceToken: !GetAtt BattlesnakeDeployFunction.Arn
       Operation: CleanupSagemakerBucket
+      Tags:
+        - Key: app
+          Value: battlesnake
   CleanupEndpointOnDelete:
     Type: Custom::CleanupEndpoint
     Properties:
       ServiceToken: !GetAtt BattlesnakeDeployFunction.Arn
       Operation: CleanupSagemakerEndpoint
+      Tags:
+        - Key: app
+          Value: battlesnake
   NotebookInstanceExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -103,6 +111,9 @@ Resources:
                 - sagemaker.amazonaws.com
             Action:
               - "sts:AssumeRole"
+      Tags:
+        - Key: app
+          Value: battlesnake
   NotebookInstanceIAMPolicy:
     Type: AWS::IAM::Policy
     Properties:
@@ -198,6 +209,9 @@ Resources:
       NotebookInstanceName: BattlesnakeNotebook
       RoleArn: !GetAtt NotebookInstanceExecutionRole.Arn
       VolumeSizeInGB: 14
+      Tags:
+        - Key: app
+          Value: battlesnake
   LifeCycleConfig:
     Type: AWS::SageMaker::NotebookInstanceLifecycleConfig
     Properties:
@@ -206,7 +220,7 @@ Resources:
             Fn::Base64: !Join
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - git clone --depth=1 https://github.com/JohnyFicient/sagemaker-battlesnake-ai.git battlesnake
+                - git clone --depth=1 https://github.com/awslabs/sagemaker-battlesnake-ai.git battlesnake
                 - chown -R ec2-user:ec2-user battlesnake
                 - cd battlesnake
                 - rm -rf .git
@@ -300,6 +314,9 @@ Resources:
                   - sagemaker:DescribeEndpoint
                 Resource:
                   - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
+      Tags:
+        - Key: app
+          Value: battlesnake
   BattlesnakeAPIFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -327,10 +344,14 @@ Resources:
       CodeUri:
         Bucket: !Sub "battlesnake-aws-${AWS::Region}"
         Key: lambda/model-lambda-package.zip
+      Tags:
+        app: battlesnake
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: snake
+      Tags:
+        app: battlesnake
 Outputs:
   SourceEditionInNotebook:
     Description: "Open Jupyter IDE. This authenticate you against Jupyter."
