@@ -111,12 +111,18 @@ def convert_state_into_json(map_size, state, snake_list, snake_id, turn_count, h
         
     return json
 
-def get_action(net, state):
+def get_action(net, state, prev_action, prev_reward):
     state = np.expand_dims(state, 0)
+    
+    if prev_action == None:
+        prev_action = -1
+    if prev_reward == None:
+        prev_reward = -1
+
     predict = net(observations=tf.convert_to_tensor(state, dtype=tf.float32), 
                seq_lens=tf.constant([-1], dtype=tf.int32), 
-               prev_action=tf.constant([-1], dtype=tf.int64),
-               prev_reward=tf.constant([-1], dtype=tf.float32), 
+               prev_action=tf.constant([prev_action], dtype=tf.int64),
+               prev_reward=tf.constant([prev_reward], dtype=tf.float32), 
                is_training=tf.constant(False, dtype=tf.bool))
     action = predict["behaviour_logits"].numpy()
     return action
@@ -131,10 +137,12 @@ def simulate(env, net, heuristics, number_of_snakes):
         
     heuristics_log_array = [{k: "" for k in range(number_of_snakes)}]
 
-    previous_state = {}
+    previous_move = {}
     for i in range(number_of_snakes):
         agent_id = "agent_{}".format(i)
-        previous_state[agent_id] = None
+        previous_move[agent_id] = {"state": None,
+                                   "reward": None,
+                                   "action": None}
         
     while True:
         infos["current_turn"] += 1
@@ -144,9 +152,10 @@ def simulate(env, net, heuristics, number_of_snakes):
         for i in range(number_of_snakes):
             agent_id = "agent_{}".format(i)
             
-            state_i, obs = build_state_for_snake(state, i, previous_state[agent_id])
+            state_i, obs = build_state_for_snake(state, i, previous_move[agent_id]["state"])
             
-            action = get_action(net, state_i)
+            action = get_action(net, state_i, previous_move[agent_id]["action"],
+                                previous_move[agent_id]["reward"])
 
             snake_list = make_snake_lists(env)
             map_size = env.map_size
@@ -163,9 +172,17 @@ def simulate(env, net, heuristics, number_of_snakes):
             heuristics_log[i] = heuristics_log_string
             
             actions.append(action)
-            previous_state[agent_id] = obs
         
-        next_state, reward, dones, infos = env.step(actions)
+        next_state, rewards, dones, infos = env.step(actions)
+        
+        for i in range(number_of_snakes):
+            agent_id = "agent_{}".format(i)
+            action = actions[i]
+            reward = rewards[i]
+            previous_move[agent_id] = {"state": obs,
+                                       "reward": reward,
+                                       "action": action}
+
         
         rgb_array = env.render(mode="rgb_array")
         rgb_arrays.append(rgb_array.copy())
