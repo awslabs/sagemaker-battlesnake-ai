@@ -27,7 +27,10 @@ class MyLauncher(SageMakerRayLauncher):
         self.hparams = json.loads(os.environ.get("SM_HPS", "{}"))
         self.num_agents = self.hparams['num_agents']
         self.num_iters = self.hparams['num_iters']
-        self.map_height = 7
+        self.iterate_map_size = self.hparams['iterate_map_size']
+        self.map_height = self.hparams['map_size']
+        self.algorithm = self.hparams['algorithm']
+        self.additional_configs = self.hparams["additional_configs"]
             
     def register_env_creator(self):
                 register_env("MultiAgentBattlesnake-v1", lambda _: MultiAgentBattlesnake(num_agents=self.num_agents, 
@@ -49,22 +52,16 @@ class MyLauncher(SageMakerRayLauncher):
         # you could also adjust based on mean rewards, mean episode length, etc.
         iteration = info['result']['training_iteration']
         
-        iteration = iteration % 70
-
-        if iteration <= 10:
-            eff_map_size = 7
-        elif iteration <= 20:
-            eff_map_size = 9
-        elif iteration <= 30:
-            eff_map_size = 11
-        elif iteration <= 40:
-            eff_map_size = 13
-        elif iteration <= 50:
-            eff_map_size = 15
-        elif iteration <= 60:
-            eff_map_size = 17
+        if self.iterate_map_size:
+            iteration = iteration % 30
+            if iteration <= 10:
+                eff_map_size = 7
+            elif iteration <= 20:
+                eff_map_size = 11
+            else:
+                eff_map_size = 19
         else:
-            eff_map_size = 19
+            eff_map_size = self.map_height
 
         info['result']['sm__effective_map_size'] = eff_map_size
 
@@ -80,40 +77,17 @@ class MyLauncher(SageMakerRayLauncher):
         
         ModelCatalog.register_custom_model("my_model", VisionNetwork)
         
-        return {
-          "training": { 
-            "env": "MultiAgentBattlesnake-v1",
-#            "restore": "/opt/ml/code/checkpoints/checkpoint_250/checkpoint-250",
-            "run": "PPO",
-            "stop": {
-              "training_iteration": self.num_iters,
-            },
-            "checkpoint_freq": 50,
-            'config': {
+        configs = {
                 'callbacks': { 
                     'on_train_result': self.on_train_result,
                 },
-                'monitor': False,  # Record videos.
-                'lambda': 0.90,
-                'gamma': 0.999,
-                'kl_coeff': 0.2,
-                'clip_rewards': True,
-                'vf_clip_param': 175.0,
-                'train_batch_size': 9216,
-                'sample_batch_size': 96,
-                'sgd_minibatch_size': 256,
-                'num_sgd_iter': 3,
                 'num_workers': (self.num_cpus-1),
                 'num_envs_per_worker': 1,
-                'batch_mode': 'complete_episodes',
-                'observation_filter': 'NoFilter',
-                'vf_share_layers': False,
                 'num_gpus': self.num_gpus,
                 "num_gpus_per_worker": 0,
-                'lr': 5.0e-4,
-                'log_level': 'ERROR',
-                'simple_optimizer': False,
-                'model': {"custom_model": "my_model", 
+                'model': 
+                {
+                    "custom_model": "my_model", 
                     'use_lstm': False, 
                     "max_seq_len": 60,
                 },
@@ -123,6 +97,16 @@ class MyLauncher(SageMakerRayLauncher):
                 },
                 'use_pytorch': False,
             }
+        
+        return {
+          "training": { 
+            "env": "MultiAgentBattlesnake-v1",
+            "run": self.algorithm,
+            "stop": {
+              "training_iteration": self.num_iters,
+            },
+            "checkpoint_freq": 50,
+            'config': {**configs, **self.additional_configs}
           }
         }
     
