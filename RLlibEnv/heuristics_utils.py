@@ -1,3 +1,4 @@
+import random
 import numpy as np
 import tensorflow as tf
 from training.training_src.utils import sort_states_for_snake_id
@@ -126,7 +127,7 @@ def get_action(net, state, prev_action, prev_reward):
     action = predict["behaviour_logits"].numpy()
     return action
 
-def simulate(env, net, heuristics, number_of_snakes):    
+def simulate(env, net, heuristics, number_of_snakes, use_random_snake):    
     state, _, _, infos  = env.reset()
 
     rgb_arrays = [env.render(mode="rgb_array")]
@@ -153,8 +154,11 @@ def simulate(env, net, heuristics, number_of_snakes):
             
             state_i, obs = build_state_for_snake(state, i, previous_move[agent_id]["state"])
             
-            action = get_action(net, state_i, previous_move[agent_id]["action"],
-                                previous_move[agent_id]["reward"])
+            if use_random_snake:
+                action = get_action(net, state_i, previous_move[agent_id]["action"],
+                                    previous_move[agent_id]["reward"])
+            else:
+                action = random.choice([0, 1, 2, 3])
 
             snake_list = make_snake_lists(env)
             map_size = env.map_size
