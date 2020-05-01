@@ -13,19 +13,27 @@
 
 import numpy as np
 import random
+try:
+    from heuristics import Heuristics
+except ModuleNotFoundError:
+    from inference.inference_src.heuristics import Heuristics
 
-class MyBattlesnakeHeuristics:
+class MyBattlesnakeHeuristics(Heuristics):
     '''
     The BattlesnakeHeuristics class allows you to define handcrafted rules of the snake.
     '''
     FOOD_INDEX = 0
     def __init__(self):
         pass
-    
-    def go_to_food_if_close(self, state, json):
+           
+    @Heuristics.positive_heuristics
+    def go_to_food_if_close(self, state, snake_id, turn_count, health, json):
         '''
         Example heuristic to move towards food if it's close to you.
         '''
+        if health[snake_id] > 30:
+            return [True, True, True, True]  
+        
         # Get the position of the snake head
         your_snake_body = json["you"]["body"]
         i, j = your_snake_body[0]["y"], your_snake_body[0]["x"]
@@ -39,15 +47,16 @@ class MyBattlesnakeHeuristics:
         
         food_direction = None
         if food[i-1, j] == 1:
-            food_direction = 0 # up
+            return [True, False, False, False]
         if food[i+1, j] == 1:
-            food_direction = 1 # down
+            return [False, True, False, False]
         if food[i, j-1] == 1:
-            food_direction = 2 # left
+            return [False, False, True, False]
         if food[i, j+1] == 1:
-            food_direction = 3 # right
-        return food_direction
-    
+            return [False, False, False, True]
+        
+        return [True, True, True, True]   
+
     def run(self, state, snake_id, turn_count, health, json, action):
         '''
         The main function of the heuristics.
@@ -77,16 +86,14 @@ class MyBattlesnakeHeuristics:
         # The default `best_action` to take is the one that provides has the largest Q value.
         # If you think of something else, you can edit how `best_action` is calculated
         best_action = int(np.argmax(action))
-                
-        # Example heuristics to eat food that you are close to.
-        if health[snake_id] < 30:
-            food_direction = self.go_to_food_if_close(state, json)
-            if food_direction:
-                best_action = food_direction
-                log_string = "Went to food if close."
-                
+        
+        go_to_food_masks = self.go_to_food_if_close(state, snake_id, turn_count, health, json)
+        if best_action not in np.where(go_to_food_masks)[0]:
+            log_string += "Food "
+            best_action = int(np.argmax(action * go_to_food_masks))
 
         # TO DO, add your own heuristics
         
-        assert best_action in [0, 1, 2, 3], "{} is not a valid action.".format(best_action)
+        if best_action not in [0, 1, 2, 3]:
+            best_action = random.choice([0, 1, 2, 3])
         return best_action, log_string
