@@ -31,10 +31,12 @@ class MyLauncher(SageMakerRayLauncher):
         self.map_height = self.hparams['map_size']
         self.algorithm = self.hparams['algorithm']
         self.additional_configs = self.hparams["additional_configs"]
+        self.use_heuristics_action_masks = self.hparams["use_heuristics_action_masks"]
             
     def register_env_creator(self):
-                register_env("MultiAgentBattlesnake-v1", lambda _: MultiAgentBattlesnake(num_agents=self.num_agents, 
-                                                                                         map_height=self.map_height))
+        register_env("MultiAgentBattlesnake-v1", lambda _: MultiAgentBattlesnake(num_agents=self.num_agents, 
+                                                                                map_height=self.map_height,
+                                                                                use_heuristics=self.use_heuristics_action_masks))
     # Callback function that is executed after each training iteration
     # Used to implement curriculum learning, inject custom metrics, etc.
     def on_train_result(self, info):
@@ -71,7 +73,7 @@ class MyLauncher(SageMakerRayLauncher):
                     lambda env: env.set_effective_map_size(eff_map_size)))
 
     def get_experiment_config(self):        
-        tmp_env = MultiAgentBattlesnake(num_agents=self.num_agents, map_height=self.map_height)
+        tmp_env = MultiAgentBattlesnake(num_agents=self.num_agents, map_height=self.map_height, use_heuristics=self.use_heuristics_action_masks)
         policies = {'policy_{}'.format(i): (None, tmp_env.observation_space, tmp_env.action_space, {}) for i in range(self.num_agents)}
         policy_ids = list(policies.keys())
         
@@ -90,6 +92,10 @@ class MyLauncher(SageMakerRayLauncher):
                     "custom_model": "my_model", 
                     'use_lstm': False, 
                     "max_seq_len": 60,
+                    "conv_filters": [[16, [5, 5], 4], [32, [3, 3], 1], [256, [3, 3], 1]],
+                    "custom_options": {
+                        "max_map_height": 21
+                    }
                 },
                 'multiagent': {
                     'policies': policies,

@@ -97,6 +97,20 @@ class Heuristics:
                 snake_location.append({"x": coord[1], "y": coord[0]})
             snake_locations.append(snake_location)
         return snake_locations
+    
+    def get_action_masks_from_functions(self, state, snake_id, turn_count, health, env, functions):
+        '''
+        
+        '''
+        snake_list = self._make_snake_lists(env)
+        map_size = env.map_size
+        json = self._convert_state_into_json(map_size, state, snake_list, snake_id, 
+                                       turn_count, health)
+
+        masks = np.array([1, 1, 1, 1])
+        for func in functions:
+            masks *= np.array(func(state, snake_id, turn_count, health, json))
+        return masks
 
     def run_with_env(self, state, snake_id, turn_count, health, action, env):
         '''
@@ -108,9 +122,6 @@ class Heuristics:
         json = self._convert_state_into_json(map_size, state, snake_list, snake_id, 
                                        turn_count, health)
         return self.run(state, snake_id, turn_count, health, json, action)
-    
-    def run_for_mask(self, functions_to_run):
-        pass
-        
+            
     def run(self):
         raise NotImplementedError()

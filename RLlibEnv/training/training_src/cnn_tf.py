@@ -15,21 +15,23 @@ class VisionNetwork(TFModelV2):
         super(VisionNetwork, self).__init__(obs_space, action_space,
                                             num_outputs, model_config, name)
 
+        map_height = model_config["custom_options"]["max_map_height"]
         activation = get_activation_fn(model_config.get("conv_activation"))
 
         filters = model_config.get("conv_filters")
 
         # If the user hasn't provided conv_filters, choose default values rather than erroring out    
         if not filters:
-            filters = self.get_filter_config(obs_space.shape[0])
+            filters = self.get_filter_config(map_height)
 
         no_final_linear = model_config.get("no_final_linear")
         vf_share_layers = model_config.get("vf_share_layers")
 
+        input_shape = [map_height, map_height, 6]
         inputs = tf.keras.layers.Input(
-            shape=obs_space.shape, name="observations")
+            shape=input_shape, name="observations")
         last_layer = inputs
-
+        
         # Build the action layers
         for i, (out_size, kernel, stride) in enumerate(filters[:-1], 1):
             last_layer = tf.keras.layers.Conv2D(
@@ -103,20 +105,24 @@ class VisionNetwork(TFModelV2):
         self.base_model = tf.keras.Model(inputs, [conv_out, value_out])
         self.register_variables(self.base_model.variables)
         
-
     def forward(self, input_dict, state, seq_lens):
         # explicit cast to float32 needed in eager
         model_out, self._value_out = self.base_model(
-            tf.cast(input_dict["obs"], tf.float32))
-        return tf.squeeze(model_out, axis=[1, 2]), state
+            tf.cast(input_dict["obs"]["state"], tf.float32))
+        
+        model_out = tf.squeeze(model_out, axis=[1, 2])
+        mask = input_dict["obs"]["action_mask"]
+        inf_mask = tf.maximum(tf.log(mask), tf.float32.min)
+        masked_logits = inf_mask + model_out
 
-    
+        return masked_logits, state
+
     def value_function(self):
         return tf.reshape(self._value_out, [-1])
 
 # Default CNN filter values for various Battlesnake map sizes. These can be overriden via 'conv_filters' model config    
     def get_filter_config(self, map_dim):
-        configs = { 7: [ [16, [3, 3], 1], [32, [3, 3], 1], [256, [3, 3], 1] ],
+        configs = {7: [ [16, [3, 3], 1], [32, [3, 3], 1], [256, [3, 3], 1] ],
                    8: [ [16, [4, 4], 1], [32, [3, 3], 1], [256, [3, 3], 1] ],
                    9: [ [16, [5, 5], 1], [32, [3, 3], 1], [256, [3, 3], 1] ],
                    10: [ [16, [6, 6], 1], [32, [3, 3], 1], [256, [3, 3], 1] ],
