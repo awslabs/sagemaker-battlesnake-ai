@@ -153,6 +153,9 @@ def get_action(net, state, snake_id, turn_count, health, memory):
     '''
     return action.asnumpy()[0]
 
+def is_snake_alive(env, snake_id):
+    return env.snakes.get_snakes()[snake_id].is_alive()
+
 def simulate(env, net, heuristics, number_of_snakes):
     '''
     Helper functions to simulate the snakes moving with BattlesnakeGym.
@@ -191,12 +194,16 @@ def simulate(env, net, heuristics, number_of_snakes):
                                            turn_count=infos["current_turn"]+1, 
                                            health=infos["snake_health"])
             # Add heuristics
-            action, heuristics_log_string = heuristics.run(
+            if is_snake_alive(env, i):
+                action, heuristics_log_string = heuristics.run(
                                                 state, snake_id=i,
                                                 turn_count=infos["current_turn"]+1,
                                                 health=infos["snake_health"],
                                                 json=json,
-                                                action=action)
+                                                action=action)           
+            else:
+                action = np.argmax(action[0])
+                heuristics_log_string = "Dead"
             heuristics_log[i] = heuristics_log_string
             
             actions.append(action)

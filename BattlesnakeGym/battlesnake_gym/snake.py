@@ -65,10 +65,15 @@ class Snake:
         for i, j in locations[::-1]: # head is element n
             tmp_locations.append(np.array([i, j])) 
 
-        head = tmp_locations[-1]
+        if len(tmp_locations) == 0:
+            head = None
+        else:
+            head = tmp_locations[-1]
         cls = Snake(head, map_size)
         cls.locations = tmp_locations
         cls.health = health
+        if len(tmp_locations) == 0:
+            cls.kill_snake()
 
         if len(cls.locations) > 1:
             # Calculate the facing direction with the head and the next location
@@ -286,7 +291,7 @@ class Snake:
         Set snake to be dead
         '''
         self._is_alive = False
-        #self.locations = []
+        self.locations = []
 
     def is_alive(self):
         '''
@@ -381,8 +386,8 @@ class Snakes:
         map_image: np.array(map_sizep[0], map_size[1], 1)
             If any snake is on coordinate i, j, map_image[i, j] will be 1
         '''
-        return np.sum(self.get_snake_depth_51_map(excluded_snakes=excluded_snakes), 2)
-
+        sum_map = np.sum(self.get_snake_depth_51_map(excluded_snakes=excluded_snakes), 2)   
+        return sum_map
             
     def get_snake_numbered_map(self, excluded_snakes=[]):
         '''
@@ -455,6 +460,7 @@ class Snakes:
         for i, snake in enumerate(self.snakes):
             if snake not in excluded_snakes:
                 map_image[:, :, i] = snake.get_snake_map(return_type="Binary")
+
         return map_image
 
     def get_snake_colour_map(self):

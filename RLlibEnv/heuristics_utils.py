@@ -28,6 +28,9 @@ def build_state_for_snake(obs, snake_i, prev_state=None):
 
     return merged_map, obs
 
+def is_snake_alive(env, snake_id):
+    return env.snakes.get_snakes()[snake_id].is_alive()
+
 def get_action(net, state, prev_action, prev_reward):
     state = np.expand_dims(state, 0)
     
@@ -77,12 +80,17 @@ def simulate(env, net, heuristics, number_of_snakes, use_random_snake):
                 action = get_action(net, state_i, previous_move[agent_id]["action"],
                                     previous_move[agent_id]["reward"])
             
-            action, heuristics_log_string = heuristics.run_with_env(
-                                                state, snake_id=i,
-                                                turn_count=infos["current_turn"]+1,
-                                                health=infos["snake_health"],
-                                                env=env,
-                                                action=action)
+            if is_snake_alive(env, i):
+                action, heuristics_log_string = heuristics.run_with_env(
+                                                    state, snake_id=i,
+                                                    turn_count=infos["current_turn"]+1,
+                                                    health=infos["snake_health"],
+                                                    env=env,
+                                                    action=action)
+            else:
+                action = np.argmax(action[0])
+                heuristics_log_string = "Dead"
+            
             heuristics_log[i] = heuristics_log_string
             
             actions.append(action)

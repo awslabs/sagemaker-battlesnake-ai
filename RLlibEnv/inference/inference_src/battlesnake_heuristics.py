@@ -37,14 +37,13 @@ class MyBattlesnakeHeuristics(Heuristics):
         if -1 in state:
             border_len = int((state.shape[0] - json["board"]["height"])/2)
             i, j = i + border_len, j + border_len
-              
+        
         up = state[i-1, j, snake_id+1] != -1
         down = state[i+1, j, snake_id+1] != -1
         left = state[i, j-1, snake_id+1] != -1
         right = state[i, j+1, snake_id+1] != -1
 
         action = [up, down, left, right]
-        assert np.sum(action) > 1, "A maximum of 2 False is allowed in the mask"
         return action
     
     @Heuristics.negative_heuristics
@@ -100,7 +99,7 @@ class MyBattlesnakeHeuristics(Heuristics):
             return [False, False, False, True]
         
         return [True, True, True, True]   
-
+    
     def run(self, state, snake_id, turn_count, health, json, action):
         '''
         The main function of the heuristics.

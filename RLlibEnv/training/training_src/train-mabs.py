@@ -32,22 +32,61 @@ class MyLauncher(SageMakerRayLauncher):
         self.algorithm = self.hparams['algorithm']
         self.additional_configs = self.hparams["additional_configs"]
         self.use_heuristics_action_masks = self.hparams["use_heuristics_action_masks"]
-            
+        self.converter = {"Snake hit wall": "Snake_hit_wall",
+                          "Snake was eaten - same tile": "Snake_was_eaten",
+                          "Snake was eaten - adjacent tile": "Snake_was_eaten",
+                          "Other snake hit body": "Killed_another_snake",
+                          "Snake hit body - hit itself": "Snake_hit_body",
+                          "Snake hit body - hit other": "Snake_hit_body",
+                          "Did not collide": "",
+                          "Ate another snake": "Killed_another_snake",
+                          "Dead": "",
+                          "Starved": "Starved",
+                          "Forbidden move": "Forbidden_move"
+        }
+  
     def register_env_creator(self):
         register_env("MultiAgentBattlesnake-v1", lambda _: MultiAgentBattlesnake(num_agents=self.num_agents, 
                                                                                 map_height=self.map_height,
                                                                                 use_heuristics=self.use_heuristics_action_masks))
-    # Callback function that is executed after each training iteration
-    # Used to implement curriculum learning, inject custom metrics, etc.
+    
+
+    def on_episode_start(self, info):
+        for outcome in ["Snake_hit_wall", "Snake_was_eaten", "Snake_hit_body", "Killed_another_snake",
+                        "Starved", "Forbidden_move"]:
+            info['episode'].custom_metrics[outcome] = 0
+
+    def on_episode_step(self, info):
+        agent_info = info['episode'].last_info_for('agent_1')
+        if "snake_info" in agent_info:
+            for i in range(self.num_agents):
+                snake_info_i = agent_info["snake_info"][i]
+                converted_outcome = self.converter[snake_info_i]
+                if len(converted_outcome) > 0:
+                    info['episode'].custom_metrics[converted_outcome] += 1
+
+    def on_episode_end(self, info):
+        agent_info = info['episode'].last_info_for('agent_1')
+        for i in range(self.num_agents):
+            snake_info_i = agent_info["snake_info"][i]
+            converted_outcome = self.converter[snake_info_i]
+            if len(converted_outcome) > 0:
+                info['episode'].custom_metrics[converted_outcome] += 1
+
+        for i in range(self.num_agents):
+            snake_max_len = info['episode'].last_info_for('agent_1')['snake_max_len']
+            info['episode'].custom_metrics['policy{}_max_len'.format(i)] = snake_max_len[i]
+    
     def on_train_result(self, info):
-        # Add reformatted metrics for SageMaker
-        info['result']['sm__episode_len_mean'] = info['result']['episode_len_mean']
-        info['result']['sm__episode_reward_min'] = info['result']['episode_reward_min']
-        info['result']['sm__episode_reward_max'] = info['result']['episode_reward_max']
-        info['result']['sm__episode_reward_mean'] = info['result']['episode_reward_mean']
-        info['result']['sm__policy_0_reward_max'] = info['result']['policy_reward_max']['policy_0']
-        info['result']['sm__policy_0_reward_min'] = info['result']['policy_reward_min']['policy_0']
-        info['result']['sm__policy_0_reward_mean'] = info['result']['policy_reward_mean']['policy_0']
+        max_lens_per_policy = []
+        for i in range(self.num_agents):
+            agent_id = "policy{}".format(i)
+            max_lens_per_policy.append(info['result']['custom_metrics']['{}_max_len_max'.format(agent_id)])
+        info['result']['best_snake_episode_len_max'] = max(max_lens_per_policy)
+        info['result']['worst_snake_episode_len_max'] = min(max_lens_per_policy)
+
+        info['result']['episode_len_max'] = max(info["result"]["hist_stats"]["episode_lengths"])
+        info['result']['episode_len_min'] = min(info["result"]["hist_stats"]["episode_lengths"])
 
         # curriculum learning -
         # here we adjust effective map size based on current training iteration
@@ -81,6 +120,9 @@ class MyLauncher(SageMakerRayLauncher):
         
         configs = {
                 'callbacks': { 
+                    'on_episode_start': self.on_episode_start,
+                    'on_episode_step': self.on_episode_step,
+                    'on_episode_end': self.on_episode_end,
                     'on_train_result': self.on_train_result,
                 },
                 'num_workers': (self.num_cpus-1),
@@ -89,6 +131,8 @@ class MyLauncher(SageMakerRayLauncher):
                 "num_gpus_per_worker": 0,
                 'model': 
                 {
+                    "no_final_linear": False,
+                    "vf_share_layers": False,
                     "custom_model": "my_model", 
                     'use_lstm': False, 
                     "max_seq_len": 60,

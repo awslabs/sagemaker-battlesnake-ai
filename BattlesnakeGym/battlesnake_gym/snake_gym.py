@@ -163,15 +163,18 @@ class BattlesnakeGym(gym.Env):
         
         snakes_health = {}
         snake_info = {}
+        self.snake_max_len = {}
         for i, snake in enumerate(self.snakes.get_snakes()):
             snakes_health[i] = snake.health
-            snake_info[i] = "Did not colide" 
+            snake_info[i] = "Did not collide" 
+            self.snake_max_len[i] = 0
         info = {'current_turn': self.turn_count,
                 'snake_health': snakes_health,
-                 'snake_info': snake_info}
+                'snake_info': snake_info, 
+                'snake_max_len': self.snake_max_len}
         return self._get_observation(), {}, dones, info
 
-    def _did_snake_collide(self, snake):
+    def _did_snake_collide(self, snake, snakes_to_be_killed):
         '''
         Helper function to check if a snake has collided into something else. Checks the following:
         1) If the snake's head hit a wall (i.e., if the head is outside of the map)
@@ -182,6 +185,8 @@ class BattlesnakeGym(gym.Env):
         Parameter:
         ----------
         snake: Snake
+        
+        snakes_to_be_killed: a list of snakes that will be killed in the end of the turn.
 
         Returns:
         ----------
@@ -193,11 +198,13 @@ class BattlesnakeGym(gym.Env):
                                       "Snake was eaten - adjacent tile", 
                                       "Snake hit body - hit itself", 
                                       "Snake hit body - hit other", 
-                                      "Did not colide",
+                                      "Did not collide",
                                       "Ate another snake",
                                       "Other snake hit body"]
         '''       
         snake_head_location = snake.get_head()
+        ate_another_snake = False
+        snakes_eaten_this_turn = []
         
         # 1) Check if the snake ran into a wall
         outcome = "Snake hit wall"
@@ -223,7 +230,8 @@ class BattlesnakeGym(gym.Env):
                         if self.verbose: print(outcome)
                         return True, outcome
                     else:
-                        return False, "Ate another snake"
+                        ate_another_snake = True
+                        snakes_eaten_this_turn.append(other_snake)
                 
         # 2.2) Check if snake's head collided with another snakes head when they were adjacent to one another
         # (i.e., that the heads swapped positions)
@@ -247,8 +255,9 @@ class BattlesnakeGym(gym.Env):
                             if self.verbose: print(outcome)
                             return True, outcome
                         else:
-                            return False, "Ate another snake"
-        
+                            ate_another_snake = True
+                            snakes_eaten_this_turn.append(other_snake)
+
         # 3.1) Check if snake ran into it's own body
         outcome = "Snake hit body - hit itself"
         for self_body_locations in snake.get_body():
@@ -258,8 +267,7 @@ class BattlesnakeGym(gym.Env):
             
         # 3.2) Check if snake ran into another snake's body
         outcome = "Snake hit body - hit other"
-        snake_binary_map = self.snakes.get_snake_51_map(
-            excluded_snakes=[snake])
+        snake_binary_map = self.snakes.get_snake_51_map(excluded_snakes=[snake]+snakes_eaten_this_turn)
         if snake_binary_map[snake_head_location[0], snake_head_location[1]] == 1:
             if self.verbose: print("Snake hit another snake")
             return True, outcome
@@ -269,12 +277,16 @@ class BattlesnakeGym(gym.Env):
             if other_snake == snake:
                 continue
             if other_snake.is_alive():
-                other_snake_head = other_snake.get_head()
-                for location in snake.get_body():
-                    if np.array_equal(location, other_snake_head):
-                        return False, "Other snake hit body"
+                if other_snake not in snakes_to_be_killed:
+                    other_snake_head = other_snake.get_head()
+                    for location in snake.get_body():
+                        if np.array_equal(location, other_snake_head):
+                            return False, "Other snake hit body"
         
-        return False, "Did not colide"
+        if ate_another_snake:                            
+            return False, "Ate another snake"
+
+        return False, "Did not collide"
 
     def step(self, actions, episodes=None):
         '''
@@ -307,6 +319,9 @@ class BattlesnakeGym(gym.Env):
         reward = {}
         snake_info = {}
 
+        # DEBUGING
+        json_before_moving = self.get_json()
+        
         # Reduce health and move
         for i, snake in enumerate(self.snakes.get_snakes()):
             reward[i] = 0
@@ -318,7 +333,7 @@ class BattlesnakeGym(gym.Env):
             if snake.health == 0:
                 snake.kill_snake()
                 reward[i] += self.rewards.get_reward("starved", i, episodes)
-                snake_info[i] = "starved"
+                snake_info[i] = "Starved"
                 continue
 
             action = actions[i] 
@@ -326,12 +341,17 @@ class BattlesnakeGym(gym.Env):
             if is_forbidden:
                 snake.kill_snake()
                 reward[i] += self.rewards.get_reward("forbidden_move", i, episodes)
-                snake_info[i] = "forbidden move"
+                snake_info[i] = "Forbidden move"
             
         # check for food and collision
         number_of_food_eaten = 0
         number_of_snakes_alive = 0
 
+        
+        # DEBUGING
+        json_after_moving = self.get_json()
+        
+        snakes_to_be_killed = []
         for i, snake in enumerate(self.snakes.get_snakes()):
             if not snake.is_alive():
                 continue
@@ -339,14 +359,13 @@ class BattlesnakeGym(gym.Env):
             snake_head_location = snake.get_head()
 
             # Check for collisions with the snake
-            should_kill_snake, outcome = self._did_snake_collide(snake)
-            snake_info[i] = outcome
+            should_kill_snake, outcome = self._did_snake_collide(snake, snakes_to_be_killed)
             if should_kill_snake:
-                snake.kill_snake()
+                snakes_to_be_killed.append(snake)
+            snake_info[i] = outcome
 
             # Check if snakes ate any food
-            if snake.is_alive() and self.food.does_coord_have_food(
-                    snake_head_location):
+            if not should_kill_snake and self.food.does_coord_have_food(snake_head_location):
                 number_of_food_eaten += 1
                 snake.set_ate_food()
                 self.food.remove_food_from_coord(snake_head_location)
@@ -373,23 +392,23 @@ class BattlesnakeGym(gym.Env):
                 reward[i] += self.rewards.get_reward("other_snake_hit_body", i,
                                                     episodes)
                 
-            elif outcome == "Did not colide":
+            elif outcome == "Did not collide":
                 pass
                 
             elif outcome == "Ate another snake":
                 reward[i] += self.rewards.get_reward("ate_another_snake", i,
                                                     episodes)
-
-            # Processing snakes that are alive
+        for snake_to_be_killed in snakes_to_be_killed:
+            snake_to_be_killed.kill_snake()
+        
+        snakes_alive = []
+        for i, snake in enumerate(self.snakes.get_snakes()):
+            snakes_alive.append(snake.is_alive())
             if snake.is_alive():
                 number_of_snakes_alive += 1
                 reward[i] += self.rewards.get_reward("another_turn", i, episodes)
         
         self.food.end_of_turn(self.snakes.get_snake_51_map())
-
-        snakes_alive = []
-        for snake in self.snakes.get_snakes():
-            snakes_alive.append(snake.is_alive())
 
         if self.number_of_snakes > 1 and np.sum(snakes_alive) <= 1:
             done = True
@@ -407,10 +426,24 @@ class BattlesnakeGym(gym.Env):
         snakes_health = {}
         for i, snake in enumerate(self.snakes.get_snakes()):
             snakes_health[i] = snake.health
+            if snake.is_alive():
+                self.snake_max_len[i] += 1
+            if i not in snake_info:
+                snake_info[i] = "Dead"
                 
+        sum_map = self.snakes.get_snake_51_map()
+        if np.max(sum_map) > 5 or 2 in sum_map:
+            print("snake info {}".format(snake_info))
+            print("actions {}".format(actions))
+            print("before moving json {}".format(json_before_moving))
+            print("after moving json {}".format(json_after_moving))
+            print("final json {}".format(self.get_json()))
+            raise
+            
         return self._get_observation(), reward, snake_alive_dict, {'current_turn': self.turn_count,
                                                                    'snake_health': snakes_health,
-                                                                    'snake_info': snake_info}
+                                                                   'snake_info': snake_info,
+                                                                   'snake_max_len': self.snake_max_len}
                 
     def _get_observation(self):
         '''

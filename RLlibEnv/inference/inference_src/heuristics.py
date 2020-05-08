@@ -20,8 +20,13 @@ class Heuristics:
         Helper function to remove the -1 borders from the state representation
         '''
         if -1 in state:
-            y, x = map_size
-            return state[int(y/2):-int(y/2), int(x/2):-int(x/2), :]
+            h, w = map_size
+            middle_y, middle_x = state.shape[0]/2, state.shape[1]/2
+            
+            start_y, end_y = int(middle_y - h/2), int(middle_y + h/2)
+            start_x, end_x = int(middle_x - w/2), int(middle_x + w/2)
+
+            return state[start_y:end_y, start_x:end_x, :]
         else:
             return state
         
@@ -51,8 +56,8 @@ class Heuristics:
         '''
         FOOD_INDEX = 0
 
-        state = self._remove_borders_from_state(state, map_size)
-        food = self._convert_food_maxtrix_to_list(state[:, :, FOOD_INDEX])
+        borderless_state = self._remove_borders_from_state(state, map_size)
+        food = self._convert_food_maxtrix_to_list(borderless_state[:, :, FOOD_INDEX])
 
         # Make snake_dict from snake_list
         snake_dict_list = []
@@ -69,11 +74,12 @@ class Heuristics:
 
         # Create board
         json = {}
-        json["board"] = {"height": state.shape[0],
-                        "width": state.shape[1],
+        json["board"] = {"height": map_size[0],
+                        "width": map_size[1],
                         "food": food, 
                         "snakes": other_snake_dict_list}
         json["you"] = your_snake_dict_list
+        
 
         return json
     
@@ -106,7 +112,6 @@ class Heuristics:
         map_size = env.map_size
         json = self._convert_state_into_json(map_size, state, snake_list, snake_id, 
                                        turn_count, health)
-
         masks = np.array([1, 1, 1, 1])
         for func in functions:
             masks *= np.array(func(state, snake_id, turn_count, health, json))
