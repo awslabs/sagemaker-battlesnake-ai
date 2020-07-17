@@ -27,8 +27,8 @@ ENVIRONMENT=python3
 
 # Create the SagMaker endpoint
 #source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
-#source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
-nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=python --execute&
-#conda deactivate
+source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
+nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=tensorflow_p36 --execute&
+conda deactivate
 
 chown -R ec2-user:ec2-user $FOLDER
