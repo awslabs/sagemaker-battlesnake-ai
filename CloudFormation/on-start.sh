@@ -23,13 +23,7 @@ set -e
 RL_METHOD=$1
 FOLDER=$RL_METHOD"Env"
 NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/$FOLDER/deployEndpoint.ipynb
-
-if RL_METHOD=="MXNet"
-then
-  ENVIRONMENT="mxnet_p36"
-else
-  ENVIRONMENT="tensorflow_p36"
-fi
+ENVIRONMENT=python3
 
 # Create the SagMaker endpoint
 source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
