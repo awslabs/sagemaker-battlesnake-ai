@@ -16,39 +16,62 @@ from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
 from ray.rllib.models import ModelCatalog
 
 from battlesnake_gym.snake_gym import BattlesnakeGym
-from utils import sort_states_for_snake_id
+from battlesnake_gym.rewards import SimpleRewards
 
+try:
+    from utils import sort_states_for_snake_id
+except ModuleNotFoundError:
+    from training.training_src.utils import sort_states_for_snake_id
+
+try:
+    from battlesnake_heuristics import MyBattlesnakeHeuristics
+except ModuleNotFoundError:
+    from inference.inference_src.battlesnake_heuristics import MyBattlesnakeHeuristics
+    
 ## MultiAgentEnv wrapper for battlesnake_gym
 class MultiAgentBattlesnake(MultiAgentEnv):
 
     MAX_MAP_HEIGHT = 21
-    def __init__(self, num_agents, map_height):
+        
+    def __init__(self, num_agents, map_height, heuristics, rewards=SimpleRewards()):
         observation_type = "max-bordered-51s"
+         
         self.env = BattlesnakeGym(
             observation_type=observation_type,
             number_of_snakes=num_agents, 
-            map_size=(map_height, map_height))
+            map_size=(map_height, map_height), rewards=rewards)
         
-        if "bordered" in observation_type:
-            if "max-bordered" in observation_type:
-                self.observation_height = self.MAX_MAP_HEIGHT
-            else: # If only bordered with 2 rows of -1
-                self.observation_height = map_height + 2
-        else: # Flat without border
-            self.observation_height = map_height
-
+        self.observation_height = self.MAX_MAP_HEIGHT
         self.action_space = self.env.action_space[0]
+        
+        gym_observation_space = gym.spaces.Box(low=-1.0, high=5.0,
+                                               shape=(self.observation_height, self.observation_height, 6), dtype=np.float32)
 
-        self.observation_space = gym.spaces.Box(low=-1.0, high=5.0, shape=(self.observation_height, self.observation_height, 6), dtype=np.float32)
+        self.observation_space = gym.spaces.Dict({
+            "action_mask": gym.spaces.Box(0, 1, shape=(4,),
+                dtype=np.float32),
+            "state": gym_observation_space})
+
         self.num_agents = num_agents
         self.observation_type = observation_type
         self.old_obs1 = {}
-
+        self.heuristics = heuristics
+        if len(self.heuristics) > 0:
+            self.battlesnake_heuristics = MyBattlesnakeHeuristics()
+            self.heuristics_list = []
+            for heuristic_name in self.heuristics:
+                if heuristic_name == "banned_forbidden_moves":
+                    self.heuristics_list.append(self.battlesnake_heuristics.banned_forbidden_moves)
+                elif heuristic_name == "banned_wall_hits":
+                    self.heuristics_list.append(self.battlesnake_heuristics.banned_wall_hits)
+        self.rewards = rewards
+        
     def set_effective_map_size(self, eff_map_size):
-        self.__init__(self.num_agents, eff_map_size)
+        self.__init__(self.num_agents, eff_map_size, self.heuristics, self.rewards)
         self.reset()
 
     def reset(self):
+        self.mask = {}
         new_obs, _, _, info = self.env.reset()
 
         obs = {}
@@ -65,17 +88,19 @@ class MultiAgentBattlesnake(MultiAgentEnv):
             
             merged_map = np.concatenate((empty_map, obs_i), axis=-1)
 
-            if self.num_agents > 1:
-                obs[agent_id] = merged_map
+            if len(self.heuristics) > 0:
+                health = {k: 100 for k in range(self.num_agents)}
+                mask = self.battlesnake_heuristics.get_action_masks_from_functions(
+                    obs_i, i, 0, health, self.env, 
+                    functions=self.heuristics_list)
             else:
-                obs[agent_id] = merged_map
-                
+                mask = np.array([1, 1, 1, 1])
+            obs[agent_id] = {"state": merged_map, "action_mask": mask}
+            
+            self.mask[agent_id] = obs[agent_id]["action_mask"]
             self.old_obs1[agent_id] = obs_i 
-
+            
         return obs
-
-    def render(self):
-        self.env.render()
 
     def step(self, action_dict):
         actions = []
@@ -91,21 +116,28 @@ class MultiAgentBattlesnake(MultiAgentEnv):
         for i, key in enumerate(sorted(action_dict.keys())):            
             old_obs1 = self.old_obs1[key]
             
-            o_i = np.array(o, dtype=np.float32)
-            o_i = sort_states_for_snake_id(o_i, i+1)
+            obs_i = np.array(o, dtype=np.float32)
+            obs_i = sort_states_for_snake_id(obs_i, i+1)
             
-            merged_map = np.concatenate((old_obs1, o_i), axis=-1)
+            merged_map = np.concatenate((old_obs1, obs_i), axis=-1)
             
             infos[key] = info
-            if self.num_agents > 1:
-                rewards[key] = r[i]
-                obs[key] = merged_map
+            rewards[key] = r[i]
+            if len(self.heuristics) > 0 and self.env.snakes.get_snakes()[i].is_alive():
+                turn_count = info["current_turn"]+1
+                health = info["snake_health"]
 
+                mask = self.battlesnake_heuristics.get_action_masks_from_functions(
+                        obs_i, i, turn_count, health, self.env, 
+                        functions=self.heuristics_list)
+                                
             else:
-                rewards[key] = r
-                obs[key] = merged_map
+                mask = np.array([1, 1, 1, 1])
 
-            self.old_obs1[key] = np.array(o_i, dtype=np.float32)
+            obs[key] = {"state": merged_map, "action_mask": mask}
+            self.old_obs1[key] = np.array(obs_i, dtype=np.float32)
+            
+            self.mask[key] = obs[key]["action_mask"]
 
         dead_count = 0
         for x in range(self.num_agents):

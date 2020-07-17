@@ -22,11 +22,21 @@ def build_state_for_snake(obs, snake_i, prev_state=None):
         prev_state = np.zeros((obs.shape[0], obs.shape[1], 3))
         
     obs = np.array(obs, dtype=np.float32)
-            
-    obs = sort_states_for_snake_id(obs, snake_i+1)
-    merged_map = np.concatenate((prev_state, obs), axis=-1)
+    
+    if obs.shape[2] == 2:
+        empty_state_with_borders = obs[:, :, 0]
+        empty_state_with_borders[empty_state_with_borders==1] = 0
+        empty_state_with_borders = np.expand_dims(empty_state_with_borders, 2)
+        obs_i = np.concatenate((obs, empty_state_with_borders), axis=-1)
+    else:    
+        obs_i = sort_states_for_snake_id(obs, snake_i+1)
+    
+    merged_map = np.concatenate((prev_state, obs_i), axis=-1)
 
-    return merged_map, obs
+    return merged_map, obs_i
+
+def is_snake_alive(env, snake_id):
+    return env.snakes.get_snakes()[snake_id].is_alive()
 
 def get_action(net, state, prev_action, prev_reward):
     state = np.expand_dims(state, 0)
@@ -36,8 +46,14 @@ def get_action(net, state, prev_action, prev_reward):
     if prev_reward == None:
         prev_reward = -1
 
-    predict = net(observations=tf.convert_to_tensor(state, dtype=tf.float32), 
-               seq_lens=tf.constant([-1], dtype=tf.int32), 
+    obs = {"obs": tf.convert_to_tensor(state, dtype=tf.float32),
+            "action_mask": tf.convert_to_tensor([1, 1, 1, 1], dtype=tf.float32)}
+    input_obs = tf.reshape(obs["obs"], shape=(1*21*21*6, )) 
+    input_obs = tf.concat([obs["action_mask"], input_obs], axis=0)
+    input_obs = tf.expand_dims(input_obs, 0)
+            
+    predict = net(observations=input_obs,
+               seq_lens=tf.constant([60], dtype=tf.int32), 
                prev_action=tf.constant([prev_action], dtype=tf.int64),
                prev_reward=tf.constant([prev_reward], dtype=tf.float32), 
                is_training=tf.constant(False, dtype=tf.bool))
@@ -77,12 +93,17 @@ def simulate(env, net, heuristics, number_of_snakes, use_random_snake):
                 action = get_action(net, state_i, previous_move[agent_id]["action"],
                                     previous_move[agent_id]["reward"])
             
-            action, heuristics_log_string = heuristics.run_with_env(
-                                                state, snake_id=i,
-                                                turn_count=infos["current_turn"]+1,
-                                                health=infos["snake_health"],
-                                                env=env,
-                                                action=action)
+            if is_snake_alive(env, i):
+                action, heuristics_log_string = heuristics.run_with_env(
+                                                    state_i, snake_id=i,
+                                                    turn_count=infos["current_turn"]+1,
+                                                    health=infos["snake_health"],
+                                                    env=env,
+                                                    action=action)
+            else:
+                action = np.argmax(action[0])
+                heuristics_log_string = "Dead"
+            
             heuristics_log[i] = heuristics_log_string
             
             actions.append(action)
@@ -97,7 +118,6 @@ def simulate(env, net, heuristics, number_of_snakes, use_random_snake):
                                        "reward": reward,
                                        "action": action}
 
-        
         rgb_array = env.render(mode="rgb_array")
         rgb_arrays.append(rgb_array.copy())
         infos_array.append(infos)
@@ -111,7 +131,17 @@ def simulate(env, net, heuristics, number_of_snakes, use_random_snake):
             done = True
         else:
             done = False
-
+        
+        if number_of_snakes == 1:
+            snakes_to_win = 0
+        else:
+            snakes_to_win = 1
+            
+        if len(np.where(np.sum(next_state, axis=2)==5)[0]) == snakes_to_win:
+            done = True
+        else:
+            done = False
+            
         state = next_state
         if done:
             print("Completed")
