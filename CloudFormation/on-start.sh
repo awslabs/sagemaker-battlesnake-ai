@@ -26,6 +26,6 @@ NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/$FOLDER/deployEndpoint.ipynb
 
 # Create the SagMaker endpoint
 source /home/ec2-user/anaconda3/bin/activate python3
-nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=python --execute&
+nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --execute&
 
 chown -R ec2-user:ec2-user $FOLDER
