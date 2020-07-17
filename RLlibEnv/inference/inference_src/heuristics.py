@@ -112,7 +112,11 @@ class Heuristics:
         map_size = env.map_size
         json = self._convert_state_into_json(map_size, state, snake_list, snake_id, 
                                        turn_count, health)
+                
         masks = np.array([1, 1, 1, 1])
+        if not env.snakes.get_snakes()[snake_id].is_alive():
+            return masks
+        
         for func in functions:
             masks *= np.array(func(state, snake_id, turn_count, health, json))
         return masks

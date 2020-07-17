@@ -12,16 +12,9 @@ from cnn_tf import VisionNetwork
 from ma_battlesnake import MultiAgentBattlesnake
 
 from sagemaker_rl.ray_launcher import SageMakerRayLauncher
-
-'''
-def create_environment(env_config):
-    # This import must happen inside the method so that worker processes import this code
-    import ma_battlesnake
-    return MultiAgentBattlesnake(num_agents=5, map_height=11)
-'''
+from battlesnake_gym.rewards import SimpleRewards
 
 class MyLauncher(SageMakerRayLauncher):
-    
     def __init__(self):
         super().__init__()
         self.hparams = json.loads(os.environ.get("SM_HPS", "{}"))
@@ -31,7 +24,6 @@ class MyLauncher(SageMakerRayLauncher):
         self.map_height = self.hparams['map_size']
         self.algorithm = self.hparams['algorithm']
         self.additional_configs = self.hparams["additional_configs"]
-        self.use_heuristics_action_masks = self.hparams["use_heuristics_action_masks"]
         self.converter = {"Snake hit wall": "Snake_hit_wall",
                           "Snake was eaten - same tile": "Snake_was_eaten",
                           "Snake was eaten - adjacent tile": "Snake_was_eaten",
@@ -44,12 +36,20 @@ class MyLauncher(SageMakerRayLauncher):
                           "Starved": "Starved",
                           "Forbidden move": "Forbidden_move"
         }
-  
+        self.rewards = SimpleRewards()
+        if "rewards" in self.hparams:
+            self.rewards.reward_dict = self.hparams["rewards"]
+            
+        self.heuristics = []
+        if "heuristics" in self.hparams:
+            self.heuristics = self.hparams["heuristics"]
+          
     def register_env_creator(self):
-        register_env("MultiAgentBattlesnake-v1", lambda _: MultiAgentBattlesnake(num_agents=self.num_agents, 
-                                                                                map_height=self.map_height,
-                                                                                use_heuristics=self.use_heuristics_action_masks))
-    
+        register_env("MultiAgentBattlesnake-v1", lambda _: MultiAgentBattlesnake(
+            num_agents=self.num_agents, 
+            map_height=self.map_height,
+            heuristics=self.heuristics, 
+            rewards=self.rewards))
 
     def on_episode_start(self, info):
         for outcome in ["Snake_hit_wall", "Snake_was_eaten", "Snake_hit_body", "Killed_another_snake",
@@ -101,18 +101,17 @@ class MyLauncher(SageMakerRayLauncher):
                 eff_map_size = 11
             else:
                 eff_map_size = 19
+            info['result']['sm__effective_map_size'] = eff_map_size
+
+            trainer = info["trainer"]
+            trainer.workers.foreach_worker(
+                    lambda ev: ev.foreach_env(
+                        lambda env: env.set_effective_map_size(eff_map_size)))
         else:
             eff_map_size = self.map_height
 
-        info['result']['sm__effective_map_size'] = eff_map_size
-
-        trainer = info["trainer"]
-        trainer.workers.foreach_worker(
-                lambda ev: ev.foreach_env(
-                    lambda env: env.set_effective_map_size(eff_map_size)))
-
     def get_experiment_config(self):        
-        tmp_env = MultiAgentBattlesnake(num_agents=self.num_agents, map_height=self.map_height, use_heuristics=self.use_heuristics_action_masks)
+        tmp_env = MultiAgentBattlesnake(num_agents=self.num_agents, map_height=self.map_height, heuristics=self.heuristics)
         policies = {'policy_{}'.format(i): (None, tmp_env.observation_space, tmp_env.action_space, {}) for i in range(self.num_agents)}
         policy_ids = list(policies.keys())
         
@@ -155,7 +154,7 @@ class MyLauncher(SageMakerRayLauncher):
             "stop": {
               "training_iteration": self.num_iters,
             },
-            "checkpoint_freq": 50,
+            "checkpoint_freq": 500,
             'config': {**configs, **self.additional_configs}
           }
         }

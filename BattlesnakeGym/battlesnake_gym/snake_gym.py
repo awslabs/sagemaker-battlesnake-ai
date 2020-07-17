@@ -93,7 +93,7 @@ class BattlesnakeGym(gym.Env):
         self.state = None
         self.verbose = verbose
         self.rewards = rewards
-        
+
     def get_observation_space(self):
         '''
         Helper function to define the observation space given self.map_size, self.number_of_snakes

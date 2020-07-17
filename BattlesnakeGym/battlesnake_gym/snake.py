@@ -113,7 +113,7 @@ class Snake:
         if self.facing_direction == None:
             self.facing_direction == direction
 
-        if self.is_facing_opposite_of_direction(direction):
+        if self.is_facing_opposite_of_direction(direction) and len(self.locations) > 0:
             direction = self.facing_direction
             is_forbidden = True
 

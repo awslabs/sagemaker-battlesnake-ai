@@ -16,6 +16,7 @@ from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
 from ray.rllib.models import ModelCatalog
 
 from battlesnake_gym.snake_gym import BattlesnakeGym
+from battlesnake_gym.rewards import SimpleRewards
 
 try:
     from utils import sort_states_for_snake_id
@@ -26,17 +27,19 @@ try:
     from battlesnake_heuristics import MyBattlesnakeHeuristics
 except ModuleNotFoundError:
     from inference.inference_src.battlesnake_heuristics import MyBattlesnakeHeuristics
-
+    
 ## MultiAgentEnv wrapper for battlesnake_gym
 class MultiAgentBattlesnake(MultiAgentEnv):
 
     MAX_MAP_HEIGHT = 21
-    def __init__(self, num_agents, map_height, use_heuristics):
+        
+    def __init__(self, num_agents, map_height, heuristics, rewards=SimpleRewards()):
         observation_type = "max-bordered-51s"
+         
         self.env = BattlesnakeGym(
             observation_type=observation_type,
             number_of_snakes=num_agents, 
-            map_size=(map_height, map_height))
+            map_size=(map_height, map_height), rewards=rewards)
         
         self.observation_height = self.MAX_MAP_HEIGHT
         self.action_space = self.env.action_space[0]
@@ -52,15 +55,23 @@ class MultiAgentBattlesnake(MultiAgentEnv):
         self.num_agents = num_agents
         self.observation_type = observation_type
         self.old_obs1 = {}
-        self.use_heuristics = use_heuristics
-        if self.use_heuristics:
+        self.heuristics = heuristics
+        if len(self.heuristics) > 0:
             self.battlesnake_heuristics = MyBattlesnakeHeuristics()
-
+            self.heuristics_list = []
+            for heuristic_name in self.heuristics:
+                if heuristic_name == "banned_forbidden_moves":
+                    self.heuristics_list.append(self.battlesnake_heuristics.banned_forbidden_moves)
+                elif heuristic_name == "banned_wall_hits":
+                    self.heuristics_list.append(self.battlesnake_heuristics.banned_wall_hits)
+        self.rewards = rewards
+        
     def set_effective_map_size(self, eff_map_size):
-        self.__init__(self.num_agents, eff_map_size, self.use_heuristics)
+        self.__init__(self.num_agents, eff_map_size, self.heuristics, self.rewards)
         self.reset()
 
     def reset(self):
+        self.mask = {}
         new_obs, _, _, info = self.env.reset()
 
         obs = {}
@@ -77,18 +88,18 @@ class MultiAgentBattlesnake(MultiAgentEnv):
             
             merged_map = np.concatenate((empty_map, obs_i), axis=-1)
 
-            if self.use_heuristics:
+            if len(self.heuristics) > 0:
                 health = {k: 100 for k in range(self.num_agents)}
                 mask = self.battlesnake_heuristics.get_action_masks_from_functions(
-                    obs_i, 0, 0, health, self.env, 
-                    functions=[self.battlesnake_heuristics.banned_wall_hits,
-                               self.battlesnake_heuristics.banned_forbidden_moves])
+                    obs_i, i, 0, health, self.env, 
+                    functions=self.heuristics_list)
             else:
                 mask = np.array([1, 1, 1, 1])
             obs[agent_id] = {"state": merged_map, "action_mask": mask}
-                
+            
+            self.mask[agent_id] = obs[agent_id]["action_mask"]
             self.old_obs1[agent_id] = obs_i 
-
+            
         return obs
 
     def step(self, action_dict):
@@ -112,18 +123,21 @@ class MultiAgentBattlesnake(MultiAgentEnv):
             
             infos[key] = info
             rewards[key] = r[i]
-            if self.use_heuristics:
+            if len(self.heuristics) > 0 and self.env.snakes.get_snakes()[i].is_alive():
                 turn_count = info["current_turn"]+1
                 health = info["snake_health"]
+
                 mask = self.battlesnake_heuristics.get_action_masks_from_functions(
-                    obs_i, 0, turn_count, health, self.env, 
-                    functions=[self.battlesnake_heuristics.banned_wall_hits,
-                               self.battlesnake_heuristics.banned_forbidden_moves])
+                        obs_i, i, turn_count, health, self.env, 
+                        functions=self.heuristics_list)
+                                
             else:
                 mask = np.array([1, 1, 1, 1])
 
             obs[key] = {"state": merged_map, "action_mask": mask}
             self.old_obs1[key] = np.array(obs_i, dtype=np.float32)
+            
+            self.mask[key] = obs[key]["action_mask"]
 
         dead_count = 0
         for x in range(self.num_agents):
