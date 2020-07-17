@@ -31,3 +31,9 @@ nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --Exe
 #source /home/ec2-user/anaconda3/bin/deactivate
 
 chown -R ec2-user:ec2-user $FOLDER
+
+source activate tensorflow_p36
+python -m ipykernel install --user --name conda_tensorflow_p36
+
+source activate mxnet_p36
+python -m ipykernel install --user --name conda_mxnet_p36
