@@ -23,12 +23,9 @@ set -e
 RL_METHOD=$1
 FOLDER=$RL_METHOD"Env"
 NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/$FOLDER/deployEndpoint.ipynb
-ENVIRONMENT=python3
 
 # Create the SagMaker endpoint
-#source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
-source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
-nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=tensorflow_p36 --execute&
-conda deactivate
+source /home/ec2-user/anaconda3/bin/activate python3
+nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=python --execute&
 
 chown -R ec2-user:ec2-user $FOLDER
