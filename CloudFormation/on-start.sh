@@ -20,19 +20,20 @@ set -e
 
 # PARAMETERS
 
-ENVIRONMENT=python3
 RL_METHOD=$1
 FOLDER=$RL_METHOD"Env"
 NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/$FOLDER/deployEndpoint.ipynb
 
-# Create the endpoint instance
+if RL_METHOD=="MXNet"
+then
+  ENVIRONMENT="mxnet_p36"
+else
+  ENVIRONMENT="tensorflow_p36"
+fi
 
-#source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
-#nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=python --execute&
-#source /home/ec2-user/anaconda3/bin/deactivate
+# Create the SagMaker endpoint
+source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
+nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=python --execute&
+conda deactivate
 
 chown -R ec2-user:ec2-user $FOLDER
-
-#source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
-#python -m ipykernel install --user --name conda_tensorflow_p36
-#source /home/ec2-user/anaconda3/bin/deactivate
