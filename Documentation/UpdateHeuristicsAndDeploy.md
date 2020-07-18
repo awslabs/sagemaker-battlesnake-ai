@@ -37,7 +37,7 @@ Now that you have the notebook `HeuristicDeveloper.ipynb` open, ensure that you 
 
 From the Cloudformation stack created during [Step 1](DeployTheAIEndpoint.md), go to the 'Outputs' tab and click on the link next to _SourceEditionInNotebook_:
 
-Then navigate to `battlesnake/LocalEnv/battlesnake_inference/battlesnake_heuristics.py`
+Then navigate to `battlesnake/RLlibEnv/inference/inference_src/battlesnake_heuristics.py`
 
 You can customize the `run()` method in the class `MyBattlesnakeHeuristics` with your own rules (see `go_to_food_if_close` for an example). 
 
