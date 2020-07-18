@@ -229,11 +229,11 @@ Resources:
                     - !Join
                       - ";"
                       - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/deployEndpoint.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/deployEndpoint.py"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/HILL-training.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/deployEndpoint.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/deployEndpoint.py"
                         - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HILL-training.ipynb"
                     - ls

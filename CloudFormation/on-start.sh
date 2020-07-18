@@ -22,10 +22,16 @@ set -e
 
 RL_METHOD=$1
 FOLDER=$RL_METHOD"Env"
-NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/$FOLDER/deployEndpoint.ipynb
 
 # Create the SagMaker endpoint
-source /home/ec2-user/anaconda3/bin/activate python3
-nohup jupyter nbconvert --ExecutePreprocessor.timeout=600 --execute "$NOTEBOOK_FILE"&
+if [ "$RL_METHOD" == "RLlib" ]; then
+    ENDPOINT_SCRIPT=/home/ec2-user/SageMaker/tmp-battlesnake/$FOLDER/deployEndpoint.py
+    source /home/ec2-user/anaconda3/bin/activate python3
+    nohup python $ENDPOINT_SCRIPT &
+else
+    NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/$FOLDER/deployEndpoint.ipynb
+    source /home/ec2-user/anaconda3/bin/activate python3
+    nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=python3 --execute &
+fi
 
 chown -R ec2-user:ec2-user $FOLDER
