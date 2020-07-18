@@ -20,16 +20,18 @@ set -e
 
 # PARAMETERS
 
-ENVIRONMENT=python3
-NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/LocalEnv/deployEndpoint.ipynb
 RL_METHOD=$1
+FOLDER=$RL_METHOD"Env"
 
-# Generate the local environment for training & heuristics dev
-./buildTrainingEnvironment.sh LocalEnv $RL_METHOD
+# Create the SagMaker endpoint
+if [ "$RL_METHOD" == "RLlib" ]; then
+    ENDPOINT_SCRIPT=/home/ec2-user/SageMaker/battlesnake/$FOLDER/deployEndpoint.py
+    source /home/ec2-user/anaconda3/bin/activate python3
+    nohup python $ENDPOINT_SCRIPT &
+else
+    NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/$FOLDER/deployEndpoint.ipynb
+    source /home/ec2-user/anaconda3/bin/activate python3
+    nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=python3 --execute &
+fi
 
-# Create the endpoint instance
-source /home/ec2-user/anaconda3/bin/activate "$ENVIRONMENT"
-nohup jupyter nbconvert "$NOTEBOOK_FILE" --ExecutePreprocessor.timeout=600 --ExecutePreprocessor.kernel_name=python --execute&
-source /home/ec2-user/anaconda3/bin/deactivate
-
-chown -R ec2-user:ec2-user LocalEnv
+chown -R ec2-user:ec2-user $FOLDER

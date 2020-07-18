@@ -29,7 +29,7 @@ Mappings:
       "SciPyLayerArn": "arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python37-SciPy1x:2"
 Parameters:
   SnakeColor:
-    Description: "Hexa RVB color of the snake"
+    Description: "Hexa RGB color of the snake"
     Default: "#128a7a"
     Type: String
   SnakeHead:
@@ -41,7 +41,7 @@ Parameters:
     Default: freckled
     Type: String
   RLMethod:
-    Description: "Select the Reinforcement method you want to use"
+    Description: "Select the Reinforcement learning method you want to use"
     Default: RLlib
     Type: String
     AllowedValues:
@@ -228,23 +228,25 @@ Resources:
                     - isRLlib
                     - !Join
                       - ";"
-                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/TrainingEnvironment/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/InferenceEndpoint/deployEndpoint.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/TrainingEnvironment/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/InferenceEndpoint/deployEndpoint.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlib/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
+                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/PolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/deployEndpoint.py"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/HILL-training.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/PolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/deployEndpoint.py"
+                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HILL-training.ipynb"
                     - ls
                 - Fn::If:
                     - isMXNet
                     - !Join
                       - ";"
-                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/TrainingEnvironment/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/InferenceEndpoint/deployEndpoint.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/TrainingEnvironment/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/InferenceEndpoint/deployEndpoint.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNet/HeuristicsDevelopment/HeuristicsDeveloper.ipynb"
+                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNetEnv/PolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNetEnv/deployEndpoint.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNetEnv/HeuristicsDeveloper.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNetEnv/PolicyTraining.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNetEnv/deployEndpoint.ipynb"
+                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNetEnv/HeuristicsDeveloper.ipynb"
                     - ls
                 - !Sub "/bin/bash CloudFormation/on-start.sh ${RLMethod}"
   LambdaDeploymentRole:
@@ -358,10 +360,10 @@ Outputs:
     Value: !Sub "https://console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/BattlesnakeNotebook?view=classic"
   HeuristicsDevEnvironment:
     Description: "Modify, visualize and re-deploy heuristics. You need to click first on 'SourceEditionInNotebook' to be authenticated."
-    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/LocalEnv/HeuristicsDeveloper.ipynb"
+    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/${RLMethod}Env/HeuristicsDeveloper.ipynb"
   ModelTrainingEnvironment:
     Description: "Modify, train, visualize and re-deploy model.  You need to click first on 'SourceEditionInNotebook' to be authenticated."
-    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/LocalEnv/PolicyTraining.ipynb"
+    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/${RLMethod}Env/PolicyTraining.ipynb"
   SnakeAPI:
     Description: "Use this URL on the Battlesnake platform"
     Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/snake/"
