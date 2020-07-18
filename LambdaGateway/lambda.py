@@ -181,6 +181,7 @@ def remoteInferenceRLib(previous_state, current_state, data):
 
     data = {"state": state.tolist(), "prev_action": -1, 
             "prev_reward": -1, "seq_lens": -1,  
+            "action_mask": [1, 1, 1, 1],
             "all_health": health_dict, "json": data}
 
     payload = json.dumps(data)
