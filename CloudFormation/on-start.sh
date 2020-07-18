@@ -27,7 +27,8 @@ FOLDER=$RL_METHOD"Env"
 if [ "$RL_METHOD" == "RLlib" ]; then
     ENDPOINT_SCRIPT=/home/ec2-user/SageMaker/tmp-battlesnake/$FOLDER/deployEndpoint.py
     source /home/ec2-user/anaconda3/bin/activate python3
-    nohup python $ENDPOINT_SCRIPT &
+    #nohup python $ENDPOINT_SCRIPT &
+    python $ENDPOINT_SCRIPT
 else
     NOTEBOOK_FILE=/home/ec2-user/SageMaker/battlesnake/$FOLDER/deployEndpoint.ipynb
     source /home/ec2-user/anaconda3/bin/activate python3
