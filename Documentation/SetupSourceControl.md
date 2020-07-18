@@ -24,7 +24,7 @@ This should open an terminal like this:
 Once open type the following commands:
 
 ```
-cd SageMaker/battlesnake/LocalEnv/
+cd SageMaker/battlesnake/RLlibEnv
 git init
 git remote add origin <YOUR-GIT-URL>
 
