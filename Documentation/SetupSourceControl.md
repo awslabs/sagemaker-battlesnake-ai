@@ -58,7 +58,6 @@ Once open type the following commands:
 
 ```
 cd SageMaker/battlesnake/
-rm -rf LocalEnv
 git clone <YOUR-GIT-URL>
 
 # You should set your git author identity
