@@ -62,7 +62,7 @@ After about 10 minutes you should see something like this:
 
 > If the error is _The account-level service limit 'ml.m5.xlarge for endpoint usage' is 0 Instances_ then delete the stack, and recreate it selecting a different instance type on the AWS CloudFormation stack parameter page.
 
-Again on Outputs tab, the value "Snake URL" is your Snake URL. This is the URL that you can use to specify your snake on [Battlesnake](https://play.battlesnake.com/) !
+Again on Outputs tab, the value "SnakeAPI" is your Snake URL. This is the URL that you can use to specify your snake on [Battlesnake](https://play.battlesnake.com/) !
 
 Add your snake on the [Battlesnake platform](https://play.battlesnake.com/) and copy your URL:
 

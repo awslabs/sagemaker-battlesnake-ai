@@ -49,10 +49,10 @@ Parameters:
       - MXNet
   SagemakerTrainingInstanceType:
     Description: "Instance type used for the training. t2 is default because this is the only instance that can be launch in a new AWS account just after creation. m5 or m4 are in the free tiers, choose them if your account exist for some time already"
-    Default: ml.t2.medium
+    Default: ml.m5.large
     Type: String
     AllowedValues:
-      - ml.t2.medium
+      - ml.m5.large
       - ml.m5.xlarge
       - ml.m4.xlarge
   SagemakerInferenceInstanceType:
@@ -220,7 +220,7 @@ Resources:
             Fn::Base64: !Join
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - git clone --depth=1 https://github.com/jonomon/tmp-battlesnake.git battlesnake
+                - git clone --depth=1 https://github.com/awslabs/sagemaker-battlesnake-ai battlesnake
                 - chown -R ec2-user:ec2-user battlesnake
                 - cd battlesnake
                 - rm -rf .git
@@ -249,6 +249,11 @@ Resources:
                         - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNetEnv/HeuristicsDeveloper.ipynb"
                     - ls
                 - !Sub "/bin/bash CloudFormation/on-start.sh ${RLMethod}"
+                - source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
+                - pip install --upgrade pip==20.1.1
+                - pip install -r ${RLMethod}Env/requirements.txt
+                - rm -rf ${RLMethod}Env/src/package.egg-info
+                
   LambdaDeploymentRole:
     Type: AWS::IAM::Role
     Properties:

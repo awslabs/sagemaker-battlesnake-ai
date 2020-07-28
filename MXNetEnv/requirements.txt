@@ -1,0 +1,2 @@
+gym
+-e git+https://github.com/awslabs/sagemaker-battlesnake-ai.git#egg=one\&subdirectory=BattlesnakeGym
