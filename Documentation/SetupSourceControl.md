@@ -24,7 +24,7 @@ This should open an terminal like this:
 Once open type the following commands:
 
 ```
-cd SageMaker/battlesnake/LocalEnv/
+cd SageMaker/battlesnake/RLlibEnv
 git init
 git remote add origin <YOUR-GIT-URL>
 
@@ -58,7 +58,6 @@ Once open type the following commands:
 
 ```
 cd SageMaker/battlesnake/
-rm -rf LocalEnv
 git clone <YOUR-GIT-URL>
 
 # You should set your git author identity
