@@ -248,11 +248,11 @@ Resources:
                         - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNetEnv/deployEndpoint.ipynb"
                         - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNetEnv/HeuristicsDeveloper.ipynb"
                     - ls
-                - !Sub "/bin/bash CloudFormation/on-start.sh ${RLMethod}"
                 - source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
                 - pip install --upgrade pip==20.1.1
                 - pip install -r ${RLMethod}Env/requirements.txt
                 - rm -rf ${RLMethod}Env/src/package.egg-info
+                - !Sub "/bin/bash CloudFormation/on-start.sh ${RLMethod}"
                 
   LambdaDeploymentRole:
     Type: AWS::IAM::Role
