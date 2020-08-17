@@ -10,7 +10,7 @@ from sagemaker.tensorflow.serving import Model
 if __name__ == "__main__":
     endpoint_instance_type = "SAGEMAKER_INFERENCE_INSTANCE_TYPE"
     sage_session = sagemaker.session.Session()
-    s3_bucket = sage_session.default_bucket()
+    s3_bucket = "SAGEMAKER_S3_BUCKET"
     role = sagemaker.get_execution_role()
 
     s3_client = boto3.client('s3')

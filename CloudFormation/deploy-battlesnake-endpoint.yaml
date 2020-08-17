@@ -28,6 +28,9 @@ Mappings:
       "MxnetLayerArn": "arn:aws:lambda:ca-central-1:752200179490:layer:AWSLambda-Python37-MXNet:1"
       "SciPyLayerArn": "arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python37-SciPy1x:2"
 Parameters:
+  SolutionS3BucketName:
+    Description: Enter the name of the S3 bucket for the solution
+    Type: String
   SnakeColor:
     Description: "Hexa RGB color of the snake"
     Default: "#128a7a"
@@ -40,13 +43,6 @@ Parameters:
     Description: "Snake tail : sharp, pixel, bolt, curled, ... (see: https://docs.battlesnake.com/snake-customization)"
     Default: freckled
     Type: String
-  RLMethod:
-    Description: "Select the Reinforcement learning method you want to use"
-    Default: RLlib
-    Type: String
-    AllowedValues:
-      - RLlib
-      - MXNet
   SagemakerTrainingInstanceType:
     Description: "Instance type used for the training. t2 is default because this is the only instance that can be launch in a new AWS account just after creation. m5 or m4 are in the free tiers, choose them if your account exist for some time already"
     Default: ml.m5.large
@@ -63,9 +59,6 @@ Parameters:
       - ml.t2.medium
       - ml.m5.xlarge
       - ml.m4.xlarge
-Conditions:
-  isRLlib: !Equals [RLlib, !Ref RLMethod]
-  isMXNet: !Equals [MXNet, !Ref RLMethod]
 Resources:
   BattlesnakeDeployFunction:
     Type: AWS::Serverless::Function
@@ -224,30 +217,20 @@ Resources:
                 - chown -R ec2-user:ec2-user battlesnake
                 - cd battlesnake
                 - rm -rf .git
-                - Fn::If:
-                    - isRLlib
-                    - !Join
-                      - ";"
-                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/deployEndpoint.py"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/HILL-training.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/deployEndpoint.py"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HILL-training.ipynb"
-                    - ls
-                - Fn::If:
-                    - isMXNet
-                    - !Join
-                      - ";"
-                      - - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNetEnv/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNetEnv/deployEndpoint.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' MXNetEnv/HeuristicsDeveloper.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNetEnv/PolicyTraining.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNetEnv/deployEndpoint.ipynb"
-                        - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' MXNetEnv/HeuristicsDeveloper.ipynb"
-                    - ls
+		
+                - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/PolicyTraining.ipynb"
+                - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/deployEndpoint.py"
+                - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
+                - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/HILL-training.ipynb"
+                - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/PolicyTraining.ipynb"
+                - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/deployEndpoint.py"
+                - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
+                - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HILL-training.ipynb"
+
+		- !Sub "sed -i 's/SAGEMAKER_S3_BUCKET/${SolutionS3BucketName}/g' RLlibEnv/PolicyTraining.ipynb"
+		- !Sub "sed -i 's/SAGEMAKER_S3_BUCKET/${SolutionS3BucketName}/g' RLlibEnv/deployEndpoint.py"
+		- !Sub "sed -i 's/SAGEMAKER_S3_BUCKET/${SolutionS3BucketName}/g' RLlibEnv/HILL-training.ipynb"
+                
                 - source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
                 - pip install --upgrade pip==20.1.1
                 - pip install -r RLlibEnv/requirements.txt

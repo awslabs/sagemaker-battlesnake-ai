@@ -1,0 +1,145 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:CreateStack"
+            ],
+            "Resource": "arn:aws:cloudformation:*:*:stack/sagemaker-solutions-*",
+            "Condition" : {
+                "ForAllValues:StringLike" : {
+                    "cloudformation:TemplateUrl" : [ "https://battlesnake-aws-*.s3.us-west-2.amazonaws.com/*" ]
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:DeleteStack"
+            ],
+            "Resource": "arn:aws:cloudformation:*:*:stack/sagemaker-solutions-*"
+        },
+	{
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:CreateChangeSet"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+		"iam:GetRole",
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:PutRolePolicy",
+                "iam:DetachRolePolicy",
+		"iam:DeleteRolePolicy",
+                "iam:AttachRolePolicy",
+		"iam:PassRole"
+            ],
+            "Resource": "arn:aws:iam::*:role/sagemaker-solutions-*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreatePolicy",
+                "iam:DeletePolicy"
+            ],
+            "Resource": "arn:aws:iam::*:policy/sagemaker-solutions-*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:DeleteFunction",
+                "lambda:CreateFunction",
+		"lambda:InvokeFunction",
+		"lambda:AddPermission",
+		"lambda:RemovePermission"
+            ],
+            "Resource": "arn:aws:lambda:*:*:function:sagemaker-solutions-*"
+        },
+	{
+            "Effect": "Allow",
+            "Action": [
+		"lambda:GetLayerVersion"
+            ],
+            "Resource": "arn:aws:lambda:*:*:layer:*"
+        },
+	{
+            "Effect": "Allow",
+            "Action": [
+		"lambda:GetFunctionConfiguration"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:CreateBucket",
+                "s3:DeleteBucket",
+                "s3:PutBucketPublicAccessBlock",
+                "s3:PutEncryptionConfiguration"
+            ],
+            "Resource": "arn:aws:s3:::sagemaker-solutions-*"
+        },
+	{
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": "arn:aws:s3:::battlesnake-aws-*"
+        },
+	{
+            "Effect": "Allow",
+            "Action": [
+                "apigateway:POST",
+		"apigateway:DELETE",
+		"apigateway:PATCH",
+		"apigateway:GET"
+            ],
+            "Resource": "arn:aws:apigateway:*::/restapis*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sagemaker:CreateNotebookInstance",
+                "sagemaker:StopNotebookInstance",
+                "sagemaker:DeleteNotebookInstance",
+		"sagemaker:DescribeNotebookInstance"
+            ],
+            "Resource": "arn:aws:sagemaker:*:*:notebook-instance/sagemaker-solutions-*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sagemaker:CreateNotebookInstanceLifecycleConfig",
+		"sagemaker:DescribeNotebookInstanceLifecycleConfig",
+                "sagemaker:DeleteNotebookInstanceLifecycleConfig"
+            ],
+            "Resource": "arn:aws:sagemaker:*:*:notebook-instance-lifecycle-config/lifecycleconfig-*"
+        },
+	{
+            "Effect": "Allow",
+            "Action": [
+		"sagemaker:DescribeNotebookInstanceLifecycleConfig"
+            ],
+            "Resource": "arn:aws:sagemaker:*:*:notebook-instance/sagemaker-solutions-*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+	        "cloudformation:ListStacks"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+	        "cloudformation:GetTemplateSummary"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
