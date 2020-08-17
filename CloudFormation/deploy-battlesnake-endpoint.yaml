@@ -213,11 +213,10 @@ Resources:
             Fn::Base64: !Join
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - git clone --depth=1 https://github.com/awslabs/sagemaker-battlesnake-ai battlesnake
+                - git clone --depth=1 https://github.com/jonomon/tmp-battlesnake battlesnake
                 - chown -R ec2-user:ec2-user battlesnake
                 - cd battlesnake
                 - rm -rf .git
-		
                 - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/PolicyTraining.ipynb"
                 - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/deployEndpoint.py"
                 - !Sub "sed -i 's/SAGEMAKER_TRAINING_INSTANCE_TYPE/${SagemakerTrainingInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
@@ -226,16 +225,14 @@ Resources:
                 - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/deployEndpoint.py"
                 - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HeuristicsDeveloper.ipynb"
                 - !Sub "sed -i 's/SAGEMAKER_INFERENCE_INSTANCE_TYPE/${SagemakerInferenceInstanceType}/g' RLlibEnv/HILL-training.ipynb"
-
-		- !Sub "sed -i 's/SAGEMAKER_S3_BUCKET/${SolutionS3BucketName}/g' RLlibEnv/PolicyTraining.ipynb"
-		- !Sub "sed -i 's/SAGEMAKER_S3_BUCKET/${SolutionS3BucketName}/g' RLlibEnv/deployEndpoint.py"
-		- !Sub "sed -i 's/SAGEMAKER_S3_BUCKET/${SolutionS3BucketName}/g' RLlibEnv/HILL-training.ipynb"
-                
+                - !Sub "sed -i 's/SAGEMAKER_S3_BUCKET/${SolutionS3BucketName}/g' RLlibEnv/PolicyTraining.ipynb"
+                - !Sub "sed -i 's/SAGEMAKER_S3_BUCKET/${SolutionS3BucketName}/g' RLlibEnv/deployEndpoint.py"
+                - !Sub "sed -i 's/SAGEMAKER_S3_BUCKET/${SolutionS3BucketName}/g' RLlibEnv/HILL-training.ipynb"
                 - source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
                 - pip install --upgrade pip==20.1.1
                 - pip install -r RLlibEnv/requirements.txt
                 - rm -rf src/package.egg-info
-                - !Sub "/bin/bash CloudFormation/on-start.sh ${RLMethod}"
+                - !Sub "/bin/bash CloudFormation/on-start.sh RLlib"
                 
   LambdaDeploymentRole:
     Type: AWS::IAM::Role
@@ -325,7 +322,6 @@ Resources:
           SNAKE_COLOR: !Ref SnakeColor
           SNAKE_HEAD: !Ref SnakeHead
           SNAKE_TAIL: !Ref SnakeTail
-          SELECTED_RL_METHOD: !Ref RLMethod
       Runtime: python3.7
       MemorySize: 1024
       Layers:
@@ -348,10 +344,10 @@ Outputs:
     Value: !Sub "https://console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/BattlesnakeNotebook?view=classic"
   HeuristicsDevEnvironment:
     Description: "Modify, visualize and re-deploy heuristics. You need to click first on 'SourceEditionInNotebook' to be authenticated."
-    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/${RLMethod}Env/HeuristicsDeveloper.ipynb"
+    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/RLlibEnv/HeuristicsDeveloper.ipynb"
   ModelTrainingEnvironment:
     Description: "Modify, train, visualize and re-deploy model.  You need to click first on 'SourceEditionInNotebook' to be authenticated."
-    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/${RLMethod}Env/PolicyTraining.ipynb"
+    Value: !Sub "https://battlesnakenotebook.notebook.${AWS::Region}.sagemaker.aws/notebooks/battlesnake/RLlibEnv/PolicyTraining.ipynb"
   SnakeAPI:
     Description: "Use this URL on the Battlesnake platform"
     Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/snake/"
