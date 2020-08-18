@@ -60,6 +60,21 @@ Parameters:
       - ml.m5.xlarge
       - ml.m4.xlarge
 Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: "Retain"
+    Properties:
+      BucketName: !Sub "sagemaker-solutions-${SolutionS3BucketName}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
   BattlesnakeDeployFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -213,7 +228,7 @@ Resources:
             Fn::Base64: !Join
               - ";"
               - - cd /home/ec2-user/SageMaker
-                - git clone --depth=1 https://github.com/jonomon/tmp-battlesnake battlesnake
+                - git clone --depth=1 https://github.com/awslabs/sagemaker-battlesnake-ai battlesnake
                 - chown -R ec2-user:ec2-user battlesnake
                 - cd battlesnake
                 - rm -rf .git

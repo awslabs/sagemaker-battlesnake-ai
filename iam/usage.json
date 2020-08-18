@@ -153,10 +153,48 @@
                 "s3:GetObject",
                 "s3:PutObject",
                 "s3:DeleteObject",
-                "s3:AbortMultipartUpload"
+                "s3:AbortMultipartUpload",
+                "s3:CreateBucket"
             ],
             "Resource": [
                 "arn:aws:s3:::sagemaker-solutions-*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "ecr:GetAuthorizationToken"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "ecr:CompleteLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:InitiateLayerUpload",
+                "ecr:PutImage",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:DescribeImages",
+                "ecr:BatchDeleteImage"
+            ],
+            "Resource": [
+                "arn:aws:ecr:us-west-2:*:repository/sagemaker-solutions-*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:BatchGetImage",
+                "ecr:GetDownloadUrlForLayer"
+            ],
+            "Resource": [
+                "arn:aws:ecr:*:*:repository/*"
             ],
             "Effect": "Allow"
         }
