@@ -8,7 +8,7 @@ This project shows how to build and deploy an AI for the platform [Battlesnake](
 
 It is ready to deploy and contains learning materials for AI enthusiasts.
 
-__What is Battlesnake?__ (taken from [battlesnake.com](https://docs.battlesnake.com/rules)):
+__What is Battlesnake?__ (taken from [battlesnake.com](https://docs.battlesnake.com/references/rules)):
 
 > Battlesnake is an autonomous survival game where your snake competes with others to find and eat food without being eliminated. To accomplish this, you will have to teach your snake to navigate the serpentine paths created by walls, other snakes, and their own growing tail without running out of energy.
 
