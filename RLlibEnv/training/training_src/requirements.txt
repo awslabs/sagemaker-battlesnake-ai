@@ -70,7 +70,7 @@ soupsieve==2.0
 tabulate==0.8.6
 tensorboard==2.1.0
 tensorboardX==2.0
-tensorflow==2.1.0
+tensorflow==2.1.2
 tensorflow-estimator==2.1.0
 termcolor==1.1.0
 torch==1.4.0
