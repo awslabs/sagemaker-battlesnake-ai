@@ -37,14 +37,13 @@ class MyBattlesnakeHeuristics(Heuristics):
         if -1 in state:
             border_len = int((state.shape[0] - json["board"]["height"])/2)
             i, j = i + border_len, j + border_len
-        
-        up = state[i-1, j, 1] != -1
-        down = state[i+1, j, 1] != -1
+        up = state[i+1, j, 1] != -1
+        down = state[i-1, j, 1] != -1
         left = state[i, j-1, 1] != -1
         right = state[i, j+1, 1] != -1
         
-        action = [up, down, left, right]
-                
+        action = [down, up, left, right]
+
         return action
     
     @Heuristics.negative_heuristics
@@ -63,12 +62,12 @@ class MyBattlesnakeHeuristics(Heuristics):
             i, j = i + border_len, j + border_len
             next_i, next_j = next_i + border_len, next_j + border_len
 
-        up = not (i-1 == next_i and j == next_j)
-        down = not (i+1 == next_i and j == next_j)
+        up = not (i+1 == next_i and j == next_j)
+        down = not (i-1 == next_i and j == next_j)
         left = not (i == next_i and j-1 == next_j)
         right = not (i == next_i and j+1 == next_j)
       
-        return [up, down, left, right]
+        return [down, up, left, right]
     
     @Heuristics.positive_heuristics
     def go_to_food_if_close(self, state, snake_id, turn_count, health, json):
@@ -90,10 +89,10 @@ class MyBattlesnakeHeuristics(Heuristics):
             i, j = i+1, j+1
         
         food_direction = None
-        if food[i-1, j] == 1:
-            return [True, False, False, False]
         if food[i+1, j] == 1:
             return [False, True, False, False]
+        if food[i-1, j] == 1:
+            return [True, False, False, False]
         if food[i, j-1] == 1:
             return [False, False, True, False]
         if food[i, j+1] == 1:

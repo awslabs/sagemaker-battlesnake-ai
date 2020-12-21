@@ -44,15 +44,17 @@ class Heuristics:
         food: [{"x": int, "y": int}]
         '''
         food = []
+        y_size = in_array.shape[0]
         y, x = np.where(in_array==1)
         for x_, y_ in zip(x, y):
-            food.append({"x": x_, "y": y_})
+            food.append({"x": x_, "y": y_size - y_ - 1})
         return food
 
     def _convert_state_into_json(self, map_size, state, snake_list, snake_id, turn_count, health):
         '''
         Helper function to build a JSON from the battlesnake gym.
         The JSON mimics the battlesnake engine
+        Updated for APIv1.
         '''
         FOOD_INDEX = 0
 
@@ -86,6 +88,7 @@ class Heuristics:
     def _make_snake_lists(self, env):
         '''
         Helper function to create an ordered lists of snakes positions.
+        Updated for APIv1.
 
         Parameters:
         -----------
@@ -97,10 +100,11 @@ class Heuristics:
         This contains a list of the locations ([{"x": x, "y": y}]) for each snake. 
         '''
         snake_locations = []
+        y_size, _ = env.map_size
         for snakes in env.snakes.snakes:
             snake_location = []
             for coord in snakes.locations[::-1]:
-                snake_location.append({"x": coord[1], "y": coord[0]})
+                snake_location.append({"x": coord[1], "y": y_size - coord[0] - 1})
             snake_locations.append(snake_location)
         return snake_locations
     

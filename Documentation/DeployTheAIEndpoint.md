@@ -19,13 +19,13 @@ Use the links below to deploy the project into your preferred region\*:
 
 | Region        | deployment link |
 | ------------- | :-------------:|
-| __US West (Oregon) (us-west-2)__**      | [deploy](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?templateURL=https://battlesnake-aws-us-west-2.s3.us-west-2.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=sagemaker-solutions-battlesnake-environment) |
-| US East (N. Virginia) us-east-1     | [deploy](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?templateURL=https://battlesnake-aws-us-east-1.s3.us-east-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=sagemaker-solutions-battlesnake-environment) |
-| Canada (Central) ca-central-1     | [deploy](https://ca-central-1.console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/create/review?templateURL=https://battlesnake-aws-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=sagemaker-solutions-battlesnake-environment) |
-| South America (São Paulo) sa-east-1     | [deploy](https://sa-east-1.console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/create/review?templateURL=https://battlesnake-aws-sa-east-1.s3.sa-east-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=sagemaker-solutions-battlesnake-environment) |
-| Europe (Ireland) eu-west-1     | [deploy](https://eu-west-1.console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?templateURL=https://battlesnake-aws-eu-west-1.s3.eu-west-1.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=sagemaker-solutions-battlesnake-environment) |
-| Europe (Paris) eu-west-3     | [deploy](https://eu-west-3.console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/create/review?templateURL=https://battlesnake-aws-eu-west-3.s3.eu-west-3.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=sagemaker-solutions-battlesnake-environment) |
-| Asia Pacific (Sydney) ap-southeast-2    | [deploy](https://ap-southeast-2.console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?templateURL=https://battlesnake-aws-ap-southeast-2.s3.ap-southeast-2.amazonaws.com/cloudformation/deploy-battlesnake-endpoint.yaml&stackName=sagemaker-solutions-battlesnake-environment) |
+| __US West (Oregon) (us-west-2)__**      | [deploy](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?templateURL=https://sagemaker-solutions-prod-us-west-2.s3.us-west-2.amazonaws.com/sagemaker-battlesnake-ai/deployment/CloudFormation/sagemaker.yaml&stackName=sagemaker-soln-bs&param_CreateSageMakerNotebookInstance=true) |
+| US East (N. Virginia) us-east-1     | [deploy](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?templateURL=https://sagemaker-solutions-prod-us-east-1.s3.us-east-1.amazonaws.com/sagemaker-battlesnake-ai/deployment/CloudFormation/deploy-battlesnake-endpoint.yaml&stackName=sagemaker-soln-bse&param_CreateSageMakerNotebookInstance=true) |
+| Canada (Central) ca-central-1     | [deploy](https://ca-central-1.console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/create/review?templateURL=https://sagemaker-solutions-prod-ca-central-1.s3.ca-central-1.amazonaws.com/sagemaker-battlesnake-ai/deployment/CloudFormation/sagemaker.yaml&stackName=sagemaker-soln-bs&param_CreateSageMakerNotebookInstance=true) |
+| South America (São Paulo) sa-east-1     | [deploy](https://sa-east-1.console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/create/review?templateURL=https://sagemaker-solutions-prod-sa-east-1.s3.sa-east-1.amazonaws.com/sagemaker-battlesnake-ai/deployment/CloudFormation/sagemaker.yaml&stackName=sagemaker-soln-bs&param_CreateSageMakerNotebookInstance=true) |
+| Europe (Ireland) eu-west-1     | [deploy](https://eu-west-1.console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create/review?templateURL=https://sagemaker-solutions-prod-eu-west-1.s3.eu-west-1.amazonaws.com/sagemaker-battlesnake-ai/deployment/CloudFormation/sagemaker.yaml&stackName=sagemaker-soln-bs&param_CreateSageMakerNotebookInstance=true) |
+| Europe (Paris) eu-west-3     | [deploy](https://eu-west-3.console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/create/review?templateURL=https://sagemaker-solutions-prod-eu-west-3.s3.eu-west-3.amazonaws.com/sagemaker-battlesnake-ai/deployment/CloudFormation/sagemaker.yaml&stackName=sagemaker-soln-bs&param_CreateSageMakerNotebookInstance=true) |
+| Asia Pacific (Sydney) ap-southeast-2    | [deploy](https://ap-southeast-2.console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/create/review?templateURL=https://sagemaker-solutions-prod-ap-southeast-2.s3.ap-southeast-2.amazonaws.com/sagemaker-battlesnake-ai/deployment/CloudFormation/sagemaker.yaml&stackName=sagemaker-soln-bs&param_CreateSageMakerNotebookInstance=true) |
 
 _Note: Before deploying the environment, you need to be logged into the AWS account where you want to deploy the CloudFormation stack._
 
@@ -43,34 +43,13 @@ Then check all permissions:
 
 Click "Create Stack"
 
-After about 10 minutes, the stack status should be CREATE_COMPLETE:
+After about 15 minutes, the stack status should be CREATE_COMPLETE:
 
-![Creation complete](images/create-complete.png "Creation complete")
+## Next steps
 
-Open the outputs tab and click on the "CheckSnakeStatus" link to see if the Snake is ready.
-![Output tab](images/outputs.png "Output tab")
+Navigate to Amazon SageMaker and click the "[Open JupyterLab]" the Battlesnake notebook instance.
 
-Initially, you should see that the snake is being created:
-
-![Snake_not_ready tab](images/Snake_not_ready.png "Snake_not_ready tab")
-
-After about 10 minutes you should see something like this:
-
-![Successfull result](images/working.png "Result")
-
-> __Troubleshooting__ : If after 20 minutes the snake is not ready, you can choose 'Amazon Sagemaker' within the AWS console and look for 'Inference Endpoints'. If you don't see any inference endpoints, go to your SageMaker notebook instance, click on your instance, scroll down and click on 'View Logs'. Then click on BattlesnakeNotebook/LifecycleConfigOnStart and see if you find any error.
-
-> If the error is _The account-level service limit 'ml.m5.xlarge for endpoint usage' is 0 Instances_ then delete the stack, and recreate it selecting a different instance type on the AWS CloudFormation stack parameter page.
-
-Again on Outputs tab, the value "SnakeAPI" is your Snake URL. This is the URL that you can use to specify your snake on [Battlesnake](https://play.battlesnake.com/) !
-
-Add your snake on the [Battlesnake platform](https://play.battlesnake.com/) and copy your URL:
-
-![Add snake](images/addsnake.png "Add snake")
-
-Create a new game, select your snake by its name, add opponents, and then start the game:
-
-![Battlesnake Board](images/game.png "Battlesnake Board")
+Open the `1_Introduction.ipynb` notebook for next steps.
 
 ## Stop instances
 
@@ -85,6 +64,6 @@ Go to __[Step 2](UpdateHeuristicsAndDeploy.md)__ to start making changes to the 
 
 ## Clean up environment
 
-To clean up the environment, go to AWS CloudFormation within the AWS console, select your BattlesnakeEnvironment stack, and click 'delete'.
+To clean up the environment, go to AWS CloudFormation within the AWS console, select your sagemaker-soln-bs stack, and click 'delete'.
 
 __WARNING : Deleting your stack will erase the Battlesnake environment data, and any code changes.__ Make sure that you have saved your work before doing this! One way to do that is to [setup source control](SetupSourceControl.md)

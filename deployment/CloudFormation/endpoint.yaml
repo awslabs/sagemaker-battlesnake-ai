@@ -1,0 +1,278 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "sagemaker-battlesnake-ai: Solution for training and deploying a Battlesnake AI using Amazon SageMaker. Version 1"
+
+Mappings:
+  RegionMap:
+    ap-east-1:
+      "TensorflowInference": "871362719292.dkr.ecr.ap-east-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:ap-east-1:118857876118:layer:AWSLambda-Python37-SciPy1x:2"
+    ap-northeast-1:
+      "TensorflowInference": "763104351884.dkr.ecr.ap-northeast-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:ap-northeast-1:249908578461:layer:AWSLambda-Python37-SciPy1x:2"
+    ap-northeast-2:
+      "TensorflowInference": "763104351884.dkr.ecr.ap-northeast-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:ap-northeast-2:296580773974:layer:AWSLambda-Python37-SciPy1x:2"
+    ap-southeast-1:
+      "TensorflowInference": "763104351884.dkr.ecr.ap-southeast-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:ap-southeast-1:468957933125:layer:AWSLambda-Python37-SciPy1x:2"
+    ap-southeast-2:
+      "TensorflowInference": "763104351884.dkr.ecr.ap-southeast-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:ap-southeast-2:817496625479:layer:AWSLambda-Python37-SciPy1x:2"
+    ap-south-1:
+      "TensorflowInference": "763104351884.dkr.ecr.ap-south-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:ap-south-1:631267018583:layer:AWSLambda-Python37-SciPy1x:2"
+    sa-east-1:
+      "TensorflowInference": "763104351884.dkr.ecr.sa-east-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:sa-east-1:640010853179:layer:AWSLambda-Python37-SciPy1x:2"
+    eu-west-1:
+      "TensorflowInference": "763104351884.dkr.ecr.eu-west-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:eu-west-1:399891621064:layer:AWSLambda-Python37-SciPy1x:2"
+    eu-west-2:
+      "TensorflowInference": "763104351884.dkr.ecr.eu-west-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:eu-west-2:142628438157:layer:AWSLambda-Python37-SciPy1x:2"
+    eu-west-3:
+      "TensorflowInference": "763104351884.dkr.ecr.eu-west-3.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:eu-west-3:959311844005:layer:AWSLambda-Python37-SciPy1x:2"
+    eu-central-1:
+      "TensorflowInference": "763104351884.dkr.ecr.eu-central-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:eu-central-1:292169987271:layer:AWSLambda-Python37-SciPy1x:2"
+    eu-north-1:
+      "TensorflowInference": "763104351884.dkr.ecr.eu-north-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:eu-north-1:642425348156:layer:AWSLambda-Python37-SciPy1x:2"
+    eu-south-1:
+      "TensorflowInference": "048378556238.dkr.ecr.eu-north-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": ""
+    us-east-1:
+      "TensorflowInference": "763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python37-SciPy1x:2"
+    us-east-2:
+      "TensorflowInference": "763104351884.dkr.ecr.us-east-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:us-east-2:259788987135:layer:AWSLambda-Python-AWS-SDK:2"
+    us-west-1:
+      "TensorflowInference": "763104351884.dkr.ecr.us-west-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:us-west-1:325793726646:layer:AWSLambda-Python37-SciPy1x:2"
+    us-west-2:
+      "TensorflowInference": "763104351884.dkr.ecr.us-west-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python37-SciPy1x:2"
+    ca-central-1:
+      "TensorflowInference": "763104351884.dkr.ecr.ca-central-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": "arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python37-SciPy1x:2"
+    me-south-1:
+      "TensorflowInference": "217643126080.dkr.ecr.me-south-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
+      "SciPyLayerArn": ""
+
+Parameters:
+  SolutionPrefix:
+    Type: String
+  S3BucketName:
+    Type: String
+  SnakeColor:
+    Type: String
+  SnakeHead:
+    Type: String
+  SnakeTail:
+    Type: String
+  SageMakerIamRoleArn:
+    Type: String
+  SagemakerInferenceInstanceType:
+    Type: String
+  SolutionsS3BucketNamePrefix:
+    Type: String
+  SolutionName:
+    Type: String
+
+Resources:
+  Endpoint:
+    Type: "AWS::SageMaker::Endpoint"
+    Properties:
+      EndpointName: !Sub "${SolutionPrefix}-ep"
+      EndpointConfigName:
+        !GetAtt EndpointConfig.EndpointConfigName
+        
+  EndpointConfig:
+    Type: "AWS::SageMaker::EndpointConfig"
+    Properties:
+      EndpointConfigName: !Sub "${SolutionPrefix}-ep"
+      ProductionVariants:
+        - InitialInstanceCount: 1
+          InitialVariantWeight: 1.0
+          InstanceType: !Sub "${SagemakerInferenceInstanceType}"
+          ModelName: !GetAtt Model.ModelName
+          VariantName: !GetAtt Model.ModelName
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W1200
+            reason: Solution does not have KMS encryption enabled by default
+ 
+  Model:
+    Type: "AWS::SageMaker::Model"
+    Properties:
+      ModelName: !Sub "${SolutionPrefix}-ep"
+      PrimaryContainer:
+        ModelDataUrl: !Sub "s3://${SolutionsS3BucketNamePrefix}-${AWS::Region}/${SolutionName}/build/model-complete.tar.gz"
+        Image: !FindInMap [RegionMap, !Ref "AWS::Region", TensorflowInference]
+        Mode: "SingleModel"
+      ExecutionRoleArn: !Ref SageMakerIamRoleArn
+                    
+  RESTAPIGateway:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Description: >-
+        A REST API that can be used to invoke the Lambda function that triggers
+        predictions.
+      Name: bs-engine-endpoint
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      
+  APIGatewayCloudWatchLogGroup:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join
+        - /
+        - - /aws/apigateway/AccessLogs
+          - !Ref RESTAPIGateway
+          - snake
+      RetentionInDays: 365
+                
+  APIGatewayAccount:
+    Type: 'AWS::ApiGateway::Account'
+    Properties:
+      CloudWatchRoleArn: !Ref SageMakerIamRoleArn
+    DependsOn:
+      - RESTAPIGateway
+      
+  ProxyAPIResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref RESTAPIGateway
+      ParentId: !GetAtt RESTAPIGateway.RootResourceId
+      PathPart: '{proxy+}'
+
+  APIGatewayRootMethod:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: ANY
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        IntegrationResponses:
+          -
+            StatusCode: 200
+        Uri: !Sub
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "BattlesnakeAPIFunction.Arn"
+      ResourceId: !GetAtt RESTAPIGateway.RootResourceId
+      RestApiId: !Ref "RESTAPIGateway"
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W59
+            reason: The battlesnake engine does not require authorization
+
+  APIGatewayProxyMethod:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: ANY
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        IntegrationResponses:
+          -
+            StatusCode: 200
+        Uri: !Sub
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "BattlesnakeAPIFunction.Arn"
+      ResourceId: !Ref ProxyAPIResource
+      RestApiId: !Ref "RESTAPIGateway"
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W59
+            reason: The battlesnake engine does not require authorization
+
+  APIGatewayDeployment:
+    Type: "AWS::ApiGateway::Deployment"
+    DependsOn:
+      - "APIGatewayRootMethod"
+    Properties:
+      RestApiId: !Ref "RESTAPIGateway"
+      StageName: "snake"
+      StageDescription:
+        AccessLogSetting:
+          DestinationArn: !GetAtt
+            - APIGatewayCloudWatchLogGroup
+            - Arn
+          Format: !Join
+            - ','
+            - - '{"requestId":"$context.requestId"'
+              - '"ip": "$context.identity.sourceIp"'
+              - '"caller":"$context.identity.caller"'
+              - '"user":"$context.identity.user"'
+              - '"requestTime":"$context.requestTime"'
+              - '"httpMethod":"$context.httpMethod"'
+              - '"resourcePath":"$context.resourcePath"'
+              - '"status":"$context.status"'
+              - '"protocol":"$context.protocol"'
+              - '"responseLength":"$context.responseLength"}'
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W68
+            reason: Resource not associated with an AWS::ApiGateway::UsagePlan for now
+          - id: W64
+            reason: Resource not associated with an AWS::ApiGateway::UsagePlan for now
+
+  BattlesnakeAPIFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: lambda.proxyHandler
+      FunctionName: !Sub "${SolutionPrefix}-api-function"
+      Role: !Ref SageMakerIamRoleArn
+      Code:
+        S3Bucket: !Sub "${SolutionsS3BucketNamePrefix}-${AWS::Region}"
+        S3Key: !Sub "${SolutionName}/build/api.zip"
+      Runtime: python3.7
+      MemorySize: 1024
+      # Layers:
+      #   - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
+      Environment:
+        Variables:
+          SNAKE_COLOR: !Ref SnakeColor
+          SNAKE_HEAD: !Ref SnakeHead
+          SNAKE_TAIL: !Ref SnakeTail
+          BATTLESNAKE_ENPOINT: !Sub "${SolutionPrefix}-ep"
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W58
+            reason: Lambda functions have permission to write to logs
+
+  LambdaAPIPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt
+        - BattlesnakeAPIFunction
+        - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Join
+        - ''
+        - - 'arn:aws:execute-api:'
+          - !Ref 'AWS::Region'
+          - ':'
+          - !Ref 'AWS::AccountId'
+          - ':'
+          - !Ref RESTAPIGateway
+          - /*/*/*
+      
+Outputs:
+  SnakeAPI:
+    Description: "Use this URL on the Battlesnake platform"
+    Value: !Sub "https://${RESTAPIGateway}.execute-api.${AWS::Region}.amazonaws.com/snake/"
+  CheckSnakeStatus:
+    Description: "Check the snake status. If you see 'ready' you can use the snake"
+    Value: !Sub "https://${RESTAPIGateway}.execute-api.${AWS::Region}.amazonaws.com/snake/status"

@@ -1,0 +1,95 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "(SA0001) - sagemaker-battlesnake-ai: Solution for training and deploying a Battlesnake AI using Amazon SageMaker. Version 1"
+
+Parameters:
+  SolutionPrefix:
+    Type: String
+  SageMakerIamRoleArn:
+    Type: String
+  S3BucketName:
+    Type: String
+  SagemakerTrainingInstanceType:
+    Type: String
+  SagemakerInferenceInstanceType:
+    Type: String
+  SagemakerEndPointName:
+    Type: String
+  SolutionsS3BucketNamePrefix:
+    Type: String
+  SolutionName:
+    Type: String
+  SnakeAPI:
+    Type: String
+    
+Resources:
+  NotebookInstance:
+    Type: AWS::SageMaker::NotebookInstance
+    Properties:
+      DirectInternetAccess: Enabled
+      InstanceType: ml.t3.medium
+      LifecycleConfigName: !GetAtt LifeCycleConfig.NotebookInstanceLifecycleConfigName
+      NotebookInstanceName: !Sub "${SolutionPrefix}-battlesnake-nb"
+      RoleArn: !Sub "${SageMakerIamRoleArn}"
+      VolumeSizeInGB: 14
+      Tags:
+        - Key: app
+          Value: battlesnake
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W1201
+            reason: Solution does not have KMS encryption enabled by default
+
+  LifeCycleConfig:
+    Type: AWS::SageMaker::NotebookInstanceLifecycleConfig
+    Properties:
+      OnStart:
+        - Content:
+            Fn::Base64: !Sub |
+              cd /home/ec2-user/SageMaker
+              sudo -u ec2-user -i <<EOF
+              
+              source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
+               
+              pip install --upgrade pip==20.1.1
+              pip install -r /home/ec2-user/SageMaker/RLlibEnv/requirements.txt
+              rm -rf src/package.egg-info
+              EOF
+      OnCreate:
+        - Content:
+            Fn::Base64: !Sub |
+              set -e
+              sudo -u ec2-user -i <<EOF
+
+              cd /home/ec2-user/SageMaker
+              aws s3 cp s3://${SolutionsS3BucketNamePrefix}-${AWS::Region}/${SolutionName}/source/ . --recursive
+              
+              touch stack_outputs.json
+              echo '{' >> stack_outputs.json
+              echo '  "AwsAccountId": "${AWS::AccountId}",' >> stack_outputs.json
+              echo '  "AwsRegion": "${AWS::Region}",' >> stack_outputs.json
+              echo '  "S3Bucket": "${S3BucketName}",' >> stack_outputs.json
+              echo '  "SageMakerIamRoleArn": "${SageMakerIamRoleArn}",' >> stack_outputs.json
+              echo '  "SnakeAPI": "${SnakeAPI}",' >> stack_outputs.json
+              echo '  "EndPointS3Location": "s3://${SolutionsS3BucketNamePrefix}-${AWS::Region}/${SolutionName}/build/model-complete.tar.gz",' >> stack_outputs.json
+              echo '  "SagemakerEndPointName": "${SagemakerEndPointName}",' >> stack_outputs.json
+              echo '  "SagemakerTrainingInstanceType": "${SagemakerTrainingInstanceType}",' >> stack_outputs.json
+              echo '  "SagemakerInferenceInstanceType": "${SagemakerInferenceInstanceType}"' >> stack_outputs.json
+              echo '}' >> stack_outputs.json
+
+              python set_kernelspec.py --notebook RLlibEnv/1_Introduction.ipynb --display-name conda_tensorflow2_p36 --kernel conda_tensorflow2_p36
+              python set_kernelspec.py --notebook RLlibEnv/2_PolicyTraining.ipynb --display-name conda_tensorflow2_p36 --kernel conda_tensorflow2_p36
+              python set_kernelspec.py --notebook RLlibEnv/3_HeuristicsDeveloper.ipynb --display-name conda_tensorflow2_p36 --kernel conda_tensorflow2_p36
+              
+              EOF
+      
+Outputs:
+  SourceEditionInNotebook:
+    Description: "Open Jupyter IDE. This authenticate you against Jupyter."
+    Value: !Sub "https://console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/${SolutionPrefix}-battlesnake-nb?view=classic"
+  HeuristicsDevEnvironment:
+    Description: "Modify, visualize and re-deploy heuristics. You need to click first on 'SourceEditionInNotebook' to be authenticated."
+    Value: !Sub "https://${SolutionPrefix}-battlesnake-nb.notebook.${AWS::Region}.sagemaker.aws/notebooks/RLlibEnv/HeuristicsDeveloper.ipynb"
+  ModelTrainingEnvironment:
+    Description: "Modify, train, visualize and re-deploy model.  You need to click first on 'SourceEditionInNotebook' to be authenticated."
+    Value: !Sub "https://${SolutionPrefix}-battlesnake-nb.notebook.${AWS::Region}.sagemaker.aws/notebooks/RLlibEnv/PolicyTraining.ipynb"

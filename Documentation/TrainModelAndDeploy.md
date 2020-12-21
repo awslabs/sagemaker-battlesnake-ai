@@ -18,17 +18,6 @@ This step adds a training instance to the Battlesnake environment:
 > After the free tiers are exceeded, the charge will be $0.269 per hour ($6.5 per 24 hour period) when the training instance is running.
 > __Cost savings tip__ : Once you have finished training, you can stop your training instance in order to stop consuming free tiers or incurring charges. You can easily restart them at a later date to continue with training.
 
-## Setting up on Amazon SageMaker
-
-Similar to accessing the heuristics developer environment, check the CloudFormation 'Outputs' tab and open _ModelTrainingEnvironment_:
-
-> _You need to be authenticated for that link to work. Click on __SourceEditionInNotebook__ link if you are denied access_
-
-![Output tab](images/outputs.png "Output tab")
-
-- Once you have opened the SagemakerModelTraining.ipynb notebook, run through the notebook in order to train the model or run hyperparameter optimization (Press ► on the top to run the notebook). See [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use Jupyter Notebooks.
-- set `run_hpo = False` to train your model, or `run_hpo = True` to run hyperparameter optimization.
-
 ## Training a reinforcement learning model
 
 The reinforcement learning components of this project include an OpenAI gym to train your Battlesnake AI (https://play.battlesnake.com/) and an MXNet example notebook to train your own neural network.
@@ -120,20 +109,3 @@ This function renders the environment based on its current state.
 - `rbg_array` outputs an expanded numpy array that can be used for creating gifs
 - `ascii` outputs a text based representation that can be printed in the command prompt
 - `human` an OpenAI plot will be generated
-
-### The MXNet DQN Network
-
-#### Running DQN example
-
-`python mxnet_src/train.py --should_render --print_progress --number_of_snakes 4`
-
-*Please refer to https://github.com/awslabs/sagemaker-battlesnake-ai/blob/master/TrainingEnvironment/examples/train.py for the other hyperparameters*
-
-This code uses multi-agent DQN to train the bots. The `N` snakes share the same Qnetwork and the network is configured as follows:
-
-*Figure 4: The qnetwork*
-![alt text](images/qnetwork.png "qnetwork")
-
-Given a state representation `N x M x C` to get the action of snake `i`, the network expects that `C=1` is the representation of snake `i` and `C=2 ... num_snakes+1` are the remaining snakes (note that `C=0` represents the food).
-
-The inputs 'snake health' and 'snake ID' in the figure correspond to the health and ID of Snake `i`.

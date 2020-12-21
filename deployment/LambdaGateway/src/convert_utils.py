@@ -47,10 +47,11 @@ class ObservationToStateConverter:
     were trained with
     
     """
-    def __init__(self, style="layered", border_option="1"):
+    def __init__(self, style="layered", border_option="1", version=1):
         self.games = {}
         self.style = style
         self.border_option = border_option
+        self.version = version
 
     def _convert_to_state(self, game_state, game):
         
@@ -83,7 +84,7 @@ class ObservationToStateConverter:
         # Put the food on the board
         for coord in game_state['board']['food']:
             state[coord['y']+border_size, coord['x']+border_size, BattlesnakeGame.FOOD_INDEX] = 1
-            
+                
         # Add the snakes
         for snake in game_state['board']['snakes']:
             first = True
@@ -97,7 +98,7 @@ class ObservationToStateConverter:
                 if state[coord['y']+border_size, coord['x']+border_size, snake_channel] == 0:
                     state[coord['y']+border_size, coord['x']+border_size, snake_channel] = 5 if first else 1
                     first = False
-        
+                            
         return state
         
     def get_game_state(self, game_state):
@@ -107,7 +108,9 @@ class ObservationToStateConverter:
             
         game_record = self.games[game_id]
         current_state = self._convert_to_state(game_state, game_record['game'])
-        
+        if self.version == 1:
+            current_state = np.flip(current_state, 0)
+
         if game_record['previous_state'] is None:
             game_record['previous_state'] = current_state
             previous_state = np.zeros(shape=current_state.shape)
@@ -115,4 +118,8 @@ class ObservationToStateConverter:
         
         previous_state = game_record['previous_state']
         game_record['previous_state'] = current_state
+
+        if self.version == 1:
+            current_state = np.flip(current_state, 0)
+
         return current_state, previous_state

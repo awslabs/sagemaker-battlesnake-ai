@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "sagemaker-battlesnake-ai: Solution for training and deploying a Battlesnake AI using Amazon SageMaker- solution assistant.Version 1"
+
+Parameters:
+  SolutionPrefix:
+    Type: String
+  S3BucketName:
+    Type: String
+  SolutionName:
+    Type: String
+  SolutionsS3BucketNamePrefix:
+    Type: String
+  SageMakerIamRoleArn:
+    Type: String
+      
+Resources:
+  SolutionAssistant:
+    Type: "Custom::SolutionAssistant"
+    Properties:
+      ServiceToken: !GetAtt SolutionAssistantLambda.Arn
+      S3BucketName: !Ref S3BucketName
+      SageMakerEndpointName: !Sub "${SolutionPrefix}-ep"
+
+  SolutionAssistantLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: "lambda.handler"
+      FunctionName: !Sub "${SolutionPrefix}-soln-assistant"
+      Role: !Ref SageMakerIamRoleArn
+
+      Runtime: "python3.8"
+      Code:
+        S3Bucket: !Sub "${SolutionsS3BucketNamePrefix}-${AWS::Region}"
+        S3Key: !Sub "${SolutionName}/build/solution-assistant.zip"
+      Timeout : 60
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W58
+            reason: Lambda functions have permission to write to logs
+
+Outputs:
+  SolutionAssistantLambdaArn:
+    Description: "Arn of solution assistant lambda"
+    Value: !GetAtt SolutionAssistantLambda.Arn

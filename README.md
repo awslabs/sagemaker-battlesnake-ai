@@ -32,13 +32,6 @@ This project can be used in three steps:
 
 ### Reinforcement learning packages
 
-The repository includes two training method and framework options:
-
-* the in-built SageMaker reinforcement learning package (based on __RLlib__ and __Tensorflow__) 
-* an implementation written in __MXNet__
-
-You can choose which one to use when you deploy the stack.
-
 ### Architecture
 
 If you use Steps 1-3, you will have the following deployed within your AWS account:
@@ -61,18 +54,15 @@ With the Battlesnake visualizer, you can load any initial state and test how you
 The source code of the project is organized as follows:
 
 ```
-CloudFormation                    # contains the templates and scripts to automate deployment
-BattlesnakeGym                    # OpenAI Gym environment that simulates the Battlesnake game
-Heuristics                        # your custom heuristics
-LambdaGateway                     # code that exposes the Snake API
-MXNet                             # training environment with the MXNet implementation
-  > TrainingEnvironment           # contains the Jupyter notebook for model training
-  > InferenceEndpoint             # contains the code for the Snake Endpoint
-  > HeuristicDevelopment          # contains the Jupyter notebook for heuristics development
-RLlib			
-  > TrainingEnvironment           # contains the Jupyter notebook for model training
-  > InferenceEndpoint             # contains the code for the Snake Endpoint
-  > HeuristicDevelopment          # contains the Jupyter notebook for heuristics development
+deployment                        # contains the templates and scripts to automate deployment
+	> 
+source                     
+	> MXNet                         # training environment with the MXNet implementation (depreciated - for reference only)
+	> BattlesnakeGym								# openAI gym to simulate the battlesnake environment
+	> RLlib													# contains the Jupyter notebook for model training and heuristics development
+    > training           					# contains source code for training
+    > inference             			# contains the code for inference
+
 ```
 
 ## License
