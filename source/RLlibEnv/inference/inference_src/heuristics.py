@@ -4,7 +4,6 @@ class Heuristics:
     def negative_heuristics(func):
         def negative_heuristics_func(self, *args, **kwargs):
             action = func(self, *args, **kwargs)
-            assert np.sum(action) > 1, "A maximum of 2 False is allowed in the mask"
             return action
         return negative_heuristics_func
 
