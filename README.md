@@ -18,7 +18,7 @@ This project contains a ready-to-use AI for Battlesnake as well as a development
 The included AI makes movement decisions in two steps:
 
   1. __Run a Neural Network Model__ 
-  2. __Run Heuristics__ (ie: additional code that can override the Neural Network's predicted best action so that your snake avoids colliding with walls, eats food if it is safe to do so, attempts to eat a competitor snake, ...)
+  2. __Run Heuristics__ (ie: additional code that can override the neural network's predicted best action so that your snake avoids colliding with walls, eats food if it is safe to do so, attempts to eat a competitor snake, ...)
 
 Several pre-trained neural network models are provided within this project as well as some default heuristics. These pre-trained models (snakes) are not designed to win the Battlesnake competition, so you'll have to improve them in order to have a chance of winning. The training environment is provided for you to make modifications and to retrain the neural network models in order to obtain better results.
 
@@ -26,11 +26,11 @@ Several pre-trained neural network models are provided within this project as we
 
 This project can be used in three steps:
 
-- __[Step 1 - Deploy a Snake](Documentation/DeployTheAIEndpoint.md)__ : Deploy a snake with pre-trained AI. After this step, you'll be able to participate in a Battlesnake game! **Don't skip this step!** This step also deploys a local environment which is needed for the following steps.)
+- __[Step 1 - Deploy a Snake](Documentation/DeployTheAIEndpoint.md)__ : Deploy a snake with pre-trained AI. After this step, you'll be able to participate in a Battlesnake game! **Don't skip this step!** (This step also deploys a local environment which is needed for the following steps.)
 - __[Step 2 - Build some Heuristics](Documentation/UpdateHeuristicsAndDeploy.md)__ : Write some rules for your snake to navigate common scenarios, visualize your snake, and publish the upgraded version of your snake!
 - __[Step 3 - Upgrade your Reinforcement Learning Model](Documentation/TrainModelAndDeploy.md)__ : This is the most rewarding step. Retrain your snake with different settings, visualize your snake, and publish an upgraded version!
 
-### Reinforcement learning packages
+## Reinforcement learning packages
 
 ### Architecture
 
@@ -54,14 +54,14 @@ With the Battlesnake visualizer, you can load any initial state and test how you
 The source code of the project is organized as follows:
 
 ```
-deployment                        # contains the templates and scripts to automate deployment
+deployment                              # contains the templates and scripts to automate deployment
 	> 
 source                     
-	> MXNet                         # training environment with the MXNet implementation (depreciated - for reference only)
-	> BattlesnakeGym								# openAI gym to simulate the battlesnake environment
-	> RLlib													# contains the Jupyter notebook for model training and heuristics development
-    > training           					# contains source code for training
-    > inference             			# contains the code for inference
+	> MXNetEnv                          # training environment with the MXNet implementation (deprecated - for reference only)
+	> BattlesnakeGym					# openAI gym to simulate the battlesnake environment
+	> RLlibEnv      					# contains the Jupyter notebook for model training and heuristics development
+    > training           			    # contains source code for training
+    > inference             			# contains source code for inference
 
 ```
 

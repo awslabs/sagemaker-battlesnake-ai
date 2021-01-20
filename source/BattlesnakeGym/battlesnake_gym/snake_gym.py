@@ -34,7 +34,7 @@ class BattlesnakeGym(gym.Env):
     }
     '''
     OpenAI Gym for BattlesnakeIO 
-    Behaviour of snakes in Battlesnake.io based on https://docs.battlesnake.com/rules
+    Behaviour of snakes in Battlesnake.io based on https://docs.battlesnake.com/references/rules
 
     Parameters:
     ----------
@@ -66,7 +66,7 @@ class BattlesnakeGym(gym.Env):
     initial_game_state: dict , default=None
         Dictionary to indicate the initial game state
         Dict is in the same form as in the battlesnake engine
-        https://docs.battlesnake.com/snake-api
+        https://docs.battlesnake.com/references/api
     '''
     MAX_BORDER = (21, 21) # Largest map size (19, 19) + 2 for -1 borders
     def __init__(self, observation_type="flat-51s", map_size=(15, 15),
@@ -291,7 +291,7 @@ class BattlesnakeGym(gym.Env):
     def step(self, actions, episodes=None):
         '''
         Inherited function of the openAI gym. The steps taken mimic the steps provided in 
-        https://docs.battlesnake.com/rules -> Programming Your Snake -> 3) Turn resolution.
+        https://docs.battlesnake.com/references/rules -> Programming Your Snake -> 3) Turn resolution.
         
         Parameters:
         ---------

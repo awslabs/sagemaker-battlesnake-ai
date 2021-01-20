@@ -1,6 +1,6 @@
 # Step 1 - Deploy a Snake
 
-This section will deploy a pre-trained AI into your AWS account. This AI will expose the [Battlesnake API](https://docs.battlesnake.com/snake-api).
+This section will deploy a pre-trained AI into your AWS account. This AI will expose the [Battlesnake API](https://docs.battlesnake.com/references/api).
 
 ## Architecture
 
@@ -31,10 +31,9 @@ _Note: Before deploying the environment, you need to be logged into the AWS acco
 
 _\*The official Battlesnake platform runs in us-west-2. Selecting this region will provide you with the lowest latency_
 
-On the stack creation page you can optionnaly:
+On the stack creation page you can optionally:
  * customize your snake's appearance (color, head, tail)
  * change the instance type for training and inference
- * select the training method: MXNet or RLLib (Tensorflow)
 
 Once done scroll down at the end of the page.
 Then check all permissions:
@@ -43,11 +42,11 @@ Then check all permissions:
 
 Click "Create Stack"
 
-After about 15 minutes, the stack status should be CREATE_COMPLETE:
+After about 15 minutes, the stack status should be CREATE_COMPLETE.
 
 ## Next steps
 
-Navigate to Amazon SageMaker and click the "[Open JupyterLab]" the Battlesnake notebook instance.
+Navigate to Amazon SageMaker and click the "[Open JupyterLab]" in the Battlesnake notebook instance.
 
 Open the `1_Introduction.ipynb` notebook for next steps.
 
@@ -56,7 +55,7 @@ Open the `1_Introduction.ipynb` notebook for next steps.
 Once you finish your work for the day or you finish participating in games with your snake, you can stop your instances:
 
 * To stop the notebook instance (dev environment) go to Amazon Sagemaker in the AWS console, navigate to 'notebook instances', select your instance, click action, and choose stop.
-* To stop the endpoint instance (dev environment) go to Amazon Sagemaker in the AWS console, navigate to 'inference endpoints', select your endpoint, click action, and choose stop.
+* To stop the endpoint instance (dev environment) go to Amazon Sagemaker in the AWS console, navigate to 'inference endpoints', select your endpoint and delete it.
 
 ## Next step: customize snake
 
@@ -66,4 +65,4 @@ Go to __[Step 2](UpdateHeuristicsAndDeploy.md)__ to start making changes to the 
 
 To clean up the environment, go to AWS CloudFormation within the AWS console, select your sagemaker-soln-bs stack, and click 'delete'.
 
-__WARNING : Deleting your stack will erase the Battlesnake environment data, and any code changes.__ Make sure that you have saved your work before doing this! One way to do that is to [setup source control](SetupSourceControl.md)
+__WARNING : Deleting your stack will erase the Battlesnake environment data, and any code changes.__ Make sure that you have saved your work before doing this! One way to do that is to [setup source control](SetupSourceControl.md).

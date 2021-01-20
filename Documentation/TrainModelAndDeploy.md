@@ -1,6 +1,6 @@
 # Step 3 - Upgrade your Reinforcement Learning Model
 
-This page explains how to retrain the model, and how to modify the training settings with MXNet or with RLlib
+This page explains how to retrain the model, and how to modify the training with RLlib
 
 This is controlled mainly by a single notebook and will use a training gym environment.
 
@@ -20,13 +20,13 @@ This step adds a training instance to the Battlesnake environment:
 
 ## Training a reinforcement learning model
 
-The reinforcement learning components of this project include an OpenAI gym to train your Battlesnake AI (https://play.battlesnake.com/) and an MXNet example notebook to train your own neural network.
+The reinforcement learning components of this project include an OpenAI gym to train your Battlesnake AI (https://play.battlesnake.com/) and a RLLib example notebook to train your own neural network.
 
-The OpenAI gym was designed to follow the official Battlesnake rules outlined here: https://docs.battlesnake.com/rules.
+The OpenAI gym was designed to follow the official Battlesnake rules outlined here: https://docs.battlesnake.com/references/rules.
 
 ### Training on Amazon SageMaker
 
-From the Cloudformation stack created during [STEP 1](DeployTheAIEndpoint.md), go to the  'Outputs' tab and click on the link next to _ModelTrainingEnvironment_:
+From the Cloudformation stack created during [Step 1](DeployTheAIEndpoint.md), go to the  'Outputs' tab and click on the link next to _ModelTrainingEnvironment_:
 
 ![Output tab](images/outputs.png "Output tab")
 
@@ -34,14 +34,14 @@ The notebook contains code for training and automatic deployment of the model.
 
 Press ► on the top to run the notebook (see [here](https://www.youtube.com/watch?v=7wfPqAyYADY) for a tutorial on how to use jupyter notebooks).
 
-The main entry point (Amazon SageMaker endpoint) of the training the model is [`mxnet_src/train.py`](../TrainingEnvironment/examples/train.py) for MXNet and [rllib_src/train.py`](../TrainingEnvironment/examples/train.py) for RLlib.
+The main entry point (Amazon SageMaker endpoint) of the training the model is [RLlibEnv/training/training_src/train-mabs.py](../source/RLlibEnv/training/training_src/train-mabs.py) for RLlib.
 
 ### Reinforcement learning and gym details
 
-#### Observation space: 
+#### Observation space
 
 This gym provide several options for the the observation space. 
-The observation space provided by the gym is of size `N x M x C` where `N` and `M` are the width and height of the map and `C` is the number of snakes (+1 to account for the food). The food is indicated by values of `1` in `C=0`. The snakes are stored in `C=1 to C=num_snakes+1` and can be represented in [2 possible ways](../TrainingEnvironment/battlesnake_gym/snake_gym.py) (`51s`, `num`): 
+The observation space provided by the gym is of size `N x M x C` where `N` and `M` are the width and height of the map and `C` is the number of snakes (+1 to account for the food). The food is indicated by values of `1` in `C=0`. The snakes are stored in `C=1 to C=num_snakes+1` and can be represented in [2 possible ways](../source/BattlesnakeGym/battlesnake_gym/snake_gym.py) (`51s`, `num`): 
 
 *Figure 1: 51s snake representation*             |  *Figure 2: num snake representation*
 :-----------------------------------------------:|:----------------------------------------------------------------:
@@ -53,11 +53,11 @@ The gym also provides an option to increase the map size by 2 to include -1 in t
 
 ![alt text](images/border.png "Bordered 51s snake representation")
 
-#### Actions:
+#### Actions
 
-For each snake, the possible [actions](../TrainingEnvironment/battlesnake_gym/snake.py) are UP, DOWN, LEFT, RIGHT (0, 1, 2, 3 respectively). Please note that according to the rules of Battlesnake, if your snake is facing UP and your snake performs a DOWN action, your snake will die.
+For each snake, the possible [actions](../source/BattlesnakeGym/battlesnake_gym/snake.py) are UP, DOWN, LEFT, RIGHT (0, 1, 2, 3 respectively). Please note that according to the rules of Battlesnake, if your snake is facing UP and your snake performs a DOWN action, your snake will die.
 
-#### Food spawning:
+#### Food spawning
 
 The food spawning algorithm is not provided in the official Battlesnake rules. The gym uses a food spawning mechanism based on the code provided [here](
 https://github.com/battlesnakeio/engine/blob/master/rules/tick.go#L82)
@@ -86,25 +86,25 @@ More complex reward functions with methods that can handle sparse rewards may be
 
 Based on the OpenAI gym framework, the following functions are used to interact with the gym:
 
-1. >`state, _, dones, info = env.reset()`
+1. > `state, _, dones, info = env.reset()`
 
 This function resets the environment. This is called when first creating the environment, and also at the end of each episode. 'state' provides the initial observations. 'info' provides information on the turn count and the health of each snake
 
 2. > `state, rewards, dones, info = env.step(actions)`
 
-This function executes one time step within the environment, based on the set of snake actions contained in `actions`
+This function executes one time step within the environment, based on the set of snake actions contained in `actions`.
 
-`actions` should be a numpy array of size `num_snakes` containing integers 0 to 3, to represent the desired action for each snake in the environment
+`actions` should be a numpy array of size `num_snakes` containing integers 0 to 3, to represent the desired action for each snake in the environment.
 
-`rewards` is a dictionary of reward values, keyed by the snake id. For example {'0': 45, '1': 37, '2': 60}
+`rewards` is a dictionary of reward values, keyed by the snake id. For example {'0': 45, '1': 37, '2': 60}.
 
-`dones` is a dictionary of booleans indicating if each snake has died. Like rewards, the dictionary is keyed by snake ID, beginning at 0. 
+`dones` is a dictionary of booleans indicating if each snake has died. Like rewards, the dictionary is keyed by snake id, beginning at 0.
 
-3. > env.render(mode="rgb_array")
+3. > `env.render(mode="rgb_array")`
 
 This function renders the environment based on its current state.
 
-`mode` can be `rbg_array`, `ascii`, `human` 
+`mode` can be `rbg_array`, `ascii`, `human`
 
 - `rbg_array` outputs an expanded numpy array that can be used for creating gifs
 - `ascii` outputs a text based representation that can be printed in the command prompt

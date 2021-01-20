@@ -26,7 +26,7 @@ class Game_state_parser:
     board_dict: dict
         Dictionary to indicate the initial game state
         Dict is in the same form as in the battlesnake engine
-        https://docs.battlesnake.com/snake-api
+        https://docs.battlesnake.com/references/api
     '''
     def __init__(self, game_dict):
         self.game_dict = game_dict

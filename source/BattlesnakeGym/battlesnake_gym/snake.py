@@ -18,7 +18,7 @@ from .utils import get_random_coordinates
 class Snake:
     '''
     The Snake class mimics the behaviour of snakes in Battlesnake.io based on 
-    https://docs.battlesnake.com/rules
+    https://docs.battlesnake.com/references/rules
     
     Parameters:
     -----------
@@ -27,7 +27,6 @@ class Snake:
 
     map_size: (int, int)
         The size of the map
-
     '''
 
     UP = 0
@@ -228,7 +227,6 @@ class Snake:
         -------
         coordinate: (int, int)
             Translated coordinate
-
         '''
         if self._is_facing_opposite_of_direction(direction):
             return False

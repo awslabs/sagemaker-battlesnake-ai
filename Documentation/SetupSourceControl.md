@@ -13,18 +13,18 @@ Take note of the cloning URL of the repository.
 
 Using the outputs tab of the AWS CloudFormation stack, click on the link next to _SourceEditionInNotebook_.
 
-Once the Jupyter notebook open, click new and openterminal like on the screenshot:
+Once the Jupyter notebook open, click new and open *Terminal* like on the screenshot:
 
 ![Open a terminal](images/OpenTerminal.png "Open a terminal")
 
-This should open an terminal like this: 
+This should open an terminal like this:
 
 ![Jupyter terminal](images/terminal.png "Jupyter terminal")
 
 Once open type the following commands:
 
 ```
-cd SageMaker/battlesnake/RLlibEnv
+cd SageMaker/RLlibEnv
 git init
 git remote add origin <YOUR-GIT-URL>
 
@@ -46,18 +46,18 @@ If you have already a git repository with your work and you want to restore your
 
 Using the outputs tab of the AWS CloudFormation stack, click on the link next to _SourceEditionInNotebook_.
 
-Once the Jupyter notebook open, click new and openterminal like on the screenshot:
+Once the Jupyter notebook open, click new and open *Terminal* like on the screenshot:
 
 ![Open a terminal](images/OpenTerminal.png "Open a terminal")
 
-This should open an terminal like this: 
+This should open an terminal like this:
 
 ![Jupyter terminal](images/terminal.png "Jupyter terminal")
 
 Once open type the following commands:
 
 ```
-cd SageMaker/battlesnake/
+cd SageMaker/
 git clone <YOUR-GIT-URL>
 
 # You should set your git author identity
@@ -67,4 +67,4 @@ git config --local user.name "<YOUR-NAME>"
 
 From now you are good to go.
 
-> __WARNING__: There is no guaranty that your code will work in future version of the __sagemaker-battlesnake-ai__ project. You may need to update your code a bit to make it working.
+> __WARNING__: There is no guarantee that your code will work in future version of the __sagemaker-battlesnake-ai__ project. You may need to update your code a bit to make it working.
