@@ -42,9 +42,7 @@ class MyBattlesnakeHeuristics(Heuristics):
         left = state[i, j-1, 1] != -1
         right = state[i, j+1, 1] != -1
         
-        action = [down, up, left, right]
-
-        return action
+        return [up, down, left, right]
     
     @Heuristics.negative_heuristics
     def banned_forbidden_moves(self, state, snake_id, turn_count, health, json):
@@ -67,7 +65,7 @@ class MyBattlesnakeHeuristics(Heuristics):
         left = not (i == next_i and j-1 == next_j)
         right = not (i == next_i and j+1 == next_j)
       
-        return [down, up, left, right]
+        return [up, down, left, right]
     
     @Heuristics.positive_heuristics
     def go_to_food_if_close(self, state, snake_id, turn_count, health, json):
@@ -86,19 +84,19 @@ class MyBattlesnakeHeuristics(Heuristics):
         
         # Note that there is a -1 border around state so i = i + 1, j = j + 1
         if -1 in state:
-            i, j = i+1, j+1
+            border_len = int((state.shape[0] - json["board"]["height"])/2)
+            i, j = i + border_len, j + border_len
         
-        food_direction = None
         if food[i+1, j] == 1:
-            return [False, True, False, False]
-        if food[i-1, j] == 1:
             return [True, False, False, False]
+        if food[i-1, j] == 1:
+            return [False, True, False, False]
         if food[i, j-1] == 1:
             return [False, False, True, False]
         if food[i, j+1] == 1:
             return [False, False, False, True]
         
-        return [True, True, True, True]   
+        return [True, True, True, True]
     
     def run(self, state, snake_id, turn_count, health, json, action):
         '''
@@ -150,4 +148,5 @@ class MyBattlesnakeHeuristics(Heuristics):
         # TO DO, add your own heuristics
         if best_action not in [0, 1, 2, 3]:
             best_action = random.choice([0, 1, 2, 3])
+        
         return best_action, log_string

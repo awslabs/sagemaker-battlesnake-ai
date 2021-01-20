@@ -86,7 +86,7 @@ def move(body):
 
     direction_index = remoteInferenceRLib(previous_state, current_state, data)
         
-    directions = ['down', 'up', 'left', 'right']
+    directions = ['up', 'down', 'left', 'right']
     choice = directions[int(direction_index)]
 
     print("Move " + choice)
@@ -122,7 +122,7 @@ def remoteInferenceRLib(previous_state, current_state, data):
                                        ContentType='application/json',
                                        Body=payload)
     direction_index = json.loads(response['Body'].read().decode())
-    direction_index = direction_index["outputs"]["heuristisc_action"]
+    direction_index = direction_index["outputs"]["heuristics_action"]
     return direction_index
 
 def end():
