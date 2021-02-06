@@ -30,11 +30,11 @@ Parameters:
     Default: "#128a7a"
     Type: String
   SnakeHead:
-    Description: "Snake head : evil, fang, pixel, safe, ... (see: https://docs.battlesnake.com/snake-customization)"
+    Description: "Snake head : evil, fang, pixel, safe, ... (see: https://docs.battlesnake.com/references/personalization)"
     Default: bendr
     Type: String
   SnakeTail:
-    Description: "Snake tail : sharp, pixel, bolt, curled, ... (see: https://docs.battlesnake.com/snake-customization)"
+    Description: "Snake tail : sharp, pixel, bolt, curled, ... (see: https://docs.battlesnake.com/references/personalization)"
     Default: freckled
     Type: String
   SagemakerTrainingInstanceType:
