@@ -66,8 +66,8 @@ def ping():
             "apiversion": "1",
             "author": "my_user_name",
             "color": os.environ['SNAKE_COLOR'],
-            "headType": os.environ['SNAKE_HEAD'],
-            "tailType": os.environ['SNAKE_TAIL']
+            "head": os.environ['SNAKE_HEAD'],
+            "tail": os.environ['SNAKE_TAIL']
             })
         }
 
