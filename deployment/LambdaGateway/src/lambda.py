@@ -1,14 +1,14 @@
  # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- #  
+ #
  # Licensed under the Apache License, Version 2.0 (the "License").
  # You may not use this file except in compliance with the License.
  # A copy of the License is located at
- # 
+ #
  #     http://www.apache.org/licenses/LICENSE-2.0
- # 
- # or in the "license" file accompanying this file. This file is distributed 
- # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
- # express or implied. See the License for the specific language governing 
+ #
+ # or in the "license" file accompanying this file. This file is distributed
+ # on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ # express or implied. See the License for the specific language governing
  # permissions and limitations under the License.
 
 import json
@@ -30,7 +30,7 @@ from convert_utils import ObservationToStateConverter
 #################################
 
 converter = ObservationToStateConverter(style='one_versus_all', border_option="max")
-   
+
 config = botocore.config.Config(read_timeout=200)
 runtime = boto3.client('runtime.sagemaker', config=config)
 
@@ -66,8 +66,8 @@ def ping():
             "apiversion": "1",
             "author": "my_user_name",
             "color": os.environ['SNAKE_COLOR'],
-            "headType": os.environ['SNAKE_HEAD'],
-            "tailType": os.environ['SNAKE_TAIL']
+            "head": os.environ['SNAKE_HEAD'],
+            "tail": os.environ['SNAKE_TAIL']
             })
         }
 
@@ -85,7 +85,7 @@ def move(body):
     current_state, previous_state = converter.get_game_state(data)
 
     direction_index = remoteInferenceRLib(previous_state, current_state, data)
-        
+
     directions = ['down', 'up', 'left', 'right']
     choice = directions[int(direction_index)]
 
@@ -98,7 +98,7 @@ def move(body):
         },
         "body": json.dumps({ "move": choice })
     }
-    
+
 def make_health_dict(data):
     health_dict = {0: data['you']['health']}
     for i, snake in enumerate(data["board"]["snakes"]):
@@ -112,8 +112,8 @@ def remoteInferenceRLib(previous_state, current_state, data):
 
     health_dict = make_health_dict(data)
 
-    data = {"state": state.tolist(), "prev_action": -1, 
-            "prev_reward": -1, "seq_lens": -1,  
+    data = {"state": state.tolist(), "prev_action": -1,
+            "prev_reward": -1, "seq_lens": -1,
             "action_mask": [1, 1, 1, 1],
             "all_health": health_dict, "json": data}
 
