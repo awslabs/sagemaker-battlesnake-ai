@@ -25,7 +25,7 @@ from .test_utils import grow_snake, grow_two_snakes, should_render, simulate_sna
 class TestBattlesnakeGym(unittest.TestCase):
     '''
     Test the behaviours of the BattlesnakeGym including:
-    - Test spawnning 
+    - Test spawning 
     - Test deterministic spawning (spawning food and snakes in certain locations for testing)
     - Test that the snakes moves correctly
     - Test the snake health and that the snake dies after it's health is 0

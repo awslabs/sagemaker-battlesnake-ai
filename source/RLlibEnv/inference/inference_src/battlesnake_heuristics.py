@@ -32,19 +32,16 @@ class MyBattlesnakeHeuristics(Heuristics):
         Heuristics to stop the snakes from hitting a wall.
         '''
         your_snake_body = json["you"]["body"]
-        i, j = your_snake_body[0]["y"], your_snake_body[0]["x"]
+        y, x = your_snake_body[0]["y"], your_snake_body[0]["x"]
+        height = json["board"]["height"]
+        width = json["board"]["width"]
         
-        if -1 in state:
-            border_len = int((state.shape[0] - json["board"]["height"])/2)
-            i, j = i + border_len, j + border_len
-        up = state[i+1, j, 1] != -1
-        down = state[i-1, j, 1] != -1
-        left = state[i, j-1, 1] != -1
-        right = state[i, j+1, 1] != -1
+        up = y+1 < height
+        down = y-1 >= 0
+        left = x-1 >= 0
+        right = x+1 < width
         
-        action = [down, up, left, right]
-
-        return action
+        return [up, down, left, right]
     
     @Heuristics.negative_heuristics
     def banned_forbidden_moves(self, state, snake_id, turn_count, health, json):
@@ -52,22 +49,17 @@ class MyBattlesnakeHeuristics(Heuristics):
         Heuristics to stop the snakes from forbidden moves.
         '''
         your_snake_body = json["you"]["body"]
-        i, j = your_snake_body[0]["y"], your_snake_body[0]["x"]
         if len(your_snake_body) == 1:
             return [True, True, True, True]
-        next_i, next_j = your_snake_body[1]["y"], your_snake_body[1]["x"]
+        head_y, head_x = your_snake_body[0]["y"], your_snake_body[0]["x"]
+        next_y, next_x = your_snake_body[1]["y"], your_snake_body[1]["x"]
         
-        if -1 in state:
-            border_len = int((state.shape[0] - json["board"]["height"])/2)
-            i, j = i + border_len, j + border_len
-            next_i, next_j = next_i + border_len, next_j + border_len
+        up = not (head_y+1 == next_y and head_x == next_x)
+        down = not (head_y-1 == next_y and head_x == next_x)
+        left = not (head_y == next_y and head_x-1 == next_x)
+        right = not (head_y == next_y and head_x+1 == next_x)
 
-        up = not (i+1 == next_i and j == next_j)
-        down = not (i-1 == next_i and j == next_j)
-        left = not (i == next_i and j-1 == next_j)
-        right = not (i == next_i and j+1 == next_j)
-      
-        return [down, up, left, right]
+        return [up, down, left, right]
     
     @Heuristics.positive_heuristics
     def go_to_food_if_close(self, state, snake_id, turn_count, health, json):
@@ -79,26 +71,22 @@ class MyBattlesnakeHeuristics(Heuristics):
         
         # Get the position of the snake head
         your_snake_body = json["you"]["body"]
-        i, j = your_snake_body[0]["y"], your_snake_body[0]["x"]
+        y, x = your_snake_body[0]["y"], your_snake_body[0]["x"]
         
-        # Set food_direction towards food
-        food = state[:, :, self.FOOD_INDEX]
+        # Get food locations
+        food = json["board"]["food"]
         
-        # Note that there is a -1 border around state so i = i + 1, j = j + 1
-        if -1 in state:
-            i, j = i+1, j+1
+        for f in food:
+            if x==f["x"] and y+1==f["y"]:
+                return [True, False, False, False]
+            if x==f["x"] and y-1==f["y"]:
+                return [False, True, False, False]
+            if x-1==f["x"] and y==f["y"]:
+                return [False, False, True, False]
+            if x+1==f["x"] and y==f["y"]:
+                return [False, False, False, True]
         
-        food_direction = None
-        if food[i+1, j] == 1:
-            return [False, True, False, False]
-        if food[i-1, j] == 1:
-            return [True, False, False, False]
-        if food[i, j-1] == 1:
-            return [False, False, True, False]
-        if food[i, j+1] == 1:
-            return [False, False, False, True]
-        
-        return [True, True, True, True]   
+        return [True, True, True, True]
     
     def run(self, state, snake_id, turn_count, health, json, action):
         '''
@@ -109,6 +97,10 @@ class MyBattlesnakeHeuristics(Heuristics):
         `state`: np.array of size (map_size[0]+2, map_size[1]+2, 1+number_of_snakes)
         Provides the current observation of the gym.
         Your target snake is state[:, :, snake_id+1]
+        *Note*: This is actually not correct for the simulation. The latter has the 
+        form np.array of size [map_size[0], map_size[1], 6] which is build by
+        build_state_for_snake() in heuristics_utils.py. To overcome this problem use
+        the json format.
     
         `snake_id`: int
         Indicates the id where id \in [0...number_of_snakes]
@@ -117,28 +109,32 @@ class MyBattlesnakeHeuristics(Heuristics):
         Indicates the number of elapsed turns
     
         `health`: dict
-        Indicates the health of all snakes in the form of {int: snake_id: int:health}
+        Indicates the health of all snakes in the form of {int: snake_id:int: health}
         
         `json`: dict
-        Provides the same information as above, in the same format as the battlesnake engine.
+        Provides the same information as above, in the same format as the battlesnake engine
 
-        `action`: np.array of size 4
+        `action`: np.array or list of size 4
         The qvalues of the actions calculated. The 4 values correspond to [up, down, left, right]
         '''
         log_string = ""
         # The default `best_action` to take is the one that provides has the largest Q value.
         # If you think of something else, you can edit how `best_action` is calculated
+        action = np.array(action)
         best_action = int(np.argmax(action))
         
+        # TODO: Combine heuristics
+        # TODO: Be careful with np.argmax on masked action,
+        # Q-Values can be negative thus np.argmax prefers
+        # illegal moves with 0 over negative valid actions
         wall_masks = self.banned_wall_hits(state, snake_id, turn_count, health, json)
         if best_action not in np.where(wall_masks)[0]:
             log_string += "Hit wall "
             best_action = int(np.argmax(action * np.array(wall_masks)))
         
-        forbidden_move_masks = self.banned_forbidden_moves(state, snake_id, turn_count, 
-                                                           health, json)
+        forbidden_move_masks = self.banned_forbidden_moves(state, snake_id, turn_count, health, json)
         if best_action not in np.where(forbidden_move_masks)[0]:
-            log_string += "Foribidden "
+            log_string += "Forbidden "
             mask = np.logical_not(forbidden_move_masks) * -1e6
             best_action = int(np.argmax(action * mask))
             
@@ -147,7 +143,8 @@ class MyBattlesnakeHeuristics(Heuristics):
             log_string += "Food "
             best_action = int(np.argmax(action * np.array(go_to_food_masks)))
 
-        # TO DO, add your own heuristics
+        # TODO: add your own heuristics
         if best_action not in [0, 1, 2, 3]:
             best_action = random.choice([0, 1, 2, 3])
+        
         return best_action, log_string

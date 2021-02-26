@@ -45,7 +45,6 @@ class ObservationToStateConverter:
     """
     Convert Battlesnake observation to the states that 
     were trained with
-    
     """
     def __init__(self, style="layered", border_option="1", version=1):
         self.games = {}

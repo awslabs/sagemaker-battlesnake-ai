@@ -86,7 +86,7 @@ def _process_output(data, input_data, context):
                                       json=heuristics_json,
                                       action=action_probs)
     print("Action {} Heuristics log {} {}".format(action_probs, log_string, converted_action))
-    prediction_dict["outputs"]["heuristisc_action"] = converted_action
+    prediction_dict["outputs"]["heuristics_action"] = converted_action
     
     prediction_output = json.dumps(prediction_dict)
     

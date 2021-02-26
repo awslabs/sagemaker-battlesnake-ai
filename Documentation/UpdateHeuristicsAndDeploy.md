@@ -48,13 +48,13 @@ You can customize the `run()` method in the class `MyBattlesnakeHeuristics` with
 - If you want to visualize your AI in action, ensure that you are using *Jupyter* instead of *JupyterLab* (this is the default if you use the links from the CloudFormation 'Outputs' tab).
 - The notebook loads a pre-trained model and allows your AI to interact with the environment
 - After the *Playback the simulation* section, you should see the step-by-step positions, actions, health etc. of each snake.
-- If you want to specify the positions of each snake and food (instead of randomly generating it), you can enter it in `initial_state` in *Define the openAI gym*. initial_state is defined similarly to the [battlesnake API](https://docs.battlesnake.com/snake-api).
+- If you want to specify the positions of each snake and food (instead of randomly generating it), you can enter it in `initial_state` in *Define the openAI gym*. initial_state is defined similarly to the [battlesnake API](https://docs.battlesnake.com/references/api).
 
 ![Visualization](images/VisualizingHeuristics.png "Visualize the heuristics")
 
 ## Deploy your own custom snake
 
-- If you trained a new model (but did not deploy it yet), run the cell in *(Optional) Run if you retrained the model*
+- If you trained a new model (but did not deploy it yet), run the cell in *(Optional) Run if you retrained the model*.
 - Otherwise, simply run the cell in *Deploy your new heuristics* and your snake will be deployed.
 - Note that there's no need to change the url on the battlesnake engine.
 
