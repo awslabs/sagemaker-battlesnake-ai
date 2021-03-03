@@ -1,3 +1,2 @@
 array2gif
-mxboard
 gym
