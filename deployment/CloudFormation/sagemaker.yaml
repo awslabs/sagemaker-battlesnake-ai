@@ -49,11 +49,13 @@ Resources:
               cd /home/ec2-user/SageMaker
               sudo -u ec2-user -i <<EOF
               
-              source /home/ec2-user/anaconda3/bin/activate tensorflow_p36
-               
-              pip install --upgrade pip==20.1.1
+              source /home/ec2-user/anaconda3/bin/activate tensorflow2_p36
+              
+              pip install --upgrade pip
               pip install -r /home/ec2-user/SageMaker/RLlibEnv/requirements.txt
               rm -rf src/package.egg-info
+              
+              source /home/ec2-user/anaconda3/bin/deactivate
               EOF
       OnCreate:
         - Content:
@@ -62,24 +64,24 @@ Resources:
               sudo -u ec2-user -i <<EOF
 
               cd /home/ec2-user/SageMaker
-              aws s3 cp s3://${SolutionsS3BucketNamePrefix}-${AWS::Region}/${SolutionName}/source/ . --recursive
+              aws s3 cp s3://${SolutionsS3BucketNamePrefix}-${AWS::Region}/${SolutionName}/source/ /home/ec2-user/SageMaker/ --recursive
               
-              touch stack_outputs.json
-              echo '{' >> stack_outputs.json
-              echo '  "AwsAccountId": "${AWS::AccountId}",' >> stack_outputs.json
-              echo '  "AwsRegion": "${AWS::Region}",' >> stack_outputs.json
-              echo '  "S3Bucket": "${S3BucketName}",' >> stack_outputs.json
-              echo '  "SageMakerIamRoleArn": "${SageMakerIamRoleArn}",' >> stack_outputs.json
-              echo '  "SnakeAPI": "${SnakeAPI}",' >> stack_outputs.json
-              echo '  "EndPointS3Location": "s3://${SolutionsS3BucketNamePrefix}-${AWS::Region}/${SolutionName}/build/model-complete.tar.gz",' >> stack_outputs.json
-              echo '  "SagemakerEndPointName": "${SagemakerEndPointName}",' >> stack_outputs.json
-              echo '  "SagemakerTrainingInstanceType": "${SagemakerTrainingInstanceType}",' >> stack_outputs.json
-              echo '  "SagemakerInferenceInstanceType": "${SagemakerInferenceInstanceType}"' >> stack_outputs.json
-              echo '}' >> stack_outputs.json
+              touch /home/ec2-user/SageMaker/stack_outputs.json
+              echo '{' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '  "AwsAccountId": "${AWS::AccountId}",' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '  "AwsRegion": "${AWS::Region}",' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '  "S3Bucket": "${S3BucketName}",' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '  "SageMakerIamRoleArn": "${SageMakerIamRoleArn}",' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '  "SnakeAPI": "${SnakeAPI}",' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '  "EndPointS3Location": "s3://${SolutionsS3BucketNamePrefix}-${AWS::Region}/${SolutionName}/build/model-complete.tar.gz",' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '  "SagemakerEndPointName": "${SagemakerEndPointName}",' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '  "SagemakerTrainingInstanceType": "${SagemakerTrainingInstanceType}",' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '  "SagemakerInferenceInstanceType": "${SagemakerInferenceInstanceType}"' >> /home/ec2-user/SageMaker/stack_outputs.json
+              echo '}' >> /home/ec2-user/SageMaker/stack_outputs.json
 
-              python set_kernelspec.py --notebook RLlibEnv/1_Introduction.ipynb --display-name conda_tensorflow2_p36 --kernel conda_tensorflow2_p36
-              python set_kernelspec.py --notebook RLlibEnv/2_PolicyTraining.ipynb --display-name conda_tensorflow2_p36 --kernel conda_tensorflow2_p36
-              python set_kernelspec.py --notebook RLlibEnv/3_HeuristicsDeveloper.ipynb --display-name conda_tensorflow2_p36 --kernel conda_tensorflow2_p36
+              python /home/ec2-user/SageMaker/set_kernelspec.py --notebook RLlibEnv/1_Introduction.ipynb --display-name conda_tensorflow2_p36 --kernel conda_tensorflow2_p36
+              python /home/ec2-user/SageMaker/set_kernelspec.py --notebook RLlibEnv/2_PolicyTraining.ipynb --display-name conda_tensorflow2_p36 --kernel conda_tensorflow2_p36
+              python /home/ec2-user/SageMaker/set_kernelspec.py --notebook RLlibEnv/3_HeuristicsDeveloper.ipynb --display-name conda_tensorflow2_p36 --kernel conda_tensorflow2_p36
               
               EOF
       

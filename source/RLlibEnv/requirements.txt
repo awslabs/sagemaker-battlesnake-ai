@@ -1,3 +1,10 @@
 gym
--e git+https://github.com/awslabs/sagemaker-battlesnake-ai.git#egg=one\&subdirectory=BattlesnakeGym
 tensorflow
+tensorflow-cpu
+tensorflow-serving-api
+astroid
+pylint
+boto3==1.21.*
+botocore==1.24.*
+awscli
+-e git+https://github.com/awslabs/sagemaker-battlesnake-ai.git#egg=battlesnake_gym\&subdirectory=source/BattlesnakeGym
