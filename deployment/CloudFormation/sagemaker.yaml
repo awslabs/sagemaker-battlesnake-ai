@@ -26,7 +26,7 @@ Resources:
     Type: AWS::SageMaker::NotebookInstance
     Properties:
       DirectInternetAccess: Enabled
-      InstanceType: ml.t3.medium
+      InstanceType: ml.m5.xlarge
       LifecycleConfigName: !GetAtt LifeCycleConfig.NotebookInstanceLifecycleConfigName
       NotebookInstanceName: !Sub "${SolutionPrefix}-battlesnake-nb"
       RoleArn: !Sub "${SageMakerIamRoleArn}"
