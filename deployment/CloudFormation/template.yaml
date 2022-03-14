@@ -272,10 +272,6 @@ Outputs:
     Description: "Use this URL on the Battlesnake platform"
     Value: !GetAtt EndpointStack.Outputs.SnakeAPI
     
-  CheckSnakeStatus:
-    Description: "Check the snake status. If you see 'ready' you can use the snake"
-    Value: !GetAtt EndpointStack.Outputs.CheckSnakeStatus
-    
   S3Bucket:
     Description: "Name of the S3 bucket"
     Value: !Ref S3Bucket

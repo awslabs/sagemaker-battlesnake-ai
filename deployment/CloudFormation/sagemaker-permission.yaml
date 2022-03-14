@@ -49,6 +49,13 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
+              - sagemaker:ListEndpoints
+              - sagemaker:ListModels
+              - sagemaker:ListEndpointConfigs
+            Resource:
+              - !Sub "*"
+          - Effect: Allow
+            Action:
               - sagemaker:CreateTrainingJob
               - sagemaker:DescribeTrainingJob
               
@@ -66,7 +73,11 @@ Resources:
               - sagemaker:DescribeEndpoint
               - sagemaker:InvokeEndpoint
             Resource:
-              - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
+              # - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
+              - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:training-job/*"
+              - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:endpoint-config/*"
+              - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:model/*"
+              - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:endpoint/*"
           - Effect: Allow
             Action:
               - ecr:GetAuthorizationToken
@@ -88,7 +99,7 @@ Resources:
               - cloudwatch:GetMetricStatistics
               - cloudwatch:ListMetrics
             Resource:
-              - !Sub "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:*"
+              - !Sub "*"
           - Effect: Allow
             Action:
               - logs:CreateLogGroup
@@ -100,6 +111,7 @@ Resources:
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/sagemaker/*"
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/apigateway/*"
+              - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*:log-stream:*"
 
           - Effect: Allow
             Action:

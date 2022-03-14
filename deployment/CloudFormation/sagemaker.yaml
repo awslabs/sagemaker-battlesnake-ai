@@ -91,7 +91,7 @@ Outputs:
     Value: !Sub "https://console.aws.amazon.com/sagemaker/home?region=${AWS::Region}#/notebook-instances/openNotebook/${SolutionPrefix}-battlesnake-nb?view=classic"
   HeuristicsDevEnvironment:
     Description: "Modify, visualize and re-deploy heuristics. You need to click first on 'SourceEditionInNotebook' to be authenticated."
-    Value: !Sub "https://${SolutionPrefix}-battlesnake-nb.notebook.${AWS::Region}.sagemaker.aws/notebooks/RLlibEnv/HeuristicsDeveloper.ipynb"
+    Value: !Sub "https://${SolutionPrefix}-battlesnake-nb.notebook.${AWS::Region}.sagemaker.aws/notebooks/RLlibEnv/3_HeuristicsDeveloper.ipynb"
   ModelTrainingEnvironment:
     Description: "Modify, train, visualize and re-deploy model. You need to click first on 'SourceEditionInNotebook' to be authenticated."
-    Value: !Sub "https://${SolutionPrefix}-battlesnake-nb.notebook.${AWS::Region}.sagemaker.aws/notebooks/RLlibEnv/PolicyTraining.ipynb"
+    Value: !Sub "https://${SolutionPrefix}-battlesnake-nb.notebook.${AWS::Region}.sagemaker.aws/notebooks/RLlibEnv/2_PolicyTraining.ipynb"
