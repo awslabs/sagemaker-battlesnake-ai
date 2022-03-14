@@ -1,65 +1,47 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "sagemaker-battlesnake-ai: Solution for training and deploying a Battlesnake AI using Amazon SageMaker. Version 1"
 
+# Available images: https://github.com/aws/deep-learning-containers/blob/master/available_images.md
 Mappings:
   RegionMap:
     ap-east-1:
-      "TensorflowInference": "871362719292.dkr.ecr.ap-east-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:ap-east-1:118857876118:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "871362719292.dkr.ecr.ap-east-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     ap-northeast-1:
-      "TensorflowInference": "763104351884.dkr.ecr.ap-northeast-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:ap-northeast-1:249908578461:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.ap-northeast-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     ap-northeast-2:
-      "TensorflowInference": "763104351884.dkr.ecr.ap-northeast-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:ap-northeast-2:296580773974:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.ap-northeast-2.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     ap-southeast-1:
-      "TensorflowInference": "763104351884.dkr.ecr.ap-southeast-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:ap-southeast-1:468957933125:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.ap-southeast-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     ap-southeast-2:
-      "TensorflowInference": "763104351884.dkr.ecr.ap-southeast-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:ap-southeast-2:817496625479:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.ap-southeast-2.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     ap-south-1:
-      "TensorflowInference": "763104351884.dkr.ecr.ap-south-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:ap-south-1:631267018583:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.ap-south-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     sa-east-1:
-      "TensorflowInference": "763104351884.dkr.ecr.sa-east-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:sa-east-1:640010853179:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.sa-east-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     eu-west-1:
-      "TensorflowInference": "763104351884.dkr.ecr.eu-west-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:eu-west-1:399891621064:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.eu-west-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     eu-west-2:
-      "TensorflowInference": "763104351884.dkr.ecr.eu-west-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:eu-west-2:142628438157:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.eu-west-2.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     eu-west-3:
-      "TensorflowInference": "763104351884.dkr.ecr.eu-west-3.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:eu-west-3:959311844005:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.eu-west-3.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     eu-central-1:
-      "TensorflowInference": "763104351884.dkr.ecr.eu-central-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:eu-central-1:292169987271:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.eu-central-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     eu-north-1:
-      "TensorflowInference": "763104351884.dkr.ecr.eu-north-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:eu-north-1:642425348156:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.eu-north-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     eu-south-1:
-      "TensorflowInference": "048378556238.dkr.ecr.eu-north-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": ""
+      "TensorflowInference": "048378556238.dkr.ecr.eu-north-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     us-east-1:
-      "TensorflowInference": "763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.us-east-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     us-east-2:
-      "TensorflowInference": "763104351884.dkr.ecr.us-east-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:us-east-2:259788987135:layer:AWSLambda-Python-AWS-SDK:2"
+      "TensorflowInference": "763104351884.dkr.ecr.us-east-2.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     us-west-1:
-      "TensorflowInference": "763104351884.dkr.ecr.us-west-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:us-west-1:325793726646:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.us-west-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     us-west-2:
-      "TensorflowInference": "763104351884.dkr.ecr.us-west-2.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:us-west-2:420165488524:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.us-west-2.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     ca-central-1:
-      "TensorflowInference": "763104351884.dkr.ecr.ca-central-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": "arn:aws:lambda:ca-central-1:778625758767:layer:AWSLambda-Python37-SciPy1x:2"
+      "TensorflowInference": "763104351884.dkr.ecr.ca-central-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
     me-south-1:
-      "TensorflowInference": "217643126080.dkr.ecr.me-south-1.amazonaws.com/tensorflow-inference:2.1.0-cpu"
-      "SciPyLayerArn": ""
+      "TensorflowInference": "217643126080.dkr.ecr.me-south-1.amazonaws.com/tensorflow-inference:2.6.0-cpu-py38-ubuntu20.04"
 
 Parameters:
   SolutionPrefix:
@@ -237,8 +219,6 @@ Resources:
         S3Key: !Sub "${SolutionName}/build/api.zip"
       Runtime: python3.7
       MemorySize: 1024
-      # Layers:
-      #   - !FindInMap [RegionMap, !Ref "AWS::Region", SciPyLayerArn]
       Environment:
         Variables:
           SNAKE_COLOR: !Ref SnakeColor
@@ -273,6 +253,3 @@ Outputs:
   SnakeAPI:
     Description: "Use this URL on the Battlesnake platform"
     Value: !Sub "https://${RESTAPIGateway}.execute-api.${AWS::Region}.amazonaws.com/snake/"
-  CheckSnakeStatus:
-    Description: "Check the snake status. If you see 'ready' you can use the snake"
-    Value: !Sub "https://${RESTAPIGateway}.execute-api.${AWS::Region}.amazonaws.com/snake/status"

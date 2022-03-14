@@ -52,8 +52,7 @@ Resources:
               - sagemaker:ListEndpoints
               - sagemaker:ListModels
               - sagemaker:ListEndpointConfigs
-            Resource:
-              - !Sub "*"
+            Resource: "*"
           - Effect: Allow
             Action:
               - sagemaker:CreateTrainingJob
@@ -98,8 +97,7 @@ Resources:
               - cloudwatch:GetMetricData
               - cloudwatch:GetMetricStatistics
               - cloudwatch:ListMetrics
-            Resource:
-              - !Sub "*"
+            Resource: "*"
           - Effect: Allow
             Action:
               - logs:CreateLogGroup
