@@ -72,7 +72,6 @@ Resources:
               - sagemaker:DescribeEndpoint
               - sagemaker:InvokeEndpoint
             Resource:
-              # - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:*"
               - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:training-job/*"
               - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:endpoint-config/*"
               - !Sub "arn:aws:sagemaker:${AWS::Region}:${AWS::AccountId}:model/*"
@@ -85,7 +84,6 @@ Resources:
               - ecr:BatchCheckLayerAvailability
             Resource:
               - "*"
-              - !Sub "arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/*"
           - Effect: Allow
             Action:
               - ec2:CreateVpcEndpoint
@@ -110,7 +108,6 @@ Resources:
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/apigateway/*"
               - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*:log-stream:*"
-
           - Effect: Allow
             Action:
               - iam:PassRole
@@ -133,16 +130,14 @@ Resources:
             Resource:
               - !Sub "arn:aws:s3:::${SolutionsS3BucketNamePrefix}-${AWS::Region}"
               - !Sub "arn:aws:s3:::${SolutionsS3BucketNamePrefix}-${AWS::Region}/*"
-
-          - Effect: Allow
-            Action:
-              - s3:ListBucket
-              - s3:GetObject
-              - s3:PutObject
-              - s3:DeleteObject
-            Resource:
               - !Sub "arn:aws:s3:::${S3BucketName}"
               - !Sub "arn:aws:s3:::${S3BucketName}/*"
+              - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}"
+              - !Sub "arn:aws:s3:::sagemaker-${AWS::Region}-${AWS::AccountId}/*"
+          - Effect: Allow
+            Action:
+              - s3:ListAllMyBuckets
+            Resource: "*"
 
     Metadata:
       cfn_nag:

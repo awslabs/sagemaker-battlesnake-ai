@@ -24,7 +24,7 @@ Parameters:
   S3BucketName:
     Description: Enter the name of the S3 bucket for the solution
     Type: String
-    Default: "dnblak-snake-bucket"
+    Default: "snake-bucket"
   SnakeColor:
     Description: "Hexa RGB color of the snake"
     Default: "#128a7a"
@@ -42,7 +42,7 @@ Parameters:
     Default: ml.m5.xlarge
     Type: String
     AllowedValues:
-      - "ml.m5.large"
+      - "ml.t3.large"
       - "ml.m5.xlarge"
       - "ml.m4.xlarge"
   CreateSageMakerNotebookInstance:
@@ -51,7 +51,7 @@ Parameters:
     AllowedValues: 
       - 'true'
       - 'false'
-    Default: 'true' ########################
+    Default: 'false'
   SolutionName:
     Description: |
       Prefix for the solution name. Needs to be sagemaker-battlesnake-ai
@@ -66,7 +66,7 @@ Parameters:
       Use 'release' version unless you are customizing the 
       CloudFormation templates and solution artifacts.
     Type: String
-    Default: development ########################
+    Default: release
     AllowedValues: 
       - release
       - development
@@ -74,7 +74,7 @@ Parameters:
 Mappings: 
   SolutionsS3BucketNamePrefix: 
     development: 
-      Prefix: dnblak-dev1 ########################
+      Prefix: sagemaker-solutions-devo
     release: 
       Prefix: sagemaker-solutions-prod    
   SageMakerInferenceInstanceTypeRegion:
