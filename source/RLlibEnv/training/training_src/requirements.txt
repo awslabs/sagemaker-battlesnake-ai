@@ -37,7 +37,7 @@ lz4==3.0.2
 Markdown==3.2.1
 more-itertools==8.2.0
 multidict==4.7.5
-numpy==1.18.1
+numpy
 oauthlib==3.1.0
 opencv-python==4.2.0.32
 opencv-python-headless==4.2.0.32
@@ -46,7 +46,7 @@ packaging==20.1
 pandas==1.0.1
 Pillow>=7.1.0
 pluggy==0.13.1
-protobuf==3.11.3
+protobuf
 py>=1.10.0
 py-spy==0.3.3
 pyasn1==0.4.8
@@ -75,7 +75,7 @@ tensorflow-estimator==2.1.0
 termcolor==1.1.0
 torch==1.4.0
 typing-extensions==3.7.4.1
-urllib3==1.25.8
+urllib3
 wcwidth==0.1.8
 Werkzeug==1.0.0
 wrapt==1.12.0
